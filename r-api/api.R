@@ -1,205 +1,135 @@
 # ATO Cardiotoxicity Prediction API
-# Based on tidymodels workflow
+# Based on original Shiny server logic
+# Requires: R-4.5.0/bin/x64/Rscript.exe
 
 library(plumber)
+library(colino)          # step_select_forests — must load before tidymodels
 library(tidyverse)
 library(tidymodels)
 library(aorsf)
+library(bonsai)
 library(kernelshap)
 
-# Load the optimized workflow model
-optim_wflow_last_fit <- readRDS('optim_wflow_last_fit.rds')
+cat("[ATO API] Loading models...\n")
 
-# Extract the workflow
-optim_wflow <- optim_wflow_last_fit %>%
-  extract_workflow()
+# Load models (same as Shiny app)
+optim_wflow_last_fit <- readRDS("optim_wflow_last_fit.rds")
+optim_wflow          <- extract_workflow(optim_wflow_last_fit)
+non_select_features_data <- readRDS("non_select_features_data.rds")
+train_data           <- readRDS("train_data.rds")
 
-# Load non-selected features data (for filling missing values)
-non_select_features_data <- readRDS('non_select_features_data.rds')
-
-# Load training data (for SHAP calculations)
-train_data <- readRDS('train_data.rds')
-
-# Get selected features
+# Selected features (same logic as Shiny)
 select_features <- optim_wflow$fit$fit$preproc$x_var
-select_features <- str_remove(select_features, '_Yes$|_Female$|_High$')
+select_features <- str_remove(select_features, "_Yes$|_Female$|_High$")
 
-#* @apiTitle ATO Cardiotoxicity Prediction API
-#* @apiDescription Predict cardiotoxicity risk based on arsenic metabolism parameters
+cat("[ATO API] Models loaded. Select features:", paste(select_features, collapse = ", "), "\n")
 
-#* CORS filter
+# ── CORS ──────────────────────────────────────────────────────────────────────
 #* @filter cors
 function(req, res) {
-  res$setHeader("Access-Control-Allow-Origin", "*")
+  res$setHeader("Access-Control-Allow-Origin",  "*")
   res$setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-  res$setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization")
-
-  if (req$REQUEST_METHOD == "OPTIONS") {
-    res$status <- 200
-    return(list())
-  }
-
+  res$setHeader("Access-Control-Allow-Headers", "Content-Type")
+  if (req$REQUEST_METHOD == "OPTIONS") { res$status <- 200; return(list()) }
   plumber::forward()
 }
 
-#* Predict cardiotoxicity risk
-#* @param iAs Inorganic arsenic (ng/mL)
-#* @param MMA Monomethylarsonic acid (ng/mL)
-#* @param DMA Dimethylarsinic acid (ng/mL)
-#* @param CT_drug Concurrent cardiotoxic drug (Yes/No)
+# ── /predict ──────────────────────────────────────────────────────────────────
 #* @post /predict
 #* @serializer json
-function(req, iAs, MMA, DMA, CT_drug) {
+function(req) {
   tryCatch({
-    # Parse and validate inputs
-    iAs <- as.numeric(iAs)
-    MMA <- as.numeric(MMA)
-    DMA <- as.numeric(DMA)
+    body <- jsonlite::fromJSON(req$postBody)
 
-    if (is.na(iAs) || is.na(MMA) || is.na(DMA)) {
-      return(list(error = "Invalid numeric input"))
-    }
+    iAs    <- as.numeric(body$iAs)
+    MMA    <- as.numeric(body$MMA)
+    DMA    <- as.numeric(body$DMA)
+    CT_drug <- as.character(body$CT_drug)
 
-    if (iAs < 0 || MMA < 0 || DMA < 0) {
-      return(list(error = "All values must be positive"))
-    }
+    if (any(is.na(c(iAs, MMA, DMA)))) stop("Invalid numeric input")
+    if (any(c(iAs, MMA, DMA) < 0))   stop("Values must be >= 0")
 
-    # Calculate arsenic metabolism parameters
-    tAs <- iAs + MMA + DMA
-    PMI <- ifelse(iAs > 0, MMA / iAs, 0)
-    SMI <- ifelse(MMA > 0, DMA / MMA, 0)
-    iAs_pct <- ifelse(tAs > 0, (iAs / tAs) * 100, 0)
-    MMA_pct <- ifelse(tAs > 0, (MMA / tAs) * 100, 0)
-    DMA_pct <- ifelse(tAs > 0, (DMA / tAs) * 100, 0)
+    # ── Metabolism parameters (same as Shiny server) ──────────────────────────
+    tAs     <- iAs + MMA + DMA
+    PMI     <- if (iAs > 0) MMA / iAs else 0
+    SMI     <- if (MMA > 0) DMA / MMA else 0
+    iAs_pct <- if (tAs > 0) (iAs / tAs) * 100 else 0
+    MMA_pct <- if (tAs > 0) (MMA / tAs) * 100 else 0
+    DMA_pct <- if (tAs > 0) (DMA / tAs) * 100 else 0
 
-    # Create input data frame with selected features only
-    new_data <- tibble(
-      tAs = tAs,
-      SMI = SMI,
+    # ── Prediction data (same as Shiny bind_cols) ─────────────────────────────
+    pred_data <- tibble(
+      tAs     = tAs,
+      SMI     = SMI,
       MMA_per = MMA_pct,
       DMA_per = DMA_pct,
       CT_drug = CT_drug
-    )
+    ) |>
+      mutate(CT_drug = factor(CT_drug, levels = c("No", "Yes"))) |>
+      bind_cols(non_select_features_data)
 
-    # Add non-selected features (filled with training data means)
-    for (feature in names(non_select_features_data)) {
-      if (!feature %in% names(new_data)) {
-        new_data[[feature]] <- non_select_features_data[[feature]]
-      }
-    }
+    # ── Model prediction ──────────────────────────────────────────────────────
+    pred_class <- predict(optim_wflow, new_data = pred_data, type = "class") |>
+      pull(.pred_class) |> as.character()
 
-    # Make prediction
-    pred_result <- predict(optim_wflow, new_data, type = "prob")
-    pred_class <- predict(optim_wflow, new_data, type = "class")
+    pred_prob <- optim_wflow_last_fit |>
+      extract_workflow() |>
+      predict(new_data = pred_data, type = "prob") |>
+      pull(.pred_Yes)
 
-    # Extract probability for "Yes" class
-    pred_prob <- pred_result$.pred_Yes
-    pred_class_value <- as.character(pred_class$.pred_class)
-
-    # Determine risk level
     risk_level <- case_when(
       pred_prob < 0.2 ~ "low",
       pred_prob < 0.5 ~ "medium",
-      TRUE ~ "high"
+      TRUE            ~ "high"
     )
 
-    # Calculate SHAP values
-    # Prepare data for SHAP (only selected features)
-    shap_data <- new_data %>% select(all_of(c("tAs", "SMI", "MMA_per", "DMA_per", "CT_drug")))
+    # ── SHAP values ───────────────────────────────────────────────────────────
+    shap_res  <- kernelshap(
+      object = optim_wflow,
+      X      = pred_data,
+      bg_X   = train_data |> select(-outcome),
+      type   = "prob"
+    )
+    shap_data <- shap_res$S$.pred_Yes |>
+      as_tibble() |>
+      select(all_of(select_features))
 
-    # Convert CT_drug to numeric for SHAP
-    shap_data_numeric <- shap_data %>%
-      mutate(CT_drug = ifelse(CT_drug == "Yes", 1, 0))
+    shap_list <- as.list(shap_data[1, ])
+    shap_list <- lapply(shap_list, function(x) round(as.numeric(x), 4))
 
-    # Use training data background (sample for efficiency)
-    train_background <- train_data %>%
-      select(all_of(c("tAs", "SMI", "MMA_per", "DMA_per", "CT_drug"))) %>%
-      mutate(CT_drug = ifelse(CT_drug == "Yes", 1, 0)) %>%
-      slice_sample(n = min(100, nrow(train_data)))
+    # Major risk factor (highest |SHAP|)
+    major_risk_factor <- names(which.max(abs(unlist(shap_list))))
 
-    # Calculate SHAP values using kernelshap
-    shap_result <- tryCatch({
-      ks <- kernelshap(
-        object = optim_wflow,
-        X = shap_data_numeric,
-        bg_X = train_background,
-        type = "prob"
-      )
-
-      # Extract SHAP values for "Yes" class
-      shap_values <- ks$S[1, ]
-      names(shap_values) <- colnames(shap_data_numeric)
-
-      list(
-        tAs = round(shap_values["tAs"], 4),
-        SMI = round(shap_values["SMI"], 4),
-        MMA_per = round(shap_values["MMA_per"], 4),
-        DMA_per = round(shap_values["DMA_per"], 4),
-        CT_drug = round(shap_values["CT_drug"], 4)
-      )
-    }, error = function(e) {
-      # Fallback to simplified SHAP if kernelshap fails
-      message("SHAP calculation failed, using simplified version: ", e$message)
-      list(
-        tAs = round((tAs - mean(train_data$tAs)) / sd(train_data$tAs) * 0.05, 4),
-        SMI = round((SMI - mean(train_data$SMI)) / sd(train_data$SMI) * 0.04, 4),
-        MMA_per = round((MMA_pct - mean(train_data$MMA_per)) / sd(train_data$MMA_per) * 0.03, 4),
-        DMA_per = round((DMA_pct - mean(train_data$DMA_per)) / sd(train_data$DMA_per) * 0.03, 4),
-        CT_drug = ifelse(CT_drug == "Yes", 0.08, -0.04)
-      )
-    })
-
-    # Find major risk factor (highest absolute SHAP value)
-    shap_abs <- sapply(shap_result, abs)
-    major_risk_factor <- names(which.max(shap_abs))
-
-    # Return structured result
+    # ── Return ────────────────────────────────────────────────────────────────
     list(
       prediction = list(
-        class = pred_class_value,
+        class      = pred_class,
         probability = round(pred_prob, 4),
         risk_level = risk_level
       ),
       metabolism = list(
-        tAs = round(tAs, 2),
-        PMI = round(PMI, 4),
-        SMI = round(SMI, 4),
+        tAs     = round(tAs,     2),
+        PMI     = round(PMI,     4),
+        SMI     = round(SMI,     4),
         iAs_pct = round(iAs_pct, 2),
         MMA_pct = round(MMA_pct, 2),
         DMA_pct = round(DMA_pct, 2)
       ),
-      shap_values = shap_result,
+      shap_values       = shap_list,
       major_risk_factor = major_risk_factor,
-      timestamp = Sys.time()
+      timestamp         = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ")
     )
 
   }, error = function(e) {
-    list(
-      error = paste("Prediction error:", e$message),
-      timestamp = Sys.time()
-    )
+    list(error = paste("Prediction error:", conditionMessage(e)))
   })
 }
 
-#* Health check endpoint
+# ── /health ───────────────────────────────────────────────────────────────────
 #* @get /health
 #* @serializer json
 function() {
-  list(
-    status = "ok",
-    model_loaded = !is.null(optim_wflow),
-    timestamp = Sys.time()
-  )
-}
-
-#* Get model information
-#* @get /info
-#* @serializer json
-function() {
-  list(
-    model_type = "tidymodels workflow with aorsf",
-    selected_features = select_features,
-    training_samples = nrow(train_data),
-    timestamp = Sys.time()
-  )
+  list(status = "ok", model_loaded = TRUE,
+       select_features = select_features,
+       timestamp = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ"))
 }
