@@ -1,0 +1,74 @@
+{
+  "common": {
+    "appName": "ATO Cardiotoxicity Risk Predictor",
+    "appNameEn": "ATO Cardiotoxicity Risk Predictor"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "algorithm": "Algorithm",
+    "privacy": "Privacy",
+    "disclaimer": "Disclaimer",
+    "contact": "Contact"
+  },
+  "home": {
+    "welcome": "Welcome to ATO Cardiotoxicity",
+    "welcomeLine2": "Risk Predictor",
+    "subtitle": "Arsenic predict cardiotoxicity risk in APL patients during ATO treatment",
+    "featureIntro": "Introduction",
+    "featureIntroDesc": "Learn about the project",
+    "featureCalc": "Start Calculation",
+    "featureCalcDesc": "Assess risk now",
+    "featureUpload": "Data Upload",
+    "featureUploadDesc": "Upload research data",
+    "introTitle": "Background",
+    "introContent": "Arsenic trioxide (ATO) is a highly effective chemotherapeutic agent for acute promyelocytic leukemia (APL). However, its clinical application is significantly challenged by cardiotoxicity. Adverse cardiac events occur with notable frequency and can lead to prolonged hospitalization or fatal outcomes.\n\nOur free online ATO Cardiotoxicity Risk Predictor addresses this clinical need by integrating data from authoritative studies and real-world adverse event reports.",
+    "teamTitle": "Our Team",
+    "teamLeaderName": "[Placeholder: Team Leader Name]",
+    "teamLeaderTitle": "Associate Chief Pharmacist / PhD",
+    "teamLeaderAffiliation": "The First Affiliated Hospital of Harbin Medical University",
+    "teamLeaderBio": "Specializing in clinical pharmacy and drug metabolism research, focusing on pharmacokinetics and cardiotoxicity mechanisms of arsenic agents. PI of 2 NSFC projects with 20+ SCI publications.",
+    "startPrediction": "Start Prediction"
+  },
+  "footer": {
+    "quickLinks": "Quick Links",
+    "about": "About",
+    "algorithm": "Algorithm",
+    "contact": "Contact",
+    "copyright": "Copyright © 2026 The First Affiliated Hospital of Harbin Medical University",
+    "icpBeian": "ICP Registration No. XXXXX",
+    "policeBeian": "Police Registration No. XXXXX",
+    "description": "This tool provides cardiotoxicity risk assessment for medical professionals to support clinical decision-making."
+  },
+  "predict": {
+    "title": "Risk Calculation Tool",
+    "tabs": {
+      "input": "Input",
+      "result": "Result",
+      "analysis": "Analysis",
+      "suggestion": "Suggestion"
+    },
+    "input": {
+      "patientInfo": "Patient Information",
+      "iAs": "Inorganic arsenic (iAs, ng/mL)",
+      "MMA": "Monomethylarsonic acid (MMA, ng/mL)",
+      "DMA": "Dimethylarsinic acid (DMA, ng/mL)",
+      "ctDrug": "Co-use of cardiotoxic drugs",
+      "ctDrugYes": "Yes",
+      "ctDrugNo": "No",
+      "calculate": "Calculate Cardiotoxicity Risk",
+      "calculating": "Calculating...",
+      "drugListTitle": "Cardiotoxic drugs include:",
+      "viewFullList": "View full list"
+    },
+    "result": {
+      "title": "Risk Assessment Result",
+      "riskProbability": "Cardiotoxicity Risk",
+      "riskLevel": "Risk Level",
+      "lowRisk": "Low Risk",
+      "mediumRisk": "Medium Risk",
+      "highRisk": "High Risk",
+      "downloadPDF": "Download PDF Report"
+    }
+  }
+}

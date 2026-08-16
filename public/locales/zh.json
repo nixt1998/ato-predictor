@@ -1,0 +1,74 @@
+{
+  "common": {
+    "appName": "ATO心毒性风险预测工具",
+    "appNameEn": "ATO Cardiotoxicity Risk Predictor"
+  },
+  "nav": {
+    "home": "首页",
+    "about": "关于",
+    "algorithm": "算法",
+    "privacy": "隐私政策",
+    "disclaimer": "免责声明",
+    "contact": "联系我们"
+  },
+  "home": {
+    "welcome": "Welcome to ATO Cardiotoxicity",
+    "welcomeLine2": "Risk Predictor",
+    "subtitle": "Arsenic predict cardiotoxicity risk in APL patients during ATO treatment",
+    "featureIntro": "项目简介",
+    "featureIntroDesc": "了解项目背景和研究意义",
+    "featureCalc": "开始计算",
+    "featureCalcDesc": "立即评估风险",
+    "featureUpload": "数据上传",
+    "featureUploadDesc": "上传研究数据",
+    "introTitle": "项目背景",
+    "introContent": "砷剂（ATO）是治疗急性早幼粒细胞白血病（APL）的有效药物。然而，其临床应用受到心脏毒性的显著挑战。不良心脏事件发生频率较高，可能导致住院时间延长甚至致命结局。有效管理治疗效果与心脏风险之间的平衡，对于提高患者生存率和生活质量至关重要。\n\n我们的免费在线砷剂心脏毒性风险预测工具正是为解决这一临床需求而开发。它整合了权威临床研究数据和真实世界不良事件报告，为用户提供个性化的前瞻性风险评估。",
+    "teamTitle": "研究团队",
+    "teamLeaderName": "[占位符: 负责人姓名]",
+    "teamLeaderTitle": "副主任药师 / 博士",
+    "teamLeaderAffiliation": "哈尔滨医科大学附属第一医院",
+    "teamLeaderBio": "从事临床药学和药物代谢研究，专注于砷剂的药代动力学和心脏毒性机制研究。主持国家自然科学基金项目2项，发表SCI论文20余篇。",
+    "startPrediction": "开始预测"
+  },
+  "footer": {
+    "quickLinks": "快速链接",
+    "about": "关于项目",
+    "algorithm": "算法说明",
+    "contact": "联系我们",
+    "copyright": "Copyright © 2026 哈尔滨医科大学附属第一医院",
+    "icpBeian": "黑ICP备XXXXX号",
+    "policeBeian": "黑公网安备 XXXXX号",
+    "description": "本工具为医疗专业人士提供砷剂心脏毒性风险评估，辅助临床决策。"
+  },
+  "predict": {
+    "title": "风险计算工具",
+    "tabs": {
+      "input": "输入",
+      "result": "结果",
+      "analysis": "详细分析",
+      "suggestion": "建议"
+    },
+    "input": {
+      "patientInfo": "患者信息输入",
+      "iAs": "无机砷 (iAs, ng/mL)",
+      "MMA": "一甲基砷酸 (MMA, ng/mL)",
+      "DMA": "二甲基砷酸 (DMA, ng/mL)",
+      "ctDrug": "合并心毒性药物",
+      "ctDrugYes": "是",
+      "ctDrugNo": "否",
+      "calculate": "计算心毒性风险",
+      "calculating": "正在计算...",
+      "drugListTitle": "心毒性药物包括：",
+      "viewFullList": "查看完整列表"
+    },
+    "result": {
+      "title": "风险评估结果",
+      "riskProbability": "心毒性发生风险",
+      "riskLevel": "风险等级",
+      "lowRisk": "低风险",
+      "mediumRisk": "中风险",
+      "highRisk": "高风险",
+      "downloadPDF": "下载 PDF 报告"
+    }
+  }
+}
