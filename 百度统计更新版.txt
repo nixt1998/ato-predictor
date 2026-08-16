@@ -1,0 +1,1494 @@
+# Load Packages
+library(shiny)
+library(shinydashboard)
+library(shinycustomloader)
+library(shinyFeedback)
+library(tidyverse)
+library(tidymodels)
+library(colino)
+library(aorsf)
+library(bonsai)
+library(kernelshap)
+library(wesanderson)
+library(DT)
+library(readxl)
+library(writexl)
+library(censored)
+
+# Import Model
+optim_wflow_last_fit = read_rds('www/optim_wflow_last_fit.rds')
+
+# Optimal workflow
+optim_wflow = optim_wflow_last_fit |> 
+  extract_workflow()
+
+# Non-selected features data
+non_select_features_data = read_rds('www/non_select_features_data.rds')
+
+# Import Train Data
+train_data = read_rds('www/train_data.rds')
+
+# Selected Features
+select_features = optim_wflow$fit$fit$preproc$x_var
+select_features = str_remove(select_features, '_Yes$|_Female$|_High$')
+
+# Template File
+template_file = read_xlsx('www/template/template.xlsx')
+
+# UI
+## Dashboard Header
+header = dashboardHeader(title = tags$div(style = "display: flex; align-items: center; height: 100%;",
+                                          tags$img(src = "https://www.dropbox.com/scl/fi/9bgtl9q1sjmt9fxn30wcw/logo.png?rlkey=o1dins6krbgxm66xnkwkcd4uf&st=3hsehts4&dl=1",
+                                                   style = "height: 45px; margin-right: 10px;"),
+                                          tags$div(style = "display: flex; flex-direction: column; justify-content: center; margin-left: 0px; line-height: 1.2;",
+                                                   tags$text("哈尔滨医科大学附属第一医院",
+                                                             style = "font-weight: bold; font-size: 18px; text-align: left;"),
+                                                   tags$text("The First Affiliated Hospital of Harbin Medical University",
+                                                             style = "font-weight: bold; font-size: 10px; margin-top: -1px; text-align: left;"))),
+                         titleWidth = '360'# ,
+                         
+                         # # Dropdown menu for messages
+                         # dropdownMenu(type = "messages", 
+                         #              badgeStatus = "success",
+                         #              messageItem(from = "Email",
+                         #                          message = "haixin@hrmu.edu.cn", # Insert email
+                         #                          icon = icon("envelope"),
+                         #                          time = NULL),
+                         #              messageItem(from = "联系地址",
+                         #                          message = tags$text("药学部，哈尔滨医科大学附属第一医院（南岗院区），", 
+                         #                                              tags$br(),
+                         #                                              tags$text("哈尔滨，中国，150000。", 
+                         #                                                        style = "margin-left: 10px;"),
+                         #                                              style = "font-size: 9px"), # Insert address infomation
+                         #                          icon = icon("earth-americas"),
+                         #                          time = NULL))
+                         
+)
+
+## Dashboard Sidebar
+sidebar = dashboardSidebar(width = '360',
+                           sidebarMenu(id = "tabs",
+                                       menuItem(text = tags$text("Prediction", style = "font-size: 20px"), 
+                                                tabName = "prediction", 
+                                                icon = icon("stethoscope", class = "fa-1.5x"), 
+                                                badgeLabel = "Input", 
+                                                badgeColor = "red"),
+                                       menuItem(text = tags$text("Introduction", style = "font-size: 20px"), 
+                                                tabName = "introduction", 
+                                                icon = icon("circle-info", class = "fa-1.5x")),
+                                       menuItem(text = tags$text("Data sharing", style = "font-size: 20px"), 
+                                                tabName = "data", 
+                                                icon = icon("cloud-arrow-up", class = "fa-1.5x"))))
+
+## Dashboard Body
+body = dashboardBody(
+  useShinyFeedback(),
+  tabItems(tabItem(tabName = 'prediction',
+                   fluidRow(h1("Arsenic Trioxide-Induced Cardiotoxicity Risk Assessment Predictor",
+                               style = "text-align: center; font-weight: bold; color: #333; font-size: 45px"),
+                            
+                            br(),
+                            
+                            h6("Assess the risk probability of cardiotoxic adverse events in APL patients during arsenic trioxide treatment",
+                               style = "text-align: center; color: #333; font-size: 22px"),
+                            
+                            br(),
+                            
+                            br()),
+                   
+                   fluidRow(box(tags$text('Patient Input Information:',
+                                          style = "font-size: 20px; font-weight: bold; "),
+                                
+                                textInput(inputId = 'iAs',
+                                          label = strong('1. Inorganic arsenic (iAs, ng/mL)',
+                                                         style = "text-align: left; font-size: 20px"),
+                                          value = 10,
+                                          width = '100%',
+                                          placeholder = NULL),
+                                
+                                textInput(inputId = 'MMA',
+                                          label = strong('2. Monomethylarsonic acid (MMA, ng/mL)',
+                                                         style = "text-align: left; font-size: 20px"),
+                                          value = 20,
+                                          width = '100%',
+                                          placeholder = NULL),
+                                
+                                textInput(inputId = 'DMA',
+                                          label = strong('3. Dimethylarsenic acid (DMA, ng/mL)',
+                                                         style = "text-align: left; font-size: 20px"),
+                                          value = 15,
+                                          width = '100%',
+                                          placeholder = NULL),
+                                
+                                selectInput(inputId = 'ct_drug',
+                                            label = strong('4. Co-use of cardiotoxic drugs',
+                                                           style = "text-align: left; font-size: 20px"),
+                                            choices = c('Yes', 'No'),
+                                            selected = 'No',
+                                            multiple = FALSE),
+                                
+                                actionButton(inputId = 'update', 
+                                             label = strong('  Calculate Cardiotoxicity Induced by Arsenic Trioxide',
+                                                            style = "text-align: center; font-size: 20px; color: white"), 
+                                             icon = icon('calculator',
+                                                         # class = "fa-1.7x",
+                                                         style = "color: white; font-size: 1.7em;"), 
+                                             width = '100%',
+                                             class = 'btn-primary'),
+                                
+                                title = strong('Personal Parameters'),
+                                footer = 'Please scroll down to view the cardiotoxic drug combination table.',
+                                status = 'primary',
+                                width = 8,
+                                solidHeader = TRUE, 
+                                collapsible = TRUE),
+                            
+                            box(withLoader(uiOutput(outputId = 'heart_gif')),
+                                
+                                br(),
+                                
+                                uiOutput(outputId = 'pred'),
+                                
+                                title = strong('Risk of Cardiotoxicity Occurrence'),
+                                status = 'primary',
+                                width = 4,
+                                solidHeader = TRUE, 
+                                collapsible = TRUE)),
+                   
+                   fluidRow(box(tags$text('Arsenic metabolism parameter index calculation:',
+                                          style = "font-size: 20px; font-weight: bold;"),
+                                
+                                div(style = "text-align: left;",
+                                    tags$text("1. Total arsenic (tAs, ng/mL)", style = "font-weight: bold; font-size: 20px")),
+                                
+                                verbatimTextOutput(outputId = 'tAs'),
+                                
+                                div(style = "text-align: left;",
+                                    tags$text("2. Primary methylation index (PMI)", style = "font-weight: bold; font-size: 20px")),
+                                
+                                verbatimTextOutput(outputId = 'PMI'),
+                                
+                                div(style = "text-align: left;",
+                                    tags$text("3. Secondary methylation index (SMI)", style = "font-weight: bold; font-size: 20px")),
+                                
+                                verbatimTextOutput(outputId = 'SMI'),
+                                
+                                div(style = "text-align: left;",
+                                    tags$text("4. Inorganic arsenic percentage (iAs%)", style = "font-weight: bold; font-size: 20px")),
+                                
+                                verbatimTextOutput(outputId = 'iAs_pct'),
+                                
+                                div(style = "text-align: left;",
+                                    tags$text("5. Monomethylarsonic acid percentage (MMA%)", style = "font-weight: bold; font-size: 20px")),
+                                
+                                verbatimTextOutput(outputId = 'MMA_pct'),
+                                
+                                div(style = "text-align: left;",
+                                    tags$text("6. Dimethylarsenic acid percentage (DMA%)", style = "font-weight: bold; font-size: 20px")),
+                                
+                                verbatimTextOutput(outputId = 'DMA_pct'),
+                                
+                                title = strong('Arsenic Metabolism Parameters'),
+                                footer = 'Please scroll down to view the arsenic metabolism parameter calculation formula.',
+                                status = 'primary',
+                                width = 8,
+                                solidHeader = TRUE, 
+                                collapsible = TRUE),
+                            
+                            box(withLoader(plotOutput(outputId = 'major_risk_donut', width = '100%', height = '300')),
+                                div(style = "text-align: center;",
+                                    tags$text(textOutput(outputId = 'major_risk_factor'), 
+                                              style = "font-weight: bold; font-size: 20px;")),
+                                
+                                title = strong('Risk Factors'),
+                                footer = tags$div(style = "text-align: justify; text-justify: inter-word;", 
+                                                  'Abbreviations: CT_drug, co-use of cardiotoxic drugs; DMA_per, dimethylarsenic acid percentage; MMA_per, monomethylarsonic acid percentage; SMI, secondary methylation index; tAs, total arsenic.'),
+                                  # div(class = 'justified-footer', 'Abbreviations: CT_drug, co-use of cardiotoxic drugs; DMA_per, Dimethylarsenic acid percentage; MMA_per, Monomethylarsonic acid percentage; SMI, Secondary methylation index; tAs, total arsenic.'),
+                                status = 'primary',
+                                width = 4,
+                                # height = 500,
+                                solidHeader = TRUE, 
+                                collapsible = TRUE)),
+                   
+                   fluidRow(box(withLoader(plotOutput(outputId = 'shap_value', width = '100%', height = '300')),
+                                title = strong('Cardiotoxicity Risk Quantification'),
+                                footer = tags$div(tags$text("Interpretation:",
+                                                            style = "font-weight: bold; font-size: 20px;"),
+                                                  br(),
+                                                  tags$text("The bar graph represents the quantitative risk of whether risk factors promote cardiotoxicity."),
+                                                  br(),
+                                                  tags$text("Bars extending to the right indicate factors that promote cardiotoxicity."),
+                                                  br(),
+                                                  tags$text("Bars extending to the left indicate factors that inhibit cardiotoxicity."),
+                                                  br(),
+                                                  tags$text("The values of bars represent the SHAP quantitative values of risk factors' influence on cardiotoxicity.")),
+                                status = 'primary',
+                                width = 8,
+                                # height = 500,
+                                solidHeader = TRUE, 
+                                collapsible = TRUE),
+                            
+                            box(withLoader(DTOutput(outputId = 'cardiotoxic_drug_tbl', width = '100%')),
+                                title = strong('Co-use of Cardiotoxic Drugs'),
+                                footer = NULL,
+                                status = 'primary',
+                                width = 4,
+                                # height = 500,
+                                solidHeader = TRUE, 
+                                collapsible = TRUE)),
+                   
+                   fluidRow(box(withLoader(uiOutput(outputId = 'parameter_plot')),
+                                uiOutput(outputId = 'parameter_text'),
+                                title = strong('Arsenic Metabolism Parameter Definitions'),
+                                footer = tags$div(style = "text-align: justify; text-justify: inter-word;",
+                                                  "Abbreviations: iAs, Inorganic Arsenic; MMA, monomethylarsonic Acid; DMA, dimethylarsinic Acid; tAs, Total Arsenic; PMI, primary Methylation Index; SMI, secondary Methylation Index; iAs%, inorganic Arsenic percentage; MMA%, monomethylarsonic Acid percentage; DMA%, dimethylarsinic Acid percentage."),
+                                status = 'primary',
+                                width = 8,
+                                # height = 500,
+                                solidHeader = TRUE, 
+                                collapsible = TRUE),
+                            
+                            box(withLoader(DTOutput(outputId = 'suggestion')),
+                                title = strong('Suggestions for Result'),
+                                footer = NULL,
+                                status = 'primary',
+                                width = 4,
+                                # height = 500,
+                                solidHeader = TRUE, 
+                                collapsible = TRUE))
+                   
+                   
+  ),
+  
+  tabItem(tabName = 'introduction',
+          fluidRow(h1("Introduction",
+                      style = "text-align: center; font-weight: bold; color: #333; font-size: 45px"),
+                   
+                   br(),
+                   
+                   br()),
+          
+          fluidRow(column(width = 12,
+                          tags$img(src = "https://www.dropbox.com/scl/fi/3q56ghcp52bycqc8badrz/introduction.png?rlkey=yrnpbtigxmwd61hwpyjbd2cof&st=gqg6k5nk&dl=1",
+                                   style = "width: 100%;"))),
+          
+          br(),
+          
+          fluidRow(column(width = 8,
+                          tags$div(style = "line-height: 2; text-align: justify; text-justify: inter-word;",
+                                   tags$text("Arsenic trioxide (ATO) stands as a highly effective chemotherapeutic agent for acute promyelocytic leukemia (APL). However, its clinical application is significantly challenged by cardiotoxicity. Adverse cardiac events occur with notable frequency and can lead to prolonged hospitalization or fatal outcomes. Effectively managing this balance between achieving superior efficacy and mitigating cardiac risks is paramount for improving patient survival and quality of life.",
+                                             style = "font-size: 20px"),
+                                   br(),
+                                   tags$text("Our free online Arsenic Trioxide Cardiotoxicity Risk Predictor is developed to address this precise clinical need. It integrates data from authoritative clinical studies and real-world adverse event reports to provide users with a personalized, forward-looking risk assessment.",
+                                             style = "font-size: 20px"))),
+                   column(width = 4,
+                          tags$img(src = "https://www.dropbox.com/scl/fi/q1oorflzziwhumvtvs9gn/effect.png?rlkey=46kmxp0hh2a20m2q49dqkrmv4&st=kkiop0kv&dl=1",
+                                   style = "width: 95%; display: block; margin-left: auto; margin-right: auto"),
+                          br(),
+                          tags$text("Abbreviations: XXXXX",
+                                    style = "font-size: 15px; color: grey"))),
+          br(),
+          br(),
+          br(),
+          br(),
+          br(),
+          br(),
+          
+          fluidRow(box(tags$div(style = "line-height: 2; font-size: 20px; text-align: justify; text-justify: inter-word;",
+                                tags$text("a) Scientific Early Warning: ",
+                                          style = "font-weight: bold"),
+                                tags$text("The tool calculates a quantitative risk value by analyzing core risk factors such as arsenic metabolism parameters and the concurrent use of other cardiotoxic drugs. This provides a more objective and reliable assessment than subjective feelings."),
+                                br(),
+                                tags$text("b) Convenience and Efficiency: ",
+                                          style = "font-weight: bold"),
+                                tags$text("There is no need to make a medical appointment for a consultation. By simply filling out the online form for about "),
+                                tags$text("one",
+                                          style = "font-weight: bold; color: red"),
+                                tags$text(" minute, you can receive a professional risk assessment report based on a large-data model."),
+                                br(),
+                                tags$text("c) Motivation for Action: ",
+                                          style = "font-weight: bold"),
+                                tags$text("A clear assessment result can effectively raise health awareness, motivating you to adopt a healthier lifestyle or proactively seek medical advice."),
+                                br(),
+                                tags$text("d) Dynamic Monitoring: ",
+                                          style = "font-weight: bold"),
+                                tags$text("You can regularly reassess (e.g., every six months or annually) to observe changes in your risk level after adjusting your lifestyle or receiving treatment, thereby tracking improvements in your health status.")),
+                       title = strong('Why Use the Risk Assessment Predictor for Arsenic Trioxide-Induced Cardiotoxicity?'),
+                       footer = NULL, 
+                       status = 'primary',
+                       solidHeader = TRUE,
+                       width = 12,
+                       collapsible = TRUE)),
+          
+          fluidRow(box(tags$div(style = "line-height: 2; font-size: 20px; text-align: justify; text-justify: inter-word;",
+                                tags$text("a) ", style = "font-weight: bold"),
+                                tags$text("Within the patient information input table, search the co-use medication table to indicate if you are taking any other drugs known to have cardiotoxic effects."),
+                                br(),
+                                tags$text("b) ", style = "font-weight: bold"),
+                                tags$text("Refer to your most recent arsenic concentration test report and enter key arsenic metabolite indicators such as inorganic arsenic (iAs), monomethylarsonic acid (MMA), and dimethylarsinic acid (DMA)."),
+                                br(),
+                                tags$text('c) ', style = "font-weight: bold"),
+                                tags$text('Click the "Calculate Cardiotoxicity Induced by Arsenic Trioxide" button, and the system will generate your personalized risk assessment report in real-time.')),
+                       title = strong('How to Use This Online Assessment Tool?'),
+                       footer = NULL, 
+                       status = 'primary',
+                       solidHeader = TRUE,
+                       width = 12,
+                       collapsible = TRUE)),
+          
+          fluidRow(box(tags$div(style = "line-height: 2; font-size: 20px; text-align: justify; text-justify: inter-word;",
+                                tags$text("a) Risk Probability Diagnosis: ",
+                                          style = "font-weight: bold"),
+                                tags$text("It will show the probability of developing cardiotoxicity following treatment with arsenic trioxide, along with an interpretation of what this risk level means for you."),
+                                br(),
+                                tags$text("b) Analysis of Major Risk Factors: ",
+                                          style = "font-weight: bold"),
+                                tags$text("It will identify the factors contributing most significantly to your individual risk, helping you understand which aspects require closer monitoring."),
+                                br(),
+                                tags$text("c) Personalized Action Recommendations: ",
+                                          style = "font-weight: bold"),
+                                tags$text("It will provide targeted suggestions, including guidance on treatment plans and advice on when you should consult a doctor based on your specific risk assessment outcome.")),
+                       title = strong('Contents of the Assessment Report.'),
+                       footer = NULL, 
+                       status = 'primary',
+                       solidHeader = TRUE,
+                       width = 12,
+                       collapsible = TRUE)),
+          
+          br(),
+          
+          br(),
+          
+          br(),
+          
+          fluidRow(column(width = 12,
+                          tags$div(style = "line-height: 2; ",
+                                   tags$text("Contact us: ",
+                                             style = "font-size: 15px; font-weight: bold"),
+                                   tags$text("Haixin@hrmu.edu.cn",
+                                             style = "font-size: 15px;"),
+                                   br(),
+                                   tags$text("Address: ",
+                                             style = "font-size: 15px; font-weight: bold"),
+                                   tags$text("Department of Pharmacy, The First Affiliated Hospital of Harbin Medical University, Harbin, China.",
+                                             style = "font-size: 15px;"),
+                                   br(),
+                                   tags$text('Citation: ',
+                                             style = "font-size: 15px; font-weight: bold"),
+                                   tags$text('XXXX.',
+                                             style = "font-size: 15px;"),
+                          ))),
+          
+          br(),
+          
+          fluidRow(column(width = 12,
+                          style = 'text-align: center',
+                          tags$div(tags$text('Copyright XXXX.',
+                                             style = "font-size: 15px;"))))
+          
+          
+          
+  ),
+  
+  
+  tabItem(tabName = 'data',
+          fluidRow(h1("Upload Your Data",
+                      style = "text-align: center; font-weight: bold; color: #333; font-size: 45px")),
+          
+          br(),
+          
+          fluidRow(column(width = 3,
+                          uiOutput(outputId = 'output_sex')),
+                   column(width = 3,
+                          uiOutput(outputId = 'output_age')),
+                   
+                   column(width = 3,
+                          uiOutput(outputId = 'output_smoke')),
+                   
+                   column(width = 3,
+                          uiOutput(outputId = 'output_alcohol'))),
+          
+          fluidRow(column(width = 3,
+                          uiOutput(outputId = 'output_class')),
+                   
+                   column(width = 3,
+                          uiOutput(outputId = 'output_dose')),
+                   
+                   column(width = 3,
+                          uiOutput(outputId = 'output_weight')),
+                   
+                   column(width = 3,
+                          uiOutput(outputId = 'output_CP_drug'))),
+          
+          fluidRow(column(width = 3,
+                          uiOutput(outputId = 'output_CT_drug')),
+                   
+                   column(width = 3,
+                          uiOutput(outputId = 'output_diabete')),
+                   
+                   column(width = 3,
+                          uiOutput(outputId = 'output_hyperlipidemia')),
+                   
+                   column(width = 3,
+                          uiOutput(outputId = 'output_hypertension'))),
+          
+          fluidRow(column(width = 3,
+                          uiOutput(outputId = 'output_K')),
+                   
+                   column(width = 3,
+                          uiOutput(outputId = 'output_Mg')),
+                   
+                   column(width = 3,
+                          uiOutput(outputId = 'output_Ca')),
+                   
+                   column(width = 3,
+                          uiOutput(outputId = 'output_ALT'))),
+          
+          fluidRow(column(width = 3,
+                          uiOutput(outputId = 'output_AST')),
+                   
+                   column(width = 3,
+                          uiOutput(outputId = 'output_GGT')),
+                   
+                   column(width = 3,
+                          uiOutput(outputId = 'output_UA')),
+                   
+                   column(width = 3,
+                          uiOutput(outputId = 'output_Cr'))),
+          
+          fluidRow(column(width = 3,
+                          uiOutput(outputId = 'output_CK')),
+                   
+                   column(width = 3,
+                          uiOutput(outputId = 'output_CKMB')),
+                   
+                   column(width = 3,
+                          uiOutput(outputId = 'output_LDH')),
+                   
+                   column(width = 3,
+                          uiOutput(outputId = 'output_HBDH'))),
+          
+          fluidRow(column(width = 3,
+                          uiOutput(outputId = 'output_iAs')),
+                   
+                   column(width = 3,
+                          uiOutput(outputId = 'output_MMA')),
+                   
+                   column(width = 3,
+                          uiOutput(outputId = 'output_DMA')),
+                   
+                   column(width = 3,
+                          uiOutput(outputId = 'output_outcome'))),
+          
+          br(),
+          
+          fluidRow(column(width = 12,
+                          tags$div(tags$text('Class represents to classify patients into high/low-risk groups based on whether the white blood cell count is greater than 10×10⁹ /L, according to the NCCN(2025) guideline.',
+                                              br(),
+                                             'Dose represents the arsenic trioxide treatment dosage per kilogram of body weight recommended for patients according to the NCCN(2025) guideline.',
+                                             br(),
+                                             'iAs represents inorganic arsenic concentration.',
+                                             br(),
+                                             'MMA represents monomethylarsonic acid concentration.',
+                                             br(),
+                                             'DMA represents dimethylarsenic acid concentration.',
+                            style = "text-align: justify; text-justify: inter-word; font-size: 15px; margin-left: 0px")))),
+          
+          br(),
+          br(),
+          
+          fluidRow(column(width = 3,
+                          uiOutput(outputId = 'output_upload_files')),
+                   column(width = 3,
+                          downloadButton(outputId = 'download_template',
+                                         label = 'Download Template File',
+                                         icon = icon('download'),
+                                         width = '100%'))),
+          
+          fluidRow(column(width = 12,
+                          uiOutput(outputId = 'output_statement'))),
+          
+          fluidRow(column(width = 12,
+                          style = "text-align: right;",
+                          actionButton(inputId = 'upload', 
+                                       label = strong('Submit', style = 'margin-left: 0px; color: white; font-size: 17px;'), 
+                                       icon = icon('file-arrow-up',
+                                                   style = "color: white"), 
+                                       class = "btn-primary",
+                                       width = '100px'),
+                          
+                          actionButton(inputId = 'clear',
+                                       label = strong('Clear', style = 'margin-left: 0px; color: black; font-size: 17px;'),
+                                       icon = icon('broom'),
+                                       width = '100px')))
+  )
+  
+  ),
+  includeScript("baidu_stat.js")
+
+)
+
+## Dashboard page
+ui = dashboardPage(header = header,
+                   sidebar = sidebar,
+                   body = body,
+                   title = "Arsenic Trioxide Cardiotoxicity Risk Predictor",
+                   skin = "black")
+
+# Server
+server = function(input, output, session) {
+  
+  # Calculated features
+  tAs = reactive({
+    as.numeric(input$iAs) + as.numeric(input$MMA) + as.numeric(input$DMA)
+  }) |>
+    bindEvent(input$update,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  PMI = reactive({
+    # input$update
+    as.numeric(input$MMA) / as.numeric(input$iAs)
+  }) |>
+    bindEvent(input$update,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  SMI = reactive({
+    # input$update
+    as.numeric(input$DMA) / as.numeric(input$MMA)
+  }) |>
+    bindEvent(input$update,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  iAs_pct = reactive({
+    # input$update
+    as.numeric(input$iAs) / tAs() * 100
+  }) |>
+    bindEvent(input$update,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  MMA_pct = reactive({
+    # input$update
+    as.numeric(input$MMA) / tAs() * 100
+  }) |>
+    bindEvent(input$update,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  DMA_pct = reactive({
+    # input$update
+    as.numeric(input$DMA) / tAs() * 100
+  }) |>
+    bindEvent(input$update,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  # Data used for prediction
+  pred_data = reactive({
+    tibble(tAs = tAs(),
+           SMI = SMI(),
+           MMA_per = MMA_pct(),
+           DMA_per = DMA_pct(),
+           CT_drug = input$ct_drug) |>
+      mutate(CT_drug = factor(x = CT_drug, levels = c('No', 'Yes'))) |>
+      bind_cols(non_select_features_data)
+  }) |>
+    bindEvent(input$update,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  # Predicted class for input data
+  .pred_class = reactive({
+    optim_wflow |>
+      predict(new_data = pred_data(), type = 'class') |>
+      pull(.pred_class) |> 
+      as.character()
+  })
+  
+  # Predicted prob for input data
+  .pred_Yes = reactive({
+    optim_wflow_last_fit |>
+      extract_workflow() |>
+      predict(new_data = pred_data(), type = 'prob') |>
+      pull(.pred_Yes)
+  })
+  
+  # SHAP for input data
+  optim_wflow_shap = reactive({
+    kernelshap(object = optim_wflow,
+               X = pred_data(),
+               bg_X = train_data |> dplyr::select(-outcome),
+               type = "prob",
+               # parallel = TRUE,
+               parallel_args = list(packages = "colino", "aorsf", "bonsai"))
+  })
+  
+  shap_data = reactive({
+    optim_wflow_shap()$S$.pred_Yes |>
+      as_tibble() |>
+      dplyr::select(all_of(select_features))
+  })
+  
+  output$pred = renderUI({
+    
+    tags$div(
+      div(style = "text-align: center;",
+          tags$text(if_else(.pred_class() == 'No', 'No Cardiotoxicity', 'Cardiotoxicity'),
+                    style = str_c("font-weight: bold; font-size: 30px; color: ", if_else(.pred_class() == 'No', 'green', 'red')))),
+      
+      div(style = "text-align: center;",
+          tags$text(str_c('Risk: ', round(.pred_Yes() * 100, 2), '%'),
+                    style = "font-weight: bold; font-size: 30px;"))
+    )
+  })
+  
+  output$heart_gif = renderUI(expr = {
+    
+    url = if_else(.pred_class() == 'No',
+                  'https://www.dropbox.com/scl/fi/91sfmp06qnd2bo1bveerd/normal-heart.gif?rlkey=pdltknmjgfc461ukjb9wsfx87&st=ii6lcwq5&dl=1',
+                  'https://www.dropbox.com/scl/fi/1v2om1ge6n0rch4c4xq7x/toxic-heart.gif?rlkey=92i2q0rinswt3iyr18mc5lh82&st=e1dsxm7k&dl=1')
+    
+    tags$img(src = url,
+             style = "display: block; 
+                  margin-left: auto; 
+                  margin-right: auto;
+                  width: 87%; 
+                  height: 87%;")
+    
+  })
+  
+  output$tAs = renderText(expr = {
+    round(tAs(), 2)
+  }) |>
+    bindEvent(input$update,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  output$PMI = renderText(expr = {
+    round(PMI(), 2)
+  }) |>
+    bindEvent(input$update,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  output$SMI = renderText(expr = {
+    round(SMI(), 2)
+  }) |>
+    bindEvent(input$update,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  output$iAs_pct = renderText(expr = {
+    str_c(round(iAs_pct(), 2), '%')
+  }) |>
+    bindEvent(input$update,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  output$MMA_pct = renderText(expr = {
+    str_c(round(MMA_pct(), 2), '%')
+  }) |>
+    bindEvent(input$update,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  output$DMA_pct = renderText(expr = {
+    str_c(round(DMA_pct(), 2), '%')
+  }) |>
+    bindEvent(input$update,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  output$major_risk_donut = renderPlot(expr = {
+    
+    
+    data = tibble(category = names(shap_data()),
+                  count = abs(as_vector(shap_data())))
+    
+    # Compute percentages
+    data$fraction = data$count / sum(data$count)
+    
+    # Compute the cumulative percentages (top of each rectangle)
+    data$ymax = cumsum(data$fraction)
+    
+    # Compute the bottom of each rectangle
+    data$ymin = c(0, head(data$ymax, n = -1))
+    
+    # Compute label position
+    data$labelPosition = (data$ymax + data$ymin) / 2
+    
+    # Compute a good label
+    data$label = data$category
+    
+    # Make the plot
+    ggplot(data = data,
+           mapping = aes(ymax = ymax,
+                         ymin = ymin,
+                         xmax = 4,
+                         xmin = 3,
+                         fill = category)) +
+      geom_rect() +
+      # geom_text(x = 2,
+      #           mapping = aes(y = labelPosition,
+      #                         label = label,
+      #                         color = category),
+      #           size = 6) + # x here controls label position (inner / outer)
+      scale_fill_brewer(palette = 'Set1') +
+      # scale_fill_manual(values = wes_palette("Darjeeling1", n = 5)) +
+      labs(fill = NULL) +
+      coord_polar(theta = "y") +
+      xlim(c(2, 4)) +
+      theme_void() +
+      theme(
+        legend.position = "bottom",
+        legend.text = element_text(size = 14),  # 图例文本字体大小
+        legend.key.size = unit(1.5, "lines")  # 图例符号大小
+      )
+    
+  })
+  
+  output$major_risk_factor = renderText({
+    
+    data = tibble(category = names(shap_data()),
+                  count = abs(as_vector(shap_data())))
+    
+    str_c("Major Risk Factor: ", data$category[which.max(data$count)])
+  })
+  
+  output$shap_value = renderPlot({
+    
+    shap_data() |> 
+      pivot_longer(cols = everything()) |> 
+      mutate(sign = if_else(value > 0, 'positive', 'negative'),
+             name = fct_reorder(.f = name, .x = value)) |> 
+      ggplot(aes(x = value, y = name, fill = sign)) +
+      geom_col(show.legend = FALSE) +
+      geom_vline(xintercept = 0, 
+                 color = 'grey40', 
+                 linetype = 'dashed', 
+                 linewidth = 0.5) +
+      scale_fill_manual(values = c('negative' = 'lightblue',
+                                   'positive' = 'pink')) +
+      labs(x = 'SHAP Value',
+           y = 'Risk Factor') +
+      theme_bw()+
+      theme(
+        axis.text = element_text(size = 15),       # 坐标轴刻度文本大小
+        axis.title = element_text(size = 15, face = "bold"),  # 坐标轴标题文本大小，加粗
+        axis.text.x = element_text(size = 15),     # x轴刻度文本大小（单独设置）
+        axis.text.y = element_text(size = 15),     # y轴刻度文本大小（单独设置）
+        axis.title.x = element_text(size = 18, margin = margin(t = 10)),  # x轴标题单独设置
+        axis.title.y = element_text(size = 18, margin = margin(r = 10))   # y轴标题单独设置
+      )
+    
+  })
+  
+  output$cardiotoxic_drug_tbl = renderDT({
+    
+    tibble(`Drug Name` = c('Doxorubicin',
+                           'Daunorubicin',
+                           'Idarubicin',
+                           'Pirarubicin',
+                           'Mitoxantrone',
+                           'Macrolide antibiotics',
+                           'Zole antifungals'),
+           `Drug Class` = c('Anthracycline antibiotic',
+                            'Anthracycline antibiotic',
+                            'Anthracycline antibiotic',
+                            'Anthracycline antibiotic',
+                            'Anthracenedione',
+                            'Macrolide antibiotic',
+                            'Azole antifungal')) |> 
+      datatable(editable = FALSE)
+    
+  })
+  
+  output$parameter_plot = renderUI({
+    
+    tags$img(src = "https://www.dropbox.com/scl/fi/yh9mgqjpcfwf5zyzn45cb/parameter.jpg?rlkey=p2gfpyfyewe8uyrq4hzss4vnd&st=d1uyvzkj&dl=1",
+             style = "width: 100%;")
+    
+  })
+  
+  output$parameter_text = renderUI({
+    
+    tags$div(tags$text(
+      br(),
+      'The ingested iAs undergoes methylation metabolism in human body, sequentially generating MMA and DMA. PMI and SMI are key indicators for assessing methylation efficiency. Generally, higher SMI and DMA% indicate that the body can more effectively convert arsenic into less toxic forms and excrete it, which is considered a sign of stronger detoxification capability. Conversely, elevated iAs% or MMA% may suggest impaired methylation processes, associated with higher health risks.',
+              style = "font-weight: bold; font-size: 20px; text-align: justify; text-justify: inter-word;"))
+  })
+  
+  output$suggestion = renderDT({
+    
+    tibble(`Major Risks` = c('Co-use of cardiotoxic drugs',
+                             'tAs',
+                             'MMA%',
+                             'SMI',
+                             'DMA%'),
+           `Suggestions` = c('Drug adminstration adjustment', 
+                             'Consult doctor for arsenic dosage adjustment',
+                             'Consult doctor for arsenic dosage adjustment',
+                             'Consult doctor for arsenic dosage adjustment',
+                             'Consult doctor for arsenic dosage adjustment')) |> 
+      datatable(editable = FALSE)
+    
+  })
+  
+  # Uplopad Data
+  ## Record Update
+  new_record = reactive({
+    
+    record = read_xlsx('www/upload/record.xlsx')
+    
+    record = record |> 
+      mutate(ID = as.character(ID),
+             Date = as.character(Date)) |>
+      bind_rows(tibble(ID = as.character(nrow(record) + 1),
+                       Date = as.character(Sys.time())))
+    
+    record
+    
+  }) |>
+    bindEvent(input$upload,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  observeEvent(eventExpr = input$upload,
+               handlerExpr = {
+                 write_xlsx(new_record(), 'www/upload/record.xlsx')
+               })
+  
+  ## Data Update
+  new_data = reactive({
+    
+    new_data = tibble(sex = input$input_sex,
+                      age = input$input_age,
+                      smoke = input$input_smoke,
+                      alcohol = input$input_alcohol,
+                      class = input$input_class,
+                      dose = input$input_dose,
+                      weight = input$input_weight,
+                      CP_drug = input$input_CP_drug,
+                      CT_drug = input$input_CT_drug,
+                      diabete = input$input_diabete,
+                      hyperlipidemia = input$input_hyperlipidemia,
+                      hypertension = input$input_hypertension,
+                      K = input$input_K,
+                      Mg = input$input_Mg,
+                      Ca = input$input_Ca,
+                      ALT = input$input_ALT,
+                      AST = input$input_AST,
+                      GGT = input$input_GGT,
+                      UA = input$input_UA,
+                      Cr = input$input_Cr,
+                      CK = input$input_CK,
+                      CKMB = input$input_CKMB,
+                      LDH = input$input_LDH,
+                      HBDH = input$input_HBDH,
+                      iAs = input$input_iAs,
+                      MMA = input$input_MMA,
+                      DMA = input$input_DMA,
+                      outcome = input$input_outcome
+    )
+    
+    new_data
+    
+  }) |> 
+    bindEvent(input$upload,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  observeEvent(eventExpr = input$upload,
+               handlerExpr = {
+                 
+                 new_data_path = str_c('www/upload/data/',
+                                       'ID-', last(new_record()$ID),
+                                       ' | ',
+                                       last(new_record()$Date),
+                                       '.xlsx')
+                 
+                 write_xlsx(new_data(), new_data_path)
+               })
+  
+  
+  ## Files Update
+  file_state = reactiveValues(file_state = NULL)
+  
+  new_files = reactive({
+    if (is.null(file_state$file_state)) {
+      return(NULL)
+    } else if (file_state$file_state == 'loaded') {
+      return(input$upload_files)
+    } else if (file_state$file_state == 'reset') {
+      return(NULL)
+    }
+  })
+  
+  observeEvent(eventExpr = input$upload_files,
+               handlerExpr = {
+                 file_state$file_state = 'loaded'
+               })
+  
+  observeEvent(eventExpr = input$clear, 
+               handlerExpr = {
+                 file_state$file_state = 'reset'
+               })
+  
+  
+  observeEvent(eventExpr = input$upload,
+               handlerExpr = {
+                 
+                 new_file_folder = str_c('www/upload/files/',
+                                         'ID-', last(new_record()$ID),
+                                         ' | ',
+                                         last(new_record()$Date),
+                                         '/')
+                 
+                 dir.create(path = new_file_folder)
+                 
+                 files = isolate(new_files())
+                 
+                 if(!is_null(files)){
+                   
+                   for(i in 1:nrow(files)){
+                     file.copy(from = files$datapath[i],
+                               to = str_c(new_file_folder, files$name[i]))
+                   }
+                   
+                 }
+                 
+               })
+  
+  observeEvent(eventExpr = input$clear,
+               handlerExpr = {
+                 shinyjs::reset(id = 'upload_files')
+               })
+  
+  observeEvent(eventExpr = input$upload,
+               handlerExpr = {
+                 
+                 new_file_folder = str_c('www/upload/files/',
+                                         'ID-', last(new_record()$ID),
+                                         ' | ',
+                                         last(new_record()$Date),
+                                         '/')
+                 
+                 dir.create(path = new_file_folder)
+                 
+                 if(!is_null(new_files())){
+                   
+                   for(i in 1:nrow(new_files())){
+                     file.copy(from = new_files()$datapath[i],
+                               to = str_c(new_file_folder, new_files()$name[i]))
+                   }
+                   
+                 }
+                 
+               })
+  
+  ## Statement Update
+  new_statement = reactive({
+    
+    input$statement
+    
+  }) |> 
+    bindEvent(input$upload,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  
+  observeEvent(eventExpr = input$upload,
+               handlerExpr = {
+                 
+                 if(str_length(new_statement()) > 0){
+                   new_statement_path = str_c('www/upload/additional statement/',
+                                              'ID-', last(new_record()$ID),
+                                              ' | ',
+                                              last(new_record()$Date),
+                                              '.txt')
+                   
+                   write.table(x = new_statement(),
+                               file = new_statement_path,
+                               quote = FALSE,
+                               row.names = FALSE,
+                               col.names = FALSE)
+                 }
+                 
+               })
+  
+  
+  # Clear (Reset)
+  output$output_sex = renderUI({
+    
+    selectInput(inputId = 'input_sex',
+                label = strong('Sex', style = "text-align: left; font-size: 17px"),
+                choices = c('Male', 'Female', 'NA'),
+                selected = 'NA',
+                width = '100%',
+                multiple = FALSE)
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  
+  output$output_age = renderUI({
+    
+    textInput(inputId = 'input_age',
+              label = strong('Age (years old)', style = "text-align: left; font-size: 17px"),
+              value = NULL,
+              width = '100%',
+              placeholder = 'e.g. 25')
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  
+  output$output_smoke = renderUI({
+    
+    selectInput(inputId = 'input_smoke',
+                label = strong('Smoking history', style = "text-align: left; font-size: 17px"),
+                choices = c('Yes', 'No', 'NA'),
+                selected = 'NA',
+                width = '100%',
+                multiple = FALSE)
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  output$output_alcohol = renderUI({
+    
+    selectInput(inputId = 'input_alcohol',
+                label = strong('Alcohol history', style = "text-align: left; font-size: 17px"),
+                choices = c('Yes', 'No', 'NA'),
+                selected = 'NA',
+                width = '100%',
+                multiple = FALSE)
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  
+  output$output_class = renderUI({
+    
+    selectInput(inputId = 'input_class',
+                label = strong('Class', style = "text-align: left; font-size: 17px"),
+                choices = c('Low', 'High', 'NA'),
+                selected = 'NA',
+                width = '100%',
+                multiple = FALSE)
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  
+  
+  output$output_dose = renderUI({
+    
+    textInput(inputId = 'input_dose',
+              label = strong('Dose (μg/kg)', style = "text-align: left; font-size: 17px"),
+              value = NULL,
+              width = '100%',
+              placeholder = 'e.g. 142.85')
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  
+  output$output_weight = renderUI({
+    
+    textInput(inputId = 'input_weight',
+              label = strong('Weight (kg)', style = "text-align: left; font-size: 17px"),
+              value = NULL,
+              width = '100%',
+              placeholder = 'e.g. 70')
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  
+  
+  output$output_CP_drug = renderUI({
+    
+    selectInput(inputId = 'input_CP_drug',
+                label = strong('Co-use of non-cardiotoxic drugs', style = "text-align: left; font-size: 17px"),
+                choices = c('Yes', 'No', 'NA'),
+                selected = 'NA',
+                width = '100%',
+                multiple = FALSE)
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  
+  output$output_CT_drug = renderUI({
+    
+    selectInput(inputId = 'input_CT_drug',
+                label = strong('Co-use of cardiotoxic drugs', style = "text-align: left; font-size: 17px"),
+                choices = c('Yes', 'No', 'NA'),
+                selected = 'NA',
+                width = '100%',
+                multiple = FALSE)
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  
+  output$output_diabete = renderUI({
+    
+    selectInput(inputId = 'input_diabete',
+                label = strong('Diabetes Mellitus', style = "text-align: left; font-size: 17px"),
+                choices = c('Yes', 'No', 'NA'),
+                selected = 'NA',
+                width = '100%',
+                multiple = FALSE)
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  
+  
+  output$output_hyperlipidemia = renderUI({
+    
+    selectInput(inputId = 'input_hyperlipidemia',
+                label = strong('Hyperlipidemia', style = "text-align: left; font-size: 17px"),
+                choices = c('Yes', 'No', 'NA'),
+                selected = 'NA',
+                width = '100%',
+                multiple = FALSE)
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  
+  
+  
+  output$output_hypertension = renderUI({
+    
+    selectInput(inputId = 'input_hypertension',
+                label = strong('Hypertension', style = "text-align: left; font-size: 17px"),
+                choices = c('Yes', 'No', 'NA'),
+                selected = 'NA',
+                width = '100%',
+                multiple = FALSE)
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  
+  output$output_K = renderUI({
+    
+    textInput(inputId = 'input_K',
+              label = strong('K (potassium, mmol/L)', style = "text-align: left; font-size: 17px"),
+              value = NULL,
+              width = '100%',
+              placeholder = 'e.g. 3.5')
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  
+  
+  
+  output$output_Mg = renderUI({
+    
+    textInput(inputId = 'input_Mg',
+              label = strong('Mg (magnesium, mmol/L)', style = "text-align: left; font-size: 17px"),
+              value = NULL,
+              width = '100%',
+              placeholder = 'e.g. 0.75')
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  
+  
+  output$output_Ca = renderUI({
+    
+    textInput(inputId = 'input_Ca',
+              label = strong('Ca (calcium, mmol/L)', style = "text-align: left; font-size: 17px"),
+              value = NULL,
+              width = '100%',
+              placeholder = 'e.g. 2.11')
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  
+  
+  output$output_ALT = renderUI({
+    
+    textInput(inputId = 'input_ALT',
+              label = strong('ALT (U/L)', style = "text-align: left; font-size: 17px"),
+              value = NULL,
+              width = '100%',
+              placeholder = 'e.g. 9')
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  
+  
+  output$output_AST = renderUI({
+    
+    textInput(inputId = 'input_AST',
+              label = strong('AST (U/L)', style = "text-align: left; font-size: 17px"),
+              value = NULL,
+              width = '100%',
+              placeholder = 'e.g. 15')
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  
+  
+  output$output_GGT = renderUI({
+    
+    textInput(inputId = 'input_GGT',
+              label = strong('GGT (U/L)', style = "text-align: left; font-size: 17px"),
+              value = NULL,
+              width = '100%',
+              placeholder = 'e.g. 10')
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  
+  
+  output$output_UA = renderUI({
+    
+    textInput(inputId = 'input_UA',
+              label = strong('UA (μmol/L)', style = "text-align: left; font-size: 17px"),
+              value = NULL,
+              width = '100%',
+              placeholder = 'e.g. 202')
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  
+  output$output_Cr = renderUI({
+    
+    textInput(inputId = 'input_Cr',
+              label = strong('Cr (μmol/L)', style = "text-align: left; font-size: 17px"),
+              value = NULL,
+              width = '100%',
+              placeholder = 'e.g. 57')  
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  
+  output$output_CK = renderUI({
+    
+    textInput(inputId = 'input_CK',
+              label = strong('CK (U/L)', style = "text-align: left; font-size: 17px"),
+              value = NULL,
+              width = '100%',
+              placeholder = 'e.g. 50')
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  output$output_CKMB = renderUI({
+    
+    textInput(inputId = 'input_CKMB',
+              label = strong('CKMB (U/L)', style = "text-align: left; font-size: 17px"),
+              value = NULL,
+              width = '100%',
+              placeholder = 'e.g. 12')
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  output$output_LDH = renderUI({
+    
+    textInput(inputId = 'input_LDH',
+              label = strong('LDH (U/L)', style = "text-align: left; font-size: 17px"),
+              value = NULL,
+              width = '100%',
+              placeholder = 'e.g. 120')
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  output$output_HBDH = renderUI({
+    
+    textInput(inputId = 'input_HBDH',
+              label = strong('HBDH (U/L)', style = "text-align: left; font-size: 17px"),
+              value = NULL,
+              width = '100%',
+              placeholder = 'e.g. 72')
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  output$output_iAs = renderUI({
+    
+    textInput(inputId = 'input_iAs',
+              label = strong('iAs (ng/mL)', style = "text-align: left; font-size: 17px"),
+              value = NULL,
+              width = '100%',
+              placeholder = 'e.g. 10')
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  output$output_MMA = renderUI({
+    
+    textInput(inputId = 'input_MMA',
+              label = strong('MMA (ng/mL)', style = "text-align: left; font-size: 17px"),
+              value = NULL,
+              width = '100%',
+              placeholder = 'e.g. 20')
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  output$output_DMA = renderUI({
+    
+    textInput(inputId = 'input_DMA',
+              label = strong('DMA (ng/mL)', style = "text-align: left; font-size: 17px"),
+              value = NULL,
+              width = '100%',
+              placeholder = 'e.g. 15')
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  output$output_outcome = renderUI({
+    
+    selectInput(inputId = 'input_outcome',
+                label = strong('Cardiotoxicity', style = "text-align: left; font-size: 17px; color: red"),
+                choices = c('Yes', 'No', 'NA'),
+                selected = 'NA',
+                width = '100%',
+                multiple = FALSE)
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  
+  output$output_statement = renderUI({
+    
+    textAreaInput(inputId = 'statement',
+                  label = strong("Additional Statement:",
+                                 style = 'text-align: left; font-size: 20px; font-weight: bold; margin-left: 0px'),
+                  value = '',
+                  width = '100%',
+                  height = 300,
+                  placeholder = 'Please input any additional statement.',
+                  resize = 'none')
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  output$output_upload_files = renderUI({
+    
+    fileInput(inputId = "upload_files",
+              label = NULL,
+              # label = strong("Upload your files",
+              #                style = 'margin-left: 0px'),
+              multiple = TRUE,
+              accept = NULL,
+              width = '100%',
+              buttonLabel = strong("Upload Your Files"))
+    
+  }) |>
+    bindEvent(input$clear,
+              ignoreNULL = FALSE,
+              ignoreInit = FALSE)
+  
+  # Download Template
+  output$download_template = downloadHandler(
+    filename = 'template.xlsx',
+    content = function(file){
+      write_xlsx(x = template_file, path = file)
+    }
+  )
+  
+  
+  observeEvent(eventExpr = input$upload, 
+               handlerExpr = {
+                 showToast(type = "success", 
+                           message = "File uploaded successfully!", 
+                           .options = list(positionClass = "toast-bottom-center", 
+                                           timeOut = 3000))
+                 })
+  
+  observeEvent(eventExpr = input$clear, 
+               handlerExpr = {
+                 showToast(type = "info", 
+                           message = "Reset all inputs!", 
+                           .options = list(positionClass = "toast-bottom-center", 
+                                           timeOut = 3000))
+               })
+  
+}
+
+# Run shiny app
+shinyApp(ui = ui, 
+         server = server,
+         options = list(width = '100%',
+                        height = '100%'))
+
