@@ -44,31 +44,43 @@ export async function POST(request: NextRequest) {
 
       const rResult = await response.json()
 
-      // 生成临床建议
-      const suggestions = generateSuggestions(rResult, data)
+      // R 返回的 JSON 中数值以数组形式包装：[225.5] → 提取为标量
+      const scalar = (v: any): any => Array.isArray(v) ? v[0] : v
 
-      // 构建返回结果
-      const result: PredictionResult = {
+      // 将所有嵌套的数组值转换为标量
+      const normalizedResult = {
         prediction: {
-          class: rResult.prediction.class,
-          probability: rResult.prediction.probability,
-          risk_level: rResult.prediction.risk_level,
+          class: scalar(rResult.prediction.class),
+          probability: scalar(rResult.prediction.probability),
+          risk_level: scalar(rResult.prediction.risk_level),
         },
         metabolism: {
-          tAs: rResult.metabolism.tAs,
-          PMI: rResult.metabolism.PMI,
-          SMI: rResult.metabolism.SMI,
-          iAs_pct: rResult.metabolism.iAs_pct,
-          MMA_pct: rResult.metabolism.MMA_pct,
-          DMA_pct: rResult.metabolism.DMA_pct,
+          tAs:     scalar(rResult.metabolism.tAs),
+          PMI:     scalar(rResult.metabolism.PMI),
+          SMI:     scalar(rResult.metabolism.SMI),
+          iAs_pct: scalar(rResult.metabolism.iAs_pct),
+          MMA_pct: scalar(rResult.metabolism.MMA_pct),
+          DMA_pct: scalar(rResult.metabolism.DMA_pct),
         },
-        shap_values: rResult.shap_values,
-        major_risk_factor: rResult.major_risk_factor,
-        suggestions,
-        timestamp: new Date().toISOString(),
+        shap_values: {
+          tAs:     scalar(rResult.shap_values.tAs),
+          SMI:     scalar(rResult.shap_values.SMI),
+          MMA_per: scalar(rResult.shap_values.MMA_per),
+          DMA_per: scalar(rResult.shap_values.DMA_per),
+          CT_drug: scalar(rResult.shap_values.CT_drug),
+        },
+        major_risk_factor: scalar(rResult.major_risk_factor),
       }
 
-      return NextResponse.json(result)
+      // 生成临床建议（使用标量化后的结果）
+      const suggestions = generateSuggestions(normalizedResult, data)
+
+      // 返回标量化结果
+      return NextResponse.json({
+        ...normalizedResult,
+        suggestions,
+        timestamp: new Date().toISOString(),
+      })
     } catch (fetchError: any) {
       if (fetchError.name === 'AbortError') {
         console.error('R API request timeout')
