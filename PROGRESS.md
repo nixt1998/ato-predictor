@@ -1,7 +1,7 @@
 # ATO 心毒性风险预测工具 - 开发进度
 
-**最后更新：** 2026-08-16 15:25  
-**当前阶段：** Phase 2 - 布局组件开发 ✅ 完成  
+**最后更新：** 2026-08-16 15:45  
+**当前阶段：** Phase 3 - 首页完整开发 ✅ 完成  
 **项目位置：** F:\claudedata\workdata\20260816atocarditox-website\ato-predictor
 
 ---
@@ -55,6 +55,61 @@
 
 ---
 
+### Phase 3: 首页完整开发（已完成 100%）✅
+
+#### 1. Hero 组件 ✅
+- [x] 渐变背景（#F0F7FF → 白色）
+- [x] 大标题动画（淡入 + 上滑）
+- [x] 副标题动画（延迟淡入）
+- [x] "开始预测"按钮（渐变背景 + 箭头图标）
+- [x] 按钮悬停效果（放大 + 阴影增强）
+- [x] Framer Motion 动画集成
+
+#### 2. FeatureCards 组件 ✅
+- [x] 三个入口卡片网格布局
+- [x] **项目简介卡片**（标准样式，Info 图标）
+- [x] **开始计算卡片**（特殊设计）：
+  - [x] 渐变背景（#005EB8 → #0073D1 → #41B6E6）
+  - [x] 脉冲动画效果（3秒循环）
+  - [x] 更大尺寸（h-64 = 256px）
+  - [x] 悬停放大 1.05 倍 + 上移 8px
+  - [x] 图标旋转动画
+  - [x] 箭头移动动画
+  - [x] 光晕效果
+- [x] **数据上传卡片**（标准样式，Upload 图标）
+- [x] Lucide React 图标集成
+- [x] 点击跳转到相应页面
+- [x] 响应式网格（移动端单列）
+
+#### 3. Introduction 组件 ✅
+- [x] 浅灰色背景区域（#F5F5F5）
+- [x] 标题动画（滚动触发）
+- [x] 白色卡片容器（圆角 + 阴影）
+- [x] 多段落内容（逐段淡入动画）
+- [x] useInView hook 实现滚动触发
+- [x] 最大宽度 1000px 居中
+
+#### 4. Team 组件 ✅
+- [x] 负责人卡片布局：
+  - [x] 左侧：头像（200x200，圆角 12px）
+  - [x] 右上：姓名、职称、单位
+  - [x] 分割线
+  - [x] 右下：个人简介
+- [x] 渐变卡片背景（白色 → #F5F5F5）
+- [x] 头像悬停放大效果
+- [x] 团队合照展示（1200x300）
+- [x] 合照渐变遮罩
+- [x] 文字叠加在合照底部
+- [x] 滚动触发动画
+
+#### 5. 首页集成 ✅
+- [x] 集成所有组件到主页
+- [x] 组件顺序：Hero → FeatureCards → Introduction → Team
+- [x] 统一的动画体验
+- [x] 平滑的滚动效果
+
+---
+
 ## 📂 当前项目结构
 
 ```
@@ -70,6 +125,11 @@ ato-predictor/
 │   │   ├── Header.tsx
 │   │   ├── Footer.tsx
 │   │   └── LanguageSwitcher.tsx
+│   ├── home/                        ✅ 首页组件（4个）
+│   │   ├── Hero.tsx
+│   │   ├── FeatureCards.tsx
+│   │   ├── Introduction.tsx
+│   │   └── Team.tsx
 │   └── ui/                          ✅ UI组件（3个）
 │       ├── Button.tsx
 │       ├── Card.tsx
@@ -120,6 +180,9 @@ ato-predictor/
 ## 🚀 Git 提交历史
 
 ```
+abfff1a - feat: implement complete homepage with animations
+a54a659 - feat: add static HTML preview for testing
+9dcc17e - docs: update progress after completing Phase 2
 e185b92 - feat: implement layout components with i18n support
 8492ae5 - docs: add comprehensive project documentation  
 02c05e1 - docs: add development server test report
@@ -132,9 +195,10 @@ e185b92 - feat: implement layout components with i18n support
 
 **Phase 1:** ████████████████████ 100% ✅  
 **Phase 2:** ████████████████████ 100% ✅  
-**Phase 3:** ░░░░░░░░░░░░░░░░░░░░ 0%  
+**Phase 3:** ████████████████████ 100% ✅  
+**Phase 4:** ░░░░░░░░░░░░░░░░░░░░ 0%  
 
-**总体进度：** ████████░░░░░░░░░░░░ 40%
+**总体进度：** ████████████░░░░░░░░ 60%
 
 ---
 
