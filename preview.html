@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATO心毒性风险预测工具 - 预览</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #212121;
+    }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #E0E0E0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 20px;
+      font-weight: 600;
+      color: #005EB8;
+      text-decoration: none;
+    }
+
+    nav {
+      display: flex;
+      gap: 32px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #212121;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    nav a:hover {
+      color: #005EB8;
+    }
+
+    .language-switcher {
+      display: flex;
+      gap: 4px;
+      border: 1px solid #E0E0E0;
+      border-radius: 8px;
+      padding: 4px;
+    }
+
+    .language-switcher button {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .language-switcher button.active {
+      background: #005EB8;
+      color: white;
+    }
+
+    .language-switcher button:not(.active) {
+      color: #757575;
+    }
+
+    .language-switcher button:not(.active):hover {
+      background: #F5F5F5;
+      color: #212121;
+    }
+
+    /* Main Content */
+    main {
+      min-height: calc(100vh - 80px - 400px);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 80px 0;
+    }
+
+    .hero h1 {
+      font-size: 48px;
+      font-weight: 700;
+      color: #212121;
+      line-height: 1.2;
+      margin-bottom: 24px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: #757575;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* Feature Cards */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding: 48px 0;
+    }
+
+    .feature-card {
+      background: white;
+      border: 2px solid #E0E0E0;
+      border-radius: 12px;
+      padding: 32px 24px;
+      text-align: center;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-card.primary {
+      background: linear-gradient(135deg, #005EB8 0%, #0073D1 100%);
+      border: none;
+      color: white;
+      height: 240px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .feature-card.primary:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 16px 32px rgba(0, 94, 184, 0.3);
+    }
+
+    .feature-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .feature-card h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: #757575;
+    }
+
+    .feature-card.primary p {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* Footer */
+    footer {
+      background: #1A1A1A;
+      color: white;
+      padding: 48px 0 24px;
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .footer-logo {
+      font-size: 24px;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 16px;
+    }
+
+    .footer-description {
+      color: #BDBDBD;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .footer-links h4 {
+      color: #41B6E6;
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+
+    .footer-links ul {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 8px;
+    }
+
+    .footer-links a {
+      color: #BDBDBD;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: #41B6E6;
+    }
+
+    .footer-logos {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      padding: 32px 0;
+      border-top: 1px solid #333;
+      border-bottom: 1px solid #333;
+      margin-bottom: 24px;
+    }
+
+    .footer-logo-item {
+      width: 150px;
+      height: 60px;
+      background: #333;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #757575;
+      font-size: 12px;
+      opacity: 0.6;
+      transition: opacity 0.3s;
+    }
+
+    .footer-logo-item:hover {
+      opacity: 1;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 24px;
+      border-top: 1px solid #333;
+      font-size: 14px;
+      color: #757575;
+    }
+
+    .beian-info {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .beian-info a {
+      color: #757575;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s;
+    }
+
+    .beian-info a:hover {
+      color: #41B6E6;
+    }
+
+    .beian-icon {
+      width: 16px;
+      height: 16px;
+      background: #005EB8;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    @media (max-width: 768px) {
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .beian-info {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <a href="#" class="logo">🏥 ATO心毒性风险预测工具</a>
+
+      <nav>
+        <a href="#">首页</a>
+        <a href="#">关于</a>
+        <a href="#">算法</a>
+        <a href="#">隐私政策</a>
+        <a href="#">免责声明</a>
+        <a href="#">联系我们</a>
+      </nav>
+
+      <div class="language-switcher">
+        <button class="active">中</button>
+        <button>EN</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <div class="container">
+      <!-- Hero Section -->
+      <section class="hero">
+        <h1>
+          Welcome to ATO Cardiotoxicity<br>
+          Risk Predictor
+        </h1>
+        <p>
+          Arsenic predict cardiotoxicity risk in APL patients during ATO treatment
+        </p>
+      </section>
+
+      <!-- Feature Cards -->
+      <section class="features">
+        <div class="feature-card">
+          <div class="feature-icon">ℹ️</div>
+          <h3>项目简介</h3>
+          <p>了解项目背景和研究意义</p>
+        </div>
+
+        <div class="feature-card primary">
+          <div class="feature-icon">🎯</div>
+          <h3>开始计算</h3>
+          <p>立即评估风险</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📤</div>
+          <h3>数据上传</h3>
+          <p>上传研究数据</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div>
+          <div class="footer-logo">ATO心毒性风险预测工具</div>
+          <p class="footer-description">
+            本工具为医疗专业人士提供砷剂心脏毒性风险评估，辅助临床决策。
+          </p>
+        </div>
+
+        <div class="footer-links">
+          <h4>快速链接</h4>
+          <ul>
+            <li><a href="#">关于项目</a></li>
+            <li><a href="#">算法说明</a></li>
+            <li><a href="#">联系我们</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Institution Logos -->
+      <div class="footer-logos">
+        <div class="footer-logo-item">Hospital Logo</div>
+        <div class="footer-logo-item">University Logo</div>
+        <div class="footer-logo-item">Lab Logo</div>
+      </div>
+
+      <!-- Copyright & Beian -->
+      <div class="footer-bottom">
+        <div>Copyright © 2026 哈尔滨医科大学附属第一医院</div>
+
+        <div class="beian-info">
+          <a href="https://beian.miit.gov.cn/" target="_blank">
+            黑ICP备XXXXX号
+          </a>
+          <a href="http://www.beian.gov.cn/" target="_blank">
+            <span class="beian-icon"></span>
+            黑公网安备 XXXXX号
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Language switcher
+    document.querySelectorAll('.language-switcher button').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.language-switcher button').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
