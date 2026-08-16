@@ -2,7 +2,7 @@
 
 import { useLocale } from 'next-intl'
 import { useRouter, usePathname } from 'next/navigation'
-import { locales } from '@/i18n'
+import { routing } from '@/routing'
 
 export default function LanguageSwitcher() {
   const locale = useLocale()
@@ -10,15 +10,13 @@ export default function LanguageSwitcher() {
   const pathname = usePathname()
 
   const switchLocale = (newLocale: string) => {
-    // 获取当前路径，去掉语言前缀
-    const currentPath = pathname.replace(`/${locale}`, '')
-    // 跳转到新语言的路径
+    const currentPath = pathname.replace(`/${locale}`, '') || '/'
     router.push(`/${newLocale}${currentPath}`)
   }
 
   return (
     <div className="flex items-center space-x-1 rounded-lg border border-[#E0E0E0] p-1">
-      {locales.map((loc) => (
+      {routing.locales.map((loc) => (
         <button
           key={loc}
           onClick={() => switchLocale(loc)}

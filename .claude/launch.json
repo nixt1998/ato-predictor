@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ato-predictor",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "set APPDATA=F:\\AppData\\Roaming && cd /d F:\\claudedata\\workdata\\20260816atocarditox-website\\ato-predictor && npm run dev"],
+      "port": 3000
+    }
+  ]
+}

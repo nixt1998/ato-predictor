@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { locales } from '@/i18n';
+import { routing } from '@/routing';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import "../globals.css";
@@ -14,13 +14,15 @@ export const metadata: Metadata = {
 
 export default async function LocaleLayout({
   children,
-  params: { locale }
+  params,
 }: {
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
+
   // 验证语言是否支持
-  if (!locales.includes(locale as any)) {
+  if (!routing.locales.includes(locale as any)) {
     notFound();
   }
 

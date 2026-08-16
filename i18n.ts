@@ -1,15 +1,17 @@
 import { getRequestConfig } from 'next-intl/server';
-import { notFound } from 'next/navigation';
+import { routing } from './routing';
 
-// 支持的语言
-export const locales = ['zh', 'en'] as const;
-export type Locale = (typeof locales)[number];
+export default getRequestConfig(async ({ requestLocale }) => {
+  // 解析请求语言
+  let locale = await requestLocale;
 
-export default getRequestConfig(async ({ locale }) => {
-  // 验证语言是否支持
-  if (!locales.includes(locale as Locale)) notFound();
+  // 验证是否支持，否则回退到默认
+  if (!locale || !routing.locales.includes(locale as any)) {
+    locale = routing.defaultLocale;
+  }
 
   return {
-    messages: (await import(`../public/locales/${locale}.json`)).default
+    locale,
+    messages: (await import(`./public/locales/${locale}.json`)).default,
   };
 });

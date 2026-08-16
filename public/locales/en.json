@@ -42,11 +42,12 @@
   },
   "predict": {
     "title": "Risk Calculation Tool",
+    "subtitle": "Enter patient information to calculate ATO cardiotoxicity risk",
     "tabs": {
-      "input": "Input",
-      "result": "Result",
-      "analysis": "Analysis",
-      "suggestion": "Suggestion"
+      "input": "💊 Input",
+      "result": "📊 Result",
+      "analysis": "🔍 Analysis",
+      "suggestion": "💡 Suggestions"
     },
     "input": {
       "patientInfo": "Patient Information",
@@ -68,7 +69,278 @@
       "lowRisk": "Low Risk",
       "mediumRisk": "Medium Risk",
       "highRisk": "High Risk",
-      "downloadPDF": "Download PDF Report"
+      "downloadPDF": "Download PDF Report",
+      "prediction": "Prediction",
+      "cardiotoxicityDetected": "Cardiotoxicity Detected",
+      "noCardiotoxicityDetected": "No Cardiotoxicity Detected",
+      "metabolismTitle": "Arsenic Metabolism Parameters",
+      "tAs": "Total Arsenic (tAs)",
+      "PMI": "Primary Methylation Index (PMI)",
+      "SMI": "Secondary Methylation Index (SMI)",
+      "iAsPct": "Inorganic Arsenic % (iAs%)",
+      "MMAPct": "MMA % (MMA%)",
+      "DMAPct": "DMA % (DMA%)",
+      "majorRiskFactor": "Major Risk Factor"
+    },
+    "analysis": {
+      "shapTitle": "Risk Factor Quantification (SHAP Values)",
+      "shapDescription": "SHAP values represent each factor's contribution to the prediction",
+      "increasesRisk": "Increases risk",
+      "decreasesRisk": "Decreases risk",
+      "metabolismDistribution": "Arsenic Metabolism Distribution",
+      "metabolismDescription": "Proportion of each arsenic species in total arsenic",
+      "referenceRanges": "Reference Ranges"
+    },
+    "suggestions": {
+      "clinicalSuggestions": "Clinical Suggestions",
+      "downloadReport": "Download PDF Report",
+      "printReport": "Print Report",
+      "reportInfo": "This report is for reference only. Clinical decisions require professional medical judgment.",
+      "disclaimer": {
+        "title": "⚠️ Disclaimer",
+        "content": "This tool is for medical professionals only and cannot replace clinical judgment. All treatment decisions should be based on complete clinical evaluation."
+      }
+    }
+  },
+  "about": {
+    "title": "About",
+    "subtitle": "Learn about the ATO Cardiotoxicity Risk Predictor",
+    "background": {
+      "title": "Background",
+      "content": "Arsenic trioxide (ATO) is a first-line treatment for acute promyelocytic leukemia (APL) with excellent efficacy. However, its cardiotoxic adverse effects occur at a notable frequency, significantly impacting patient safety and treatment adherence. This tool is built on real-world clinical data to provide individualized risk assessment support for clinicians."
+    },
+    "objectives": {
+      "title": "Research Objectives",
+      "obj1": "Integrate arsenic metabolism parameters (iAs, MMA, DMA) with clinical factors to build a cardiotoxicity prediction model",
+      "obj2": "Provide clinicians with interpretable risk assessment reports to support individualized medication decisions",
+      "obj3": "Identify key risk factors through SHAP interpretability analysis",
+      "obj4": "Collect real-world data to continuously optimize model performance"
+    },
+    "team": {
+      "title": "Institutions",
+      "hospital": "The First Affiliated Hospital of Harbin Medical University",
+      "university": "Harbin Medical University",
+      "lab": "[Placeholder: Laboratory Name]"
+    },
+    "scope": {
+      "title": "Scope of Application",
+      "content": "This tool is intended for cardiotoxicity risk assessment in APL patients receiving ATO treatment, suitable for clinicians, pharmacists, and related researchers.",
+      "note": "Important Note:",
+      "noteContent": "The prediction results are for reference only and cannot replace professional clinical judgment. All treatment decisions must be based on comprehensive evaluation of the individual patient."
+    }
+  },
+  "algorithm": {
+    "title": "Algorithm",
+    "subtitle": "Learn about the prediction model and technical methods used",
+    "overview": {
+      "title": "Model Overview",
+      "content": "This tool is based on the Accelerated Oblique Random Survival Forest (AORSF) model, integrating arsenic metabolism parameters and clinical covariates to build a cardiotoxicity risk prediction system.",
+      "modelType": "Model Type",
+      "sampleSize": "Training Sample Size"
+    },
+    "features": {
+      "title": "Input Features",
+      "feature1": { "name": "Total Arsenic (tAs)", "desc": "Sum of iAs, MMA, and DMA; reflects total arsenic exposure" },
+      "feature2": { "name": "Secondary Methylation Index (SMI)", "desc": "DMA/MMA; reflects secondary methylation efficiency" },
+      "feature3": { "name": "MMA Percentage (MMA%)", "desc": "MMA as proportion of total arsenic; positively correlated with cardiotoxicity risk" },
+      "feature4": { "name": "DMA Percentage (DMA%)", "desc": "DMA as proportion of total arsenic; reflects detoxification capacity" },
+      "feature5": { "name": "Concurrent Cardiotoxic Drug (CT_drug)", "desc": "Whether the patient is concurrently using cardiotoxic medications" }
+    },
+    "performance": {
+      "title": "Model Performance",
+      "auc": "AUC-ROC",
+      "accuracy": "Accuracy",
+      "sensitivity": "Sensitivity",
+      "specificity": "Specificity",
+      "note": "Metrics from independent validation set. [Placeholder: add validation set details]."
+    },
+    "shap": {
+      "title": "SHAP Interpretability",
+      "content": "This tool uses Kernel SHAP to explain model predictions, quantifying each feature's contribution to the risk prediction.",
+      "interpretation": "SHAP Value Meaning:",
+      "positive": "Positive SHAP: the feature increases cardiotoxicity risk",
+      "negative": "Negative SHAP: the feature has a protective effect against cardiotoxicity"
+    },
+    "limitations": {
+      "title": "Limitations",
+      "limitation1": "The model was trained on data from a specific institution; generalizability to different populations requires further validation",
+      "limitation2": "Only arsenic metabolism parameters are included; not all potential risk factors are captured",
+      "limitation3": "Prediction results should be interpreted alongside the patient's clinical situation and cannot serve as a standalone basis for decisions"
+    },
+    "references": {
+      "title": "References",
+      "ref1": "[Placeholder: Reference 1 — related to arsenic metabolism and cardiotoxicity]",
+      "ref2": "[Placeholder: Reference 2 — related to the AORSF model]",
+      "ref3": "[Placeholder: Reference 3 — related to SHAP interpretability]"
+    }
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "subtitle": "How we collect, use, and protect your data",
+    "collection": {
+      "title": "Data Collection",
+      "intro": "When using this tool, we may collect the following information:",
+      "item1": "Arsenic metabolism parameters (iAs, MMA, DMA) and related clinical indicators",
+      "item2": "Input data and results from prediction calculations",
+      "item3": "Patient information submitted through the data upload feature",
+      "item4": "Basic access logs (without personal identification information)"
+    },
+    "usage": {
+      "title": "Data Usage",
+      "intro": "Collected data will be used for:",
+      "purpose1": "Providing risk prediction calculation services",
+      "purpose2": "Improving and optimizing the prediction model",
+      "purpose3": "Conducting scientific research on cardiotoxicity",
+      "purpose4": "Statistical analysis and tool performance evaluation"
+    },
+    "security": {
+      "title": "Data Security",
+      "intro": "We take the following measures to protect your data:",
+      "measure1": "HTTPS encrypted transmission to protect data in transit",
+      "measure2": "Data stored in a secure server environment",
+      "measure3": "Access restricted to authorized researchers only",
+      "measure4": "Regular security audits and backups"
+    },
+    "sharing": {
+      "title": "Data Sharing",
+      "content": "We do not sell your personal data to third parties. Data may be used in de-identified form for academic research publications.",
+      "note": "Note:",
+      "noteContent": "Uploaded patient data will be used for scientific research. Please ensure you have obtained patient informed consent."
+    },
+    "rights": {
+      "title": "User Rights",
+      "intro": "You have the following rights:",
+      "right1": "To understand how we use your data",
+      "right2": "To request deletion of data you have uploaded",
+      "right3": "To opt out of data collection (may affect some features)",
+      "right4": "To contact us with privacy-related questions"
+    },
+    "cookies": {
+      "title": "Cookie Usage",
+      "content": "This tool uses necessary cookies to maintain session state and language preferences. We do not use tracking cookies.",
+      "manage": "You can manage or disable cookies through your browser settings, but this may affect the normal operation of the tool."
+    },
+    "updates": {
+      "title": "Policy Updates",
+      "content": "We may update this privacy policy periodically. Significant changes will be announced through the website.",
+      "lastUpdated": "Last Updated:"
+    },
+    "contact": {
+      "title": "Contact Us",
+      "content": "If you have any questions about this privacy policy, please contact us via:",
+      "email": "Email:",
+      "phone": "Phone:"
+    }
+  },
+  "disclaimer": {
+    "title": "Disclaimer",
+    "subtitle": "Please read the following important statements carefully before using this tool",
+    "important": {
+      "title": "Important Notice",
+      "content": "This tool is intended for use by qualified medical professionals only and cannot under any circumstances replace the clinical judgment of a trained healthcare professional."
+    },
+    "nature": {
+      "title": "Tool Nature",
+      "content": "The ATO Cardiotoxicity Risk Predictor is a decision support tool with the following characteristics:",
+      "point1": "Statistical model-based risk probability estimation, not a definitive diagnostic conclusion",
+      "point2": "Model trained on specific historical data with inherent limitations",
+      "point3": "Prediction results are affected by input data quality; data accuracy must be ensured",
+      "point4": "Periodically updated to improve accuracy, but perfect prediction is not guaranteed"
+    },
+    "notForUse": {
+      "title": "Not Suitable For",
+      "intro": "This tool is not suitable for:",
+      "scenario1": "Replacing formal medical diagnosis, treatment planning, or prescription decisions",
+      "scenario2": "Self-diagnosis by patients without medical professional knowledge",
+      "scenario3": "As a basis for handling emergency medical situations",
+      "scenario4": "As a primary research endpoint evaluation tool in clinical trials"
+    },
+    "accuracy": {
+      "title": "Data Accuracy",
+      "content": "The predictive accuracy of this tool depends on: quality and accuracy of input data, representativeness of training data, and individual patient characteristics.",
+      "note": "Tip:",
+      "noteContent": "Please ensure that input data comes from standardized laboratory tests and verify data accuracy before submission."
+    },
+    "liability": {
+      "title": "Limitation of Liability",
+      "intro": "The development team shall not be held legally responsible for:",
+      "limit1": "Consequences of medical decisions based on this tool's predictions",
+      "limit2": "Inaccurate predictions due to data entry errors",
+      "limit3": "Losses caused by temporary unavailability or calculation errors",
+      "limit4": "Use cases beyond the intended scope of this tool",
+      "limit5": "Clinical consequences of prediction deviations due to individual patient differences"
+    },
+    "professional": {
+      "title": "Professional Recommendations",
+      "content": "We strongly recommend all users:",
+      "recommendation": "When using this tool:",
+      "rec1": "Combine with complete clinical assessment for comprehensive risk evaluation",
+      "rec2": "Conduct thorough informed consent communication with patients",
+      "rec3": "Follow up regularly and adjust monitoring protocols based on patient progress"
+    },
+    "privacy": {
+      "title": "Privacy and Data Security",
+      "content": "When entering patient data, please comply with your institution's data protection policies and applicable regulations to ensure patient privacy is protected."
+    },
+    "intellectual": {
+      "title": "Intellectual Property",
+      "content": "All content of this tool, including but not limited to algorithms, interface design, and text content, is protected by intellectual property laws. Reproduction or commercial use without permission is prohibited."
+    },
+    "updates": {
+      "title": "Disclaimer Updates",
+      "content": "This disclaimer may be updated at any time. Continued use of this tool indicates your acceptance of the latest version.",
+      "lastUpdated": "Last Updated:"
+    },
+    "confirmation": {
+      "title": "By using this tool, you confirm that you have read, understood, and agreed to all terms of this disclaimer.",
+      "content": "For questions, contact us: Haixin@hrmu.edu.cn"
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "We welcome your questions and feedback",
+    "email": {
+      "title": "Email",
+      "desc": "Academic collaboration and technical questions"
+    },
+    "phone": {
+      "title": "Phone",
+      "desc": "[Placeholder: Contact Phone]"
+    },
+    "address": {
+      "title": "Address",
+      "desc": "Visit or postal contact",
+      "content": "Department of Pharmacy, The First Affiliated Hospital of Harbin Medical University (Nangang Campus), Harbin, China, 150001"
+    },
+    "hours": {
+      "title": "Working Hours",
+      "desc": "Our response time",
+      "weekday": "Monday–Friday",
+      "weekend": "Weekends",
+      "closed": "Closed"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": {
+        "question": "How do I obtain arsenic metabolism parameters?",
+        "answer": "iAs, MMA, and DMA values must be obtained from a specialized arsenic speciation laboratory report. Validated analytical methods such as HPLC-ICP-MS are recommended."
+      },
+      "q2": {
+        "question": "How accurate are the predictions?",
+        "answer": "The model achieved an AUC of 0.85 on an independent validation set. However, accuracy is affected by data quality; results are for reference only and must be interpreted alongside the patient's clinical context."
+      },
+      "q3": {
+        "question": "How should I cite this tool?",
+        "answer": "[Placeholder: Citation format to be updated after publication]"
+      },
+      "q4": {
+        "question": "How is uploaded data handled?",
+        "answer": "Uploaded data is used for scientific research, stored with encryption, accessible only to authorized researchers, and will not be used for commercial purposes."
+      }
+    },
+    "feedback": {
+      "title": "Feedback & Suggestions",
+      "content": "We welcome feedback on your experience, issues encountered, or suggestions for improvement via email. Your input helps us continuously optimize the tool."
     }
   }
 }

@@ -42,11 +42,12 @@
   },
   "predict": {
     "title": "风险计算工具",
+    "subtitle": "输入患者信息，计算砷剂心脏毒性风险",
     "tabs": {
-      "input": "输入",
-      "result": "结果",
-      "analysis": "详细分析",
-      "suggestion": "建议"
+      "input": "💊 输入",
+      "result": "📊 结果",
+      "analysis": "🔍 详细分析",
+      "suggestion": "💡 建议"
     },
     "input": {
       "patientInfo": "患者信息输入",
@@ -68,7 +69,278 @@
       "lowRisk": "低风险",
       "mediumRisk": "中风险",
       "highRisk": "高风险",
-      "downloadPDF": "下载 PDF 报告"
+      "downloadPDF": "下载 PDF 报告",
+      "prediction": "预测结果",
+      "cardiotoxicityDetected": "检测到心毒性",
+      "noCardiotoxicityDetected": "未检测到心毒性",
+      "metabolismTitle": "砷代谢参数",
+      "tAs": "总砷 (tAs)",
+      "PMI": "一级甲基化指数 (PMI)",
+      "SMI": "二级甲基化指数 (SMI)",
+      "iAsPct": "无机砷百分比 (iAs%)",
+      "MMAPct": "一甲基砷酸百分比 (MMA%)",
+      "DMAPct": "二甲基砷酸百分比 (DMA%)",
+      "majorRiskFactor": "主要风险因素"
+    },
+    "analysis": {
+      "shapTitle": "风险因素量化分析 (SHAP值)",
+      "shapDescription": "SHAP值表示各风险因素对预测结果的贡献程度",
+      "increasesRisk": "促进心毒性",
+      "decreasesRisk": "抑制心毒性",
+      "metabolismDistribution": "砷代谢分布",
+      "metabolismDescription": "各砷形态在总砷中的占比",
+      "referenceRanges": "参考范围"
+    },
+    "suggestions": {
+      "clinicalSuggestions": "临床建议",
+      "downloadReport": "下载 PDF 报告",
+      "printReport": "打印报告",
+      "reportInfo": "报告内容仅供参考，临床决策请咨询专业医生",
+      "disclaimer": {
+        "title": "⚠️ 免责声明",
+        "content": "本工具仅供医疗专业人士参考，不能替代医生的临床判断。所有治疗决策应基于完整的临床评估。"
+      }
+    }
+  },
+  "about": {
+    "title": "关于",
+    "subtitle": "了解砷剂心脏毒性风险预测工具的背景与团队",
+    "background": {
+      "title": "项目背景",
+      "content": "砷剂（ATO）是治疗急性早幼粒细胞白血病（APL）的一线药物，疗效卓越。然而，其心脏毒性不良反应发生率较高，严重影响患者安全与治疗依从性。本工具基于真实世界临床数据构建，为临床医生提供个体化的风险评估支持。"
+    },
+    "objectives": {
+      "title": "研究目标",
+      "obj1": "整合砷代谢参数（iAs、MMA、DMA）与临床因素，构建心毒性预测模型",
+      "obj2": "为临床医生提供可解释的风险评估报告，辅助个体化用药决策",
+      "obj3": "通过 SHAP 可解释性分析，识别主要风险因素",
+      "obj4": "收集真实世界数据，持续优化模型性能"
+    },
+    "team": {
+      "title": "研究机构",
+      "hospital": "哈尔滨医科大学附属第一医院",
+      "university": "哈尔滨医科大学",
+      "lab": "[占位符: 实验室名称]"
+    },
+    "scope": {
+      "title": "适用范围",
+      "content": "本工具适用于接受砷剂治疗的 APL 患者心脏毒性风险评估，适合临床医生、药师及相关研究人员使用。",
+      "note": "重要提示：",
+      "noteContent": "本工具预测结果仅供参考，不能替代专业医生的临床判断，所有治疗决策需结合患者实际情况综合评估。"
+    }
+  },
+  "algorithm": {
+    "title": "算法说明",
+    "subtitle": "了解本工具使用的预测模型与技术方法",
+    "overview": {
+      "title": "模型概述",
+      "content": "本工具基于加速斜随机生存森林（Accelerated Oblique Random Survival Forest, AORSF）模型，结合砷代谢参数与临床协变量，构建心脏毒性风险预测系统。",
+      "modelType": "模型类型",
+      "sampleSize": "训练样本量"
+    },
+    "features": {
+      "title": "输入特征",
+      "feature1": { "name": "总砷 (tAs)", "desc": "无机砷、MMA与DMA的总和，反映砷暴露总量" },
+      "feature2": { "name": "二级甲基化指数 (SMI)", "desc": "DMA/MMA，反映体内砷的二次甲基化效率" },
+      "feature3": { "name": "MMA百分比 (MMA%)", "desc": "MMA占总砷比例，与心脏毒性风险正相关" },
+      "feature4": { "name": "DMA百分比 (DMA%)", "desc": "DMA占总砷比例，反映砷的解毒能力" },
+      "feature5": { "name": "合并心毒性药物 (CT_drug)", "desc": "是否同期使用具有心脏毒性的药物" }
+    },
+    "performance": {
+      "title": "模型性能",
+      "auc": "AUC-ROC",
+      "accuracy": "准确率",
+      "sensitivity": "敏感性",
+      "specificity": "特异性",
+      "note": "以上指标来自独立验证集，[占位符: 补充验证集信息]。"
+    },
+    "shap": {
+      "title": "SHAP 可解释性",
+      "content": "本工具采用 Kernel SHAP 方法对模型预测结果进行解释，量化每个特征对风险预测的贡献值。",
+      "interpretation": "SHAP值含义：",
+      "positive": "SHAP值为正：该特征促进心脏毒性风险增加",
+      "negative": "SHAP值为负：该特征对心脏毒性具有保护作用"
+    },
+    "limitations": {
+      "title": "局限性",
+      "limitation1": "模型基于特定机构的临床数据训练，在不同人群中的泛化能力有待验证",
+      "limitation2": "仅纳入砷代谢参数，未包含所有潜在风险因素",
+      "limitation3": "预测结果应结合患者具体临床情况综合判断，不可单独作为决策依据"
+    },
+    "references": {
+      "title": "参考文献",
+      "ref1": "[占位符: 参考文献1，与砷代谢和心脏毒性相关]",
+      "ref2": "[占位符: 参考文献2，与 AORSF 模型相关]",
+      "ref3": "[占位符: 参考文献3，与 SHAP 可解释性相关]"
+    }
+  },
+  "privacy": {
+    "title": "隐私政策",
+    "subtitle": "我们如何收集、使用和保护您的数据",
+    "collection": {
+      "title": "数据收集",
+      "intro": "使用本工具时，我们可能收集以下信息：",
+      "item1": "砷代谢参数（iAs、MMA、DMA）及相关临床指标",
+      "item2": "预测计算的输入数据与结果",
+      "item3": "通过数据上传功能提交的患者信息",
+      "item4": "基本访问日志（不包含个人身份信息）"
+    },
+    "usage": {
+      "title": "数据使用",
+      "intro": "收集的数据将用于以下目的：",
+      "purpose1": "提供风险预测计算服务",
+      "purpose2": "改善和优化预测模型",
+      "purpose3": "开展心脏毒性相关科学研究",
+      "purpose4": "统计分析与工具性能评估"
+    },
+    "security": {
+      "title": "数据安全",
+      "intro": "我们采取以下措施保护您的数据：",
+      "measure1": "HTTPS 加密传输，保护数据在传输过程中的安全",
+      "measure2": "数据存储在安全的服务器环境中",
+      "measure3": "限制数据访问权限，仅授权研究人员可访问",
+      "measure4": "定期安全审计与备份"
+    },
+    "sharing": {
+      "title": "数据共享",
+      "content": "我们不会将您的个人数据出售给第三方。数据可能以去标识化的形式用于学术研究发表。",
+      "note": "注意：",
+      "noteContent": "上传的患者数据将用于科学研究目的，请确保您已获得患者知情同意。"
+    },
+    "rights": {
+      "title": "用户权利",
+      "intro": "您享有以下权利：",
+      "right1": "了解我们如何使用您的数据",
+      "right2": "请求删除您上传的数据",
+      "right3": "拒绝参与数据收集（可能影响部分功能）",
+      "right4": "联系我们就隐私问题进行咨询"
+    },
+    "cookies": {
+      "title": "Cookies 使用",
+      "content": "本工具使用必要的 Cookies 以维持会话状态和语言偏好。我们不使用追踪性 Cookies。",
+      "manage": "您可以通过浏览器设置管理或禁用 Cookies，但这可能影响工具的正常使用。"
+    },
+    "updates": {
+      "title": "政策更新",
+      "content": "我们可能定期更新本隐私政策。重大变更将通过网站公告通知用户。",
+      "lastUpdated": "最后更新："
+    },
+    "contact": {
+      "title": "联系我们",
+      "content": "如您对隐私政策有任何疑问，请通过以下方式联系我们：",
+      "email": "邮箱：",
+      "phone": "电话："
+    }
+  },
+  "disclaimer": {
+    "title": "免责声明",
+    "subtitle": "使用本工具前，请仔细阅读以下重要声明",
+    "important": {
+      "title": "重要提示",
+      "content": "本工具仅供具备专业资质的医疗人员参考使用，任何情况下均不能替代经过培训的医疗专业人员的临床判断。"
+    },
+    "nature": {
+      "title": "工具性质",
+      "content": "本砷剂心脏毒性风险预测工具是一种决策辅助软件，具有以下特点：",
+      "point1": "基于统计模型的风险概率估算，非确定性诊断结论",
+      "point2": "模型基于特定历史数据训练，存在固有局限性",
+      "point3": "预测结果受输入数据质量影响，需确保数据准确",
+      "point4": "定期更新以提高准确性，但不保证完美预测"
+    },
+    "notForUse": {
+      "title": "不适用情景",
+      "intro": "本工具不适用于以下情形：",
+      "scenario1": "替代正式的医疗诊断、治疗方案制定或处方决策",
+      "scenario2": "无医疗专业知识的患者自行诊断",
+      "scenario3": "紧急医疗情况的处理依据",
+      "scenario4": "临床试验中的主要研究终点评估工具"
+    },
+    "accuracy": {
+      "title": "数据准确性",
+      "content": "本工具的预测准确性依赖于：输入数据的质量与准确性、模型的训练数据代表性以及个体患者的特殊情况。",
+      "note": "提示：",
+      "noteContent": "请确保输入数据来源于标准化的实验室检测，并核实数据的准确性。"
+    },
+    "liability": {
+      "title": "责任限制",
+      "intro": "对于因使用本工具而导致的以下情况，开发团队不承担法律责任：",
+      "limit1": "基于工具预测结果做出的医疗决策的后果",
+      "limit2": "数据输入错误导致的不准确预测",
+      "limit3": "工具暂时不可用或计算错误造成的损失",
+      "limit4": "超出本工具适用范围的使用情形",
+      "limit5": "患者个体差异导致预测偏差的临床后果"
+    },
+    "professional": {
+      "title": "专业建议",
+      "content": "我们强烈建议所有用户：",
+      "recommendation": "在使用本工具时：",
+      "rec1": "结合完整的临床评估综合判断风险",
+      "rec2": "与患者进行充分的知情同意沟通",
+      "rec3": "定期随访并根据患者实际情况调整监测方案"
+    },
+    "privacy": {
+      "title": "隐私与数据安全",
+      "content": "使用本工具进行患者数据输入时，请遵守所在机构的数据保护政策及相关法规，确保患者隐私得到保护。"
+    },
+    "intellectual": {
+      "title": "知识产权",
+      "content": "本工具的所有内容，包括但不限于算法、界面设计、文本内容，均受知识产权法律保护。未经许可，不得复制或商业使用。"
+    },
+    "updates": {
+      "title": "声明更新",
+      "content": "本免责声明可能随时更新。继续使用本工具即表示您接受最新版本的声明内容。",
+      "lastUpdated": "最后更新："
+    },
+    "confirmation": {
+      "title": "使用本工具即表示您已阅读、理解并同意本免责声明的全部内容。",
+      "content": "如有疑问请联系我们：Haixin@hrmu.edu.cn"
+    }
+  },
+  "contact": {
+    "title": "联系我们",
+    "subtitle": "如有问题或建议，欢迎随时联系我们",
+    "email": {
+      "title": "电子邮箱",
+      "desc": "学术合作与技术问题"
+    },
+    "phone": {
+      "title": "联系电话",
+      "desc": "[占位符: 联系电话]"
+    },
+    "address": {
+      "title": "通讯地址",
+      "desc": "访问或邮件联系",
+      "content": "药学部，哈尔滨医科大学附属第一医院（南岗院区），哈尔滨，中国，150001"
+    },
+    "hours": {
+      "title": "工作时间",
+      "desc": "我们的响应时间",
+      "weekday": "周一至周五",
+      "weekend": "周末",
+      "closed": "休息"
+    },
+    "faq": {
+      "title": "常见问题",
+      "q1": {
+        "question": "砷代谢参数如何获取？",
+        "answer": "iAs、MMA 和 DMA 需通过专业砷形态分析实验室的检测报告获取，建议采用经过验证的分析方法（如HPLC-ICP-MS）。"
+      },
+      "q2": {
+        "question": "预测结果准确度如何？",
+        "answer": "模型在独立验证集上 AUC 达 0.85，但预测结果受数据质量影响，仅供临床参考，需结合患者实际情况综合判断。"
+      },
+      "q3": {
+        "question": "如何引用本工具？",
+        "answer": "[占位符: 引用格式待发表论文后更新]"
+      },
+      "q4": {
+        "question": "数据上传后如何处理？",
+        "answer": "上传的数据将用于科学研究，采用加密存储，仅限授权研究人员访问，不会用于商业目的。"
+      }
+    },
+    "feedback": {
+      "title": "反馈与建议",
+      "content": "欢迎通过邮件向我们反馈工具使用体验、发现的问题或改进建议，帮助我们持续优化。"
     }
   }
 }
