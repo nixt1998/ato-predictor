@@ -35,7 +35,7 @@ export default function AlgorithmPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                 <div className="bg-[#F0F7FF] rounded-lg p-4">
                   <p className="text-sm text-[#757575] mb-1">{t('overview.modelType')}</p>
-                  <p className="text-lg font-semibold text-[#005EB8]">Random Forest</p>
+                  <p className="text-lg font-semibold text-[#005EB8]">{t('overview.modelTypeValue')}</p>
                 </div>
                 <div className="bg-[#F0F7FF] rounded-lg p-4">
                   <p className="text-sm text-[#757575] mb-1">{t('overview.sampleSize')}</p>

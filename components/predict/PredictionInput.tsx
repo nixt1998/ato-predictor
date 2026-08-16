@@ -185,11 +185,11 @@ export default function PredictionInput() {
                 <div className="mt-3 text-sm text-[#757575] space-y-2">
                   <p className="font-medium text-[#212121]">{t('drugListTitle')}</p>
                   <ul className="list-disc list-inside space-y-1 pl-2">
-                    <li>Anthracyclines (e.g., Doxorubicin, Daunorubicin)</li>
-                    <li>HER2 inhibitors (e.g., Trastuzumab)</li>
-                    <li>Tyrosine kinase inhibitors</li>
-                    <li>Checkpoint inhibitors</li>
-                    <li>Proteasome inhibitors</li>
+                    <li>{t('drug1')}</li>
+                    <li>{t('drug2')}</li>
+                    <li>{t('drug3')}</li>
+                    <li>{t('drug4')}</li>
+                    <li>{t('drug5')}</li>
                   </ul>
                 </div>
               )}

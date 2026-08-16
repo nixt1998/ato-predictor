@@ -60,7 +60,12 @@
       "calculate": "Calculate Cardiotoxicity Risk",
       "calculating": "Calculating...",
       "drugListTitle": "Cardiotoxic drugs include:",
-      "viewFullList": "View full list"
+      "viewFullList": "View full list",
+      "drug1": "Anthracyclines (e.g., Doxorubicin, Daunorubicin)",
+      "drug2": "HER2 inhibitors (e.g., Trastuzumab)",
+      "drug3": "Tyrosine kinase inhibitors",
+      "drug4": "Checkpoint inhibitors",
+      "drug5": "Proteasome inhibitors"
     },
     "result": {
       "title": "Risk Assessment Result",
@@ -80,7 +85,14 @@
       "iAsPct": "Inorganic Arsenic % (iAs%)",
       "MMAPct": "MMA % (MMA%)",
       "DMAPct": "DMA % (DMA%)",
-      "majorRiskFactor": "Major Risk Factor"
+      "majorRiskFactor": "Major Risk Factor",
+      "riskFactor": {
+        "tAs": "Total Arsenic (tAs)",
+        "SMI": "Secondary Methylation Index (SMI)",
+        "MMA_per": "MMA Percentage (MMA%)",
+        "DMA_per": "DMA Percentage (DMA%)",
+        "CT_drug": "Cardiotoxic Drug Use"
+      }
     },
     "analysis": {
       "shapTitle": "Risk Factor Quantification (SHAP Values)",
@@ -89,7 +101,14 @@
       "decreasesRisk": "Decreases risk",
       "metabolismDistribution": "Arsenic Metabolism Distribution",
       "metabolismDescription": "Proportion of each arsenic species in total arsenic",
-      "referenceRanges": "Reference Ranges"
+      "referenceRanges": "Reference Ranges",
+      "riskFactor": {
+        "tAs": "Total Arsenic",
+        "SMI": "Secondary Methylation Index",
+        "MMA_per": "MMA %",
+        "DMA_per": "DMA %",
+        "CT_drug": "Cardiotoxic Drug"
+      }
     },
     "suggestions": {
       "clinicalSuggestions": "Clinical Suggestions",
@@ -134,8 +153,9 @@
     "subtitle": "Learn about the prediction model and technical methods used",
     "overview": {
       "title": "Model Overview",
-      "content": "This tool is based on the Accelerated Oblique Random Survival Forest (AORSF) model, integrating arsenic metabolism parameters and clinical covariates to build a cardiotoxicity risk prediction system.",
+      "content": "This tool employs a two-stage modeling strategy: first using Random Forest for feature selection, then using Accelerated Oblique Random Survival Forest (AORSF) for classification based on selected features, integrating arsenic metabolism parameters and clinical covariates to build a cardiotoxicity risk prediction system.",
       "modelType": "Model Type",
+      "modelTypeValue": "Random Forest (feature selection) + AORSF (classifier)",
       "sampleSize": "Training Sample Size"
     },
     "features": {

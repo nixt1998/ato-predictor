@@ -149,7 +149,7 @@ export default function PredictionResult() {
           <CardContent>
             <div className="bg-gradient-to-r from-[#F0F7FF] to-[#E3F2FD] rounded-lg p-6">
               <p className="text-lg font-semibold text-[#005EB8]">
-                {result.major_risk_factor}
+                {t(`riskFactor.${result.major_risk_factor}`)}
               </p>
             </div>
           </CardContent>

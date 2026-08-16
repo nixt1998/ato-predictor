@@ -60,7 +60,12 @@
       "calculate": "计算心毒性风险",
       "calculating": "正在计算...",
       "drugListTitle": "心毒性药物包括：",
-      "viewFullList": "查看完整列表"
+      "viewFullList": "查看完整列表",
+      "drug1": "蒽环类药物（如：多柔比星、柔红霉素）",
+      "drug2": "HER2抑制剂（如：曲妥珠单抗）",
+      "drug3": "酪氨酸激酶抑制剂",
+      "drug4": "免疫检查点抑制剂",
+      "drug5": "蛋白酶体抑制剂"
     },
     "result": {
       "title": "风险评估结果",
@@ -80,7 +85,14 @@
       "iAsPct": "无机砷百分比 (iAs%)",
       "MMAPct": "一甲基砷酸百分比 (MMA%)",
       "DMAPct": "二甲基砷酸百分比 (DMA%)",
-      "majorRiskFactor": "主要风险因素"
+      "majorRiskFactor": "主要风险因素",
+      "riskFactor": {
+        "tAs": "总砷 (tAs)",
+        "SMI": "二级甲基化指数 (SMI)",
+        "MMA_per": "一甲基砷酸百分比 (MMA%)",
+        "DMA_per": "二甲基砷酸百分比 (DMA%)",
+        "CT_drug": "合并心毒性药物"
+      }
     },
     "analysis": {
       "shapTitle": "风险因素量化分析 (SHAP值)",
@@ -89,7 +101,14 @@
       "decreasesRisk": "抑制心毒性",
       "metabolismDistribution": "砷代谢分布",
       "metabolismDescription": "各砷形态在总砷中的占比",
-      "referenceRanges": "参考范围"
+      "referenceRanges": "参考范围",
+      "riskFactor": {
+        "tAs": "总砷",
+        "SMI": "二级甲基化指数",
+        "MMA_per": "一甲基砷酸%",
+        "DMA_per": "二甲基砷酸%",
+        "CT_drug": "心毒性药物"
+      }
     },
     "suggestions": {
       "clinicalSuggestions": "临床建议",
@@ -134,8 +153,9 @@
     "subtitle": "了解本工具使用的预测模型与技术方法",
     "overview": {
       "title": "模型概述",
-      "content": "本工具基于加速斜随机生存森林（Accelerated Oblique Random Survival Forest, AORSF）模型，结合砷代谢参数与临床协变量，构建心脏毒性风险预测系统。",
+      "content": "本工具采用两阶段建模策略：首先使用随机森林进行特征筛选，然后基于筛选后的特征使用加速斜随机生存森林（Accelerated Oblique Random Survival Forest, AORSF）进行分类预测，结合砷代谢参数与临床协变量，构建心脏毒性风险预测系统。",
       "modelType": "模型类型",
+      "modelTypeValue": "随机森林（特征筛选）+ AORSF（分类器）",
       "sampleSize": "训练样本量"
     },
     "features": {

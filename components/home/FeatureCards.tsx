@@ -113,11 +113,11 @@ export default function FeatureCards() {
                       </div>
                     </motion.div>
                   ) : (
-                    // 普通卡片
+                    // 普通卡片 - 高度与主卡片一致
                     <motion.div
                       whileHover={{ y: -6 }}
                       whileTap={{ scale: 0.98 }}
-                      className="h-48 rounded-2xl border-2 border-[#E0E0E0] bg-white p-8
+                      className="h-64 rounded-2xl border-2 border-[#E0E0E0] bg-white p-8
                         transition-all duration-300 cursor-pointer
                         hover:shadow-xl hover:border-[#005EB8]/30"
                     >

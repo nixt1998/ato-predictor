@@ -36,7 +36,7 @@ export default function Header() {
             <Link
               key={item.key}
               href={item.href}
-              className="text-base font-medium text-[#212121] transition-colors hover:text-[#005EB8]"
+              className="text-lg font-bold text-[#212121] transition-colors hover:text-[#005EB8]"
             >
               {t(`nav.${item.key}`)}
             </Link>

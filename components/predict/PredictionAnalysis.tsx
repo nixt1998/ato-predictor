@@ -16,11 +16,11 @@ export default function PredictionAnalysis() {
 
   // SHAP 值数据
   const shapData = [
-    { name: 'Total Arsenic', value: Math.abs(shap_values.tAs), raw: shap_values.tAs },
-    { name: 'SMI', value: Math.abs(shap_values.SMI), raw: shap_values.SMI },
-    { name: 'MMA %', value: Math.abs(shap_values.MMA_per), raw: shap_values.MMA_per },
-    { name: 'DMA %', value: Math.abs(shap_values.DMA_per), raw: shap_values.DMA_per },
-    { name: 'CT Drug', value: Math.abs(shap_values.CT_drug), raw: shap_values.CT_drug },
+    { name: t('riskFactor.tAs'), value: Math.abs(shap_values.tAs), raw: shap_values.tAs },
+    { name: t('riskFactor.SMI'), value: Math.abs(shap_values.SMI), raw: shap_values.SMI },
+    { name: t('riskFactor.MMA_per'), value: Math.abs(shap_values.MMA_per), raw: shap_values.MMA_per },
+    { name: t('riskFactor.DMA_per'), value: Math.abs(shap_values.DMA_per), raw: shap_values.DMA_per },
+    { name: t('riskFactor.CT_drug'), value: Math.abs(shap_values.CT_drug), raw: shap_values.CT_drug },
   ].sort((a, b) => b.value - a.value)
 
   // 砷代谢分布数据
