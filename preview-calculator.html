@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATO心毒性风险预测工具 - 计算界面预览</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #212121;
+      background: linear-gradient(to bottom, #F0F7FF, white);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 32px;
+      margin-bottom: 8px;
+      color: #212121;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #757575;
+      margin-bottom: 32px;
+    }
+
+    /* Tab Navigation */
+    .tabs {
+      background: white;
+      border-radius: 12px;
+      padding: 8px;
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .tab {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, #005EB8, #0073D1);
+      color: white;
+      box-shadow: 0 4px 12px rgba(0, 94, 184, 0.3);
+    }
+
+    .tab:not(.active):hover {
+      background: #F5F5F5;
+    }
+
+    .tab.disabled {
+      background: #F5F5F5;
+      color: #BDBDBD;
+      cursor: not-allowed;
+    }
+
+    /* Card */
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      margin-bottom: 24px;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: #212121;
+    }
+
+    /* Form */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: #212121;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #E0E0E0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.2s;
+    }
+
+    input[type="number"]:focus {
+      outline: none;
+      border-color: #005EB8;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 24px;
+      margin-top: 8px;
+    }
+
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    /* Button */
+    .btn-primary {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #005EB8, #0073D1);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(0, 94, 184, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 94, 184, 0.4);
+    }
+
+    /* Risk Display */
+    .risk-display {
+      text-align: center;
+      padding: 40px;
+    }
+
+    .risk-icon {
+      width: 96px;
+      height: 96px;
+      margin: 0 auto 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+    }
+
+    .risk-icon.high {
+      background: #DA291C15;
+      color: #DA291C;
+    }
+
+    .risk-icon.medium {
+      background: #ED8B0015;
+      color: #ED8B00;
+    }
+
+    .risk-icon.low {
+      background: #007F3B15;
+      color: #007F3B;
+    }
+
+    .risk-level {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .risk-level.high { color: #DA291C; }
+    .risk-level.medium { color: #ED8B00; }
+    .risk-level.low { color: #007F3B; }
+
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .metric-box {
+      background: #F5F5F5;
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: #757575;
+      margin-bottom: 4px;
+    }
+
+    .metric-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #212121;
+    }
+
+    .metric-unit {
+      font-size: 12px;
+      font-weight: 400;
+      color: #757575;
+    }
+
+    /* Chart Placeholder */
+    .chart-placeholder {
+      background: #F5F5F5;
+      height: 300px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #757575;
+      font-size: 18px;
+      margin: 24px 0;
+    }
+
+    /* Suggestions */
+    .suggestion-item {
+      background: linear-gradient(to right, #F0F7FF, white);
+      border-left: 4px solid #005EB8;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+
+    .suggestion-badge {
+      display: inline-block;
+      background: #005EB8;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .info-box {
+      background: #F0F7FF;
+      padding: 16px;
+      border-radius: 12px;
+      margin-top: 16px;
+    }
+
+    .info-box summary {
+      cursor: pointer;
+      color: #005EB8;
+      font-weight: 500;
+    }
+
+    .disclaimer {
+      background: #FFF9E6;
+      border: 2px solid #ED8B00;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 24px;
+    }
+
+    .disclaimer-title {
+      color: #ED8B00;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>ATO Cardiotoxicity Risk Predictor</h1>
+    <p class="subtitle">Enter patient information to calculate cardiotoxicity risk</p>
+
+    <!-- Tab Navigation -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('input')">输入数据</button>
+      <button class="tab" id="result-tab" onclick="switchTab('result')">预测结果</button>
+      <button class="tab disabled" id="analysis-tab">详细分析</button>
+      <button class="tab disabled" id="suggestion-tab">临床建议</button>
+    </div>
+
+    <!-- Input Tab -->
+    <div id="input-content" class="tab-content active">
+      <div class="card">
+        <h2 class="card-title">患者信息输入</h2>
+
+        <form id="prediction-form">
+          <div class="form-group">
+            <label>无机砷 (iAs) - ng/mL</label>
+            <input type="number" id="iAs" step="0.01" placeholder="0.00" value="45.5" required>
+          </div>
+
+          <div class="form-group">
+            <label>一甲基砷酸 (MMA) - ng/mL</label>
+            <input type="number" id="MMA" step="0.01" placeholder="0.00" value="23.2" required>
+          </div>
+
+          <div class="form-group">
+            <label>二甲基砷酸 (DMA) - ng/mL</label>
+            <input type="number" id="DMA" step="0.01" placeholder="0.00" value="156.8" required>
+          </div>
+
+          <div class="form-group" style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #E0E0E0;">
+            <label>是否合并使用心毒性药物？</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="CT_drug" value="Yes"> 是
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="CT_drug" value="No" checked> 否
+              </label>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <details>
+              <summary>查看心毒性药物完整列表</summary>
+              <ul style="margin-top: 12px; padding-left: 20px; color: #757575; font-size: 14px;">
+                <li>蒽环类药物（如多柔比星、柔红霉素）</li>
+                <li>HER2抑制剂（如曲妥珠单抗）</li>
+                <li>酪氨酸激酶抑制剂</li>
+                <li>免疫检查点抑制剂</li>
+                <li>蛋白酶体抑制剂</li>
+              </ul>
+            </details>
+          </div>
+
+          <button type="submit" class="btn-primary" style="margin-top: 32px;">
+            开始计算
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Result Tab -->
+    <div id="result-content" class="tab-content">
+      <div class="card">
+        <div class="risk-display">
+          <div class="risk-icon medium">⚠️</div>
+          <div class="risk-level medium">中风险</div>
+          <p style="color: #757575;">风险概率: <strong style="color: #212121;">42.3%</strong></p>
+          <p style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #E0E0E0; color: #757575;">
+            预测结果: <strong style="color: #212121; font-size: 18px;">未检测到心毒性</strong>
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">砷代谢参数</h2>
+        <div class="metrics-grid">
+          <div class="metric-box">
+            <div class="metric-label">总砷 (tAs)</div>
+            <div class="metric-value">225.5 <span class="metric-unit">ng/mL</span></div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">PMI</div>
+            <div class="metric-value">0.510</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">SMI</div>
+            <div class="metric-value">6.759</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">iAs %</div>
+            <div class="metric-value">20.2%</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">MMA %</div>
+            <div class="metric-value">10.3%</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">DMA %</div>
+            <div class="metric-value">69.5%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">主要风险因素</h2>
+        <div style="background: linear-gradient(to right, #F0F7FF, #E3F2FD); padding: 24px; border-radius: 12px;">
+          <p style="font-size: 18px; font-weight: 600; color: #005EB8;">总砷浓度偏高 (tAs)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analysis Tab (Placeholder) -->
+    <div id="analysis-content" class="tab-content">
+      <div class="card">
+        <h2 class="card-title">SHAP 值分析</h2>
+        <p style="color: #757575; margin-bottom: 16px;">各特征对风险预测的影响程度</p>
+        <div class="chart-placeholder">📊 SHAP 值横向条形图</div>
+        <div style="display: flex; justify-content: center; gap: 32px; font-size: 14px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 16px; height: 16px; background: #DA291C; border-radius: 4px;"></div>
+            <span>增加风险</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 16px; height: 16px; background: #007F3B; border-radius: 4px;"></div>
+            <span>降低风险</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">砷代谢分布</h2>
+        <div class="chart-placeholder">📊 代谢分布柱状图</div>
+        <div class="info-box">
+          <p style="font-weight: 600; color: #005EB8; margin-bottom: 8px;">参考范围</p>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; font-size: 14px; color: #757575;">
+            <div><strong style="color: #212121;">iAs:</strong> 10-30%</div>
+            <div><strong style="color: #212121;">MMA:</strong> 10-20%</div>
+            <div><strong style="color: #212121;">DMA:</strong> 60-80%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Suggestions Tab -->
+    <div id="suggestion-content" class="tab-content">
+      <div class="card">
+        <h2 class="card-title">临床建议</h2>
+
+        <div class="suggestion-item">
+          <div class="suggestion-badge">高总砷浓度</div>
+          <p>考虑调整ATO剂量或延长治疗间隔，以减少总砷暴露量。</p>
+        </div>
+
+        <div class="suggestion-item">
+          <div class="suggestion-badge">MMA百分比升高</div>
+          <p>心血管风险增加。建议更频繁的心脏监测（心电图、生物标志物）。</p>
+        </div>
+
+        <div class="suggestion-item">
+          <div class="suggestion-badge">一般建议</div>
+          <p>继续常规监测。保持定期随访和心脏评估。</p>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        <div class="disclaimer-title">⚠️ 免责声明</div>
+        <p style="font-size: 14px; color: #757575; line-height: 1.6;">
+          本工具仅供医疗专业人士参考使用，不能替代医生的临床判断。所有治疗决策应基于完整的临床评估和专业医疗判断。
+        </p>
+      </div>
+
+      <div class="card" style="margin-top: 24px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <button class="btn-primary" style="background: linear-gradient(135deg, #005EB8, #0073D1);">
+            📥 下载报告
+          </button>
+          <button class="btn-primary" style="background: white; color: #005EB8; border: 2px solid #005EB8; box-shadow: none;">
+            🖨️ 打印报告
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(tabName) {
+      // Hide all tabs
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+
+      // Show selected tab
+      document.getElementById(tabName + '-content').classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    document.getElementById('prediction-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Enable result tabs
+      document.getElementById('result-tab').classList.remove('disabled');
+      document.getElementById('analysis-tab').classList.remove('disabled');
+      document.getElementById('suggestion-tab').classList.remove('disabled');
+
+      // Switch to result tab
+      switchTab('result');
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      alert('计算完成！查看预测结果。');
+    });
+  </script>
+</body>
+</html>
