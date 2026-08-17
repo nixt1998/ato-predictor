@@ -404,6 +404,46 @@
       "files": "File Upload",
       "notes": "Additional Notes"
     },
+    "dataPolicy": {
+      "title": "Data Use Statement",
+      "purpose": {
+        "title": "Research Purpose",
+        "content": "Your uploaded data will be used for validation, optimization, and related scientific research of the arsenic trioxide (ATO) cardiotoxicity risk prediction model, aiming to improve clinical medication safety and reduce cardiotoxicity incidence."
+      },
+      "usage": {
+        "title": "Data Usage",
+        "item1": "Improve and validate cardiotoxicity risk prediction algorithms",
+        "item2": "Conduct research on arsenic metabolism and cardiotoxicity mechanisms",
+        "item3": "Publish academic papers and conference reports (data will be anonymized)",
+        "item4": "Support continuous optimization of clinical decision support tools"
+      },
+      "protection": {
+        "title": "Privacy Protection",
+        "item1": "All data transmitted via encrypted channels (HTTPS) and stored securely",
+        "item2": "Access restricted to authorized researchers only",
+        "item3": "Data will be de-identified, excluding direct identifiers such as patient names",
+        "item4": "Published research uses anonymized data and will not disclose personal privacy"
+      },
+      "rights": {
+        "title": "Your Rights",
+        "item1": "You have the right to request deletion of your uploaded data at any time",
+        "item2": "You may contact the research team to learn about data usage",
+        "item3": "If you have any questions about data use, please contact us anytime"
+      },
+      "consent": {
+        "title": "Informed Consent",
+        "content": "By clicking \"I have read and agree,\" you confirm that: (1) you fully understand the data will be used for the above research purposes; (2) you agree to the research team using your uploaded data as described; (3) you have obtained informed consent from patients (if applicable)."
+      },
+      "contact": {
+        "title": "Contact",
+        "content": "For any questions, please contact: nixt1998@163.com"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "agree": "I have read and agree",
+        "countdown": "I have read and agree ({seconds}s)"
+      }
+    },
     "fields": {
       "sex": "Sex",
       "age": "Age (years)",
@@ -411,18 +451,19 @@
       "weight": "Weight (kg)",
       "contactInfo": "Contact Information",
       "class": "APL Risk Classification",
-      "dose": "ATO Dose (μg/kg)",
+      "dose": "Arsenic Trioxide (ATO) Dose (μg/kg)",
       "smoking": "Smoking History",
       "alcohol": "Alcohol History",
       "diabetes": "Diabetes Mellitus",
       "hyperlipidemia": "Hyperlipidemia",
       "hypertension": "Hypertension",
-      "cpDrug": "Co-use of Non-cardiotoxic Drugs",
-      "ctDrug": "Co-use of Cardiotoxic Drugs *",
-      "ctDrugNote": "Recommended to be filled in by a qualified medical professional",
+      "cardiotoxicDrug": "Co-use of Cardiotoxic Drugs",
+      "cardiotoxicDrugName": "Cardiotoxic Drug Name (Optional)",
+      "cardiotoxicDrugNote": "Recommended to be filled in by a qualified medical professional",
       "K": "Potassium K (mmol/L)",
       "Mg": "Magnesium Mg (mmol/L)",
       "Ca": "Calcium Ca (mmol/L)",
+      "BUN": "Blood Urea Nitrogen BUN (mmol/L)",
       "ALT": "ALT (U/L)",
       "AST": "AST (U/L)",
       "GGT": "GGT (U/L)",
@@ -452,10 +493,12 @@
       "height": "e.g. 165",
       "weight": "e.g. 65",
       "dose": "e.g. 142.85",
+      "cardiotoxicDrugName": "e.g. doxorubicin, daunorubicin, etc.",
       "contactInfo": "Email or phone (optional, for research team contact)",
       "K": "e.g. 3.5",
       "Mg": "e.g. 0.75",
       "Ca": "e.g. 2.11",
+      "BUN": "e.g. 5.5",
       "ALT": "e.g. 25",
       "AST": "e.g. 28",
       "GGT": "e.g. 35",
@@ -501,11 +544,17 @@
     },
     "success": {
       "title": "Submission Successful!",
-      "message": "Your data has been successfully uploaded. Thank you for supporting this research.",
+      "message": "Your data has been successfully uploaded.",
+      "thanks": "Thank you for supporting ATO cardiotoxicity research! Your contribution will help optimize the prediction model, improve clinical medication safety, and benefit more acute promyelocytic leukemia patients.",
       "idLabel": "Your Submission ID",
       "saveNote": "Please save your submission ID for future reference. If needed, the research team will contact you using the contact information you provided.",
       "close": "Close",
       "newSubmit": "Submit Another"
+    },
+    "resetConfirm": {
+      "title": "Form Reset",
+      "message": "All entered data has been cleared",
+      "close": "OK"
     },
     "errors": {
       "submitFailed": "Submission failed. Please check your connection and try again.",

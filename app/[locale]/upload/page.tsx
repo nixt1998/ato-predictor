@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useCallback } from 'react'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Upload, CheckCircle, X, FileText, Download, Info,
@@ -12,9 +12,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 // ─── 类型 ──────────────────────────────────────────────────────────────────
 interface FormState {
   sex: string; age: string; height: string; weight: string; contactInfo: string
-  class: string; dose: string; cpDrug: string; ctDrug: string
+  class: string; dose: string; cardiotoxicDrug: string; cardiotoxicDrugName: string
   smoking: string; alcohol: string; diabetes: string; hyperlipidemia: string; hypertension: string
-  K: string; Mg: string; Ca: string
+  K: string; Mg: string; Ca: string; BUN: string
   ALT: string; AST: string; GGT: string; UA: string; Cr: string
   CK: string; CKMB: string; LDH: string; HBDH: string
   iAs: string; MMA: string; DMA: string
@@ -23,9 +23,9 @@ interface FormState {
 
 const INITIAL: FormState = {
   sex: 'NA', age: '', height: '', weight: '', contactInfo: '',
-  class: 'NA', dose: '', cpDrug: 'NA', ctDrug: 'NA',
+  class: 'NA', dose: '', cardiotoxicDrug: 'NA', cardiotoxicDrugName: '',
   smoking: 'NA', alcohol: 'NA', diabetes: 'NA', hyperlipidemia: 'NA', hypertension: 'NA',
-  K: '', Mg: '', Ca: '',
+  K: '', Mg: '', Ca: '', BUN: '',
   ALT: '', AST: '', GGT: '', UA: '', Cr: '',
   CK: '', CKMB: '', LDH: '', HBDH: '',
   iAs: '', MMA: '', DMA: '',
@@ -108,6 +108,141 @@ function SectionCard({
   )
 }
 
+// ─── 子组件：数据使用说明弹窗 ────────────────────────────────────────────────
+function DataPolicyModal({
+  onClose, onAgree, t,
+}: {
+  onClose: () => void; onAgree: () => void
+  t: ReturnType<typeof useTranslations>
+}) {
+  const [countdown, setCountdown] = useState(10)
+  const [canAgree, setCanAgree] = useState(false)
+
+  useState(() => {
+    const timer = setInterval(() => {
+      setCountdown(prev => {
+        if (prev <= 1) {
+          setCanAgree(true)
+          clearInterval(timer)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+    return () => clearInterval(timer)
+  })
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        className="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden"
+      >
+        {/* 标题 */}
+        <div className="bg-gradient-to-r from-[#005EB8] to-[#0073D1] px-6 py-4">
+          <h2 className="text-xl font-bold text-white">{t('dataPolicy.title')}</h2>
+        </div>
+
+        {/* 内容区域（可滚动） */}
+        <div className="px-6 py-5 overflow-y-auto max-h-[calc(80vh-160px)] space-y-5 text-sm">
+          {/* 研究目的 */}
+          <div>
+            <h3 className="font-semibold text-[#005EB8] mb-2 flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-[#F0F7FF] flex items-center justify-center text-xs">1</span>
+              {t('dataPolicy.purpose.title')}
+            </h3>
+            <p className="text-[#212121] leading-relaxed">{t('dataPolicy.purpose.content')}</p>
+          </div>
+
+          {/* 数据用途 */}
+          <div>
+            <h3 className="font-semibold text-[#005EB8] mb-2 flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-[#F0F7FF] flex items-center justify-center text-xs">2</span>
+              {t('dataPolicy.usage.title')}
+            </h3>
+            <ul className="space-y-2 text-[#212121]">
+              {['item1', 'item2', 'item3', 'item4'].map(key => (
+                <li key={key} className="flex items-start gap-2">
+                  <span className="text-[#005EB8] flex-shrink-0 mt-0.5">•</span>
+                  <span>{t(`dataPolicy.usage.${key}`)}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* 隐私保护 */}
+          <div>
+            <h3 className="font-semibold text-[#005EB8] mb-2 flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-[#F0F7FF] flex items-center justify-center text-xs">3</span>
+              {t('dataPolicy.protection.title')}
+            </h3>
+            <ul className="space-y-2 text-[#212121]">
+              {['item1', 'item2', 'item3', 'item4'].map(key => (
+                <li key={key} className="flex items-start gap-2">
+                  <span className="text-green-600 flex-shrink-0 mt-0.5">✓</span>
+                  <span>{t(`dataPolicy.protection.${key}`)}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* 您的权利 */}
+          <div>
+            <h3 className="font-semibold text-[#005EB8] mb-2 flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-[#F0F7FF] flex items-center justify-center text-xs">4</span>
+              {t('dataPolicy.rights.title')}
+            </h3>
+            <ul className="space-y-2 text-[#212121]">
+              {['item1', 'item2', 'item3'].map(key => (
+                <li key={key} className="flex items-start gap-2">
+                  <span className="text-[#005EB8] flex-shrink-0 mt-0.5">→</span>
+                  <span>{t(`dataPolicy.rights.${key}`)}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* 知情同意 */}
+          <div className="bg-[#FFF9E6] border border-[#ED8B00]/30 rounded-lg p-4">
+            <h3 className="font-semibold text-[#ED8B00] mb-2">{t('dataPolicy.consent.title')}</h3>
+            <p className="text-[#212121] text-sm leading-relaxed">{t('dataPolicy.consent.content')}</p>
+          </div>
+
+          {/* 联系方式 */}
+          <div className="text-xs text-[#757575] border-t border-[#E0E0E0] pt-3">
+            <strong className="text-[#212121]">{t('dataPolicy.contact.title')}：</strong>
+            {t('dataPolicy.contact.content')}
+          </div>
+        </div>
+
+        {/* 底部按钮 */}
+        <div className="px-6 py-4 bg-[#F5F5F5] border-t border-[#E0E0E0] flex gap-3">
+          <button
+            onClick={onClose}
+            className="flex-1 h-11 rounded-lg border border-[#E0E0E0] bg-white text-[#757575] font-medium hover:bg-[#F5F5F5] transition"
+          >
+            {t('dataPolicy.buttons.cancel')}
+          </button>
+          <button
+            onClick={onAgree}
+            disabled={!canAgree}
+            className="flex-[2] h-11 rounded-lg bg-gradient-to-r from-[#005EB8] to-[#0073D1] text-white font-semibold
+              hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {canAgree
+              ? t('dataPolicy.buttons.agree')
+              : t('dataPolicy.buttons.countdown', { seconds: countdown })
+            }
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  )
+}
+
 // ─── 子组件：成功弹窗 ──────────────────────────────────────────────────────
 function SuccessModal({
   submissionId, onClose, onNew, t,
@@ -122,7 +257,7 @@ function SuccessModal({
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.9, y: 20 }}
-        className="relative bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center"
+        className="relative bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center"
       >
         <div className="flex justify-center mb-4">
           <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
@@ -130,11 +265,19 @@ function SuccessModal({
           </div>
         </div>
         <h2 className="text-2xl font-bold text-[#212121] mb-2">{t('success.title')}</h2>
-        <p className="text-[#757575] text-sm mb-5">{t('success.message')}</p>
-        <div className="bg-[#F0F7FF] rounded-xl p-4 mb-5">
-          <p className="text-xs text-[#757575] mb-1">{t('success.idLabel')}</p>
-          <p className="text-3xl font-bold text-[#005EB8] tracking-widest">{submissionId}</p>
+        <p className="text-[#757575] text-sm mb-3">{t('success.message')}</p>
+
+        {/* 感谢语 */}
+        <div className="bg-gradient-to-br from-[#F0F7FF] to-white border border-[#005EB8]/20 rounded-xl p-4 mb-5">
+          <p className="text-sm text-[#212121] leading-relaxed">{t('success.thanks')}</p>
         </div>
+
+        {/* 提交编号 */}
+        <div className="bg-[#F5F5F5] rounded-xl p-4 mb-5">
+          <p className="text-xs text-[#757575] mb-1">{t('success.idLabel')}</p>
+          <p className="text-2xl font-bold text-[#005EB8] tracking-widest">{submissionId}</p>
+        </div>
+
         <p className="text-xs text-[#ED8B00] flex items-start gap-1.5 text-left mb-6">
           <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
           {t('success.saveNote')}
@@ -158,17 +301,55 @@ function SuccessModal({
   )
 }
 
+// ─── 子组件：重置确认弹窗 ──────────────────────────────────────────────────
+function ResetConfirmModal({
+  onClose, t,
+}: {
+  onClose: () => void
+  t: ReturnType<typeof useTranslations>
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9 }}
+        className="relative bg-white rounded-2xl shadow-2xl p-6 max-w-xs w-full text-center"
+      >
+        <div className="flex justify-center mb-3">
+          <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+            <Info className="w-6 h-6 text-[#005EB8]" />
+          </div>
+        </div>
+        <h2 className="text-lg font-bold text-[#212121] mb-2">{t('resetConfirm.title')}</h2>
+        <p className="text-sm text-[#757575] mb-5">{t('resetConfirm.message')}</p>
+        <button
+          onClick={onClose}
+          className="w-full h-10 rounded-lg bg-[#005EB8] text-white font-semibold hover:bg-[#0073D1] transition"
+        >
+          {t('resetConfirm.close')}
+        </button>
+      </motion.div>
+    </div>
+  )
+}
+
 // ─── 主页面组件 ────────────────────────────────────────────────────────────
 export default function UploadPage() {
   const t = useTranslations('upload')
+  const locale = useLocale()
   const [form, setForm]             = useState<FormState>(INITIAL)
   const [files, setFiles]           = useState<File[]>([])
   const [consent, setConsent]       = useState(false)
+  const [showPolicy, setShowPolicy] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
   const [fileError, setFileError]   = useState('')
   const [success, setSuccess]       = useState<{ submissionId: string } | null>(null)
+  const [showResetConfirm, setShowResetConfirm] = useState(false)
   const fileInputRef                = useRef<HTMLInputElement>(null)
+  const dropZoneRef                 = useRef<HTMLDivElement>(null)
   const MAX_FILES = 10
   const MAX_SIZE  = 25 * 1024 * 1024
 
@@ -192,9 +373,27 @@ export default function UploadPage() {
     { value: 'Low',  label: t('options.classLow')  },
   ]
 
+  // 拖拽处理
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const incoming = Array.from(e.dataTransfer.files)
+    processFiles(incoming)
+  }
+
   // 文件选择处理
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const incoming = Array.from(e.target.files || [])
+    processFiles(incoming)
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
+
+  const processFiles = (incoming: File[]) => {
     setFileError('')
     const merged = [...files]
     for (const f of incoming) {
@@ -203,7 +402,6 @@ export default function UploadPage() {
       if (!merged.find(x => x.name === f.name && x.size === f.size)) merged.push(f)
     }
     setFiles(merged)
-    if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   const removeFile = (idx: number) =>
@@ -234,6 +432,7 @@ export default function UploadPage() {
   const handleReset = () => {
     setForm(INITIAL); setFiles([]); setConsent(false)
     setSubmitError(''); setFileError('')
+    setShowResetConfirm(true)
   }
 
   const handleNewSubmit = () => {
@@ -254,6 +453,15 @@ export default function UploadPage() {
     if (['xls','xlsx'].includes(ext))                   return 'text-emerald-600'
     if (['doc','docx'].includes(ext))                   return 'text-blue-600'
     return 'text-[#757575]'
+  }
+
+  // 模板下载
+  const handleDownloadTemplate = () => {
+    const templatePath = locale === 'zh' ? '/templates/template-zh.xlsx' : '/templates/template-en.xlsx'
+    const link = document.createElement('a')
+    link.href = templatePath
+    link.download = `ATO-CardioTox-Template-${locale}.xlsx`
+    link.click()
   }
 
   return (
@@ -277,15 +485,14 @@ export default function UploadPage() {
                 </p>
                 <p className="text-sm text-[#757575] mt-0.5">{t('template.description')}</p>
               </div>
-              <a
-                href="/templates/template.xlsx"
-                download
+              <button
+                onClick={handleDownloadTemplate}
                 className="flex-shrink-0 inline-flex items-center gap-2 h-10 px-5 rounded-lg
                   bg-[#005EB8] text-white text-sm font-semibold hover:bg-[#0073D1] transition"
               >
                 <Download className="w-4 h-4" />
                 {t('template.download')}
-              </a>
+              </button>
             </div>
             <p className="text-xs text-[#757575] mt-3 border-t border-[#005EB8]/10 pt-3">
               ─── {t('template.orText')} ───
@@ -319,8 +526,26 @@ export default function UploadPage() {
               <p className="text-xs text-[#757575] mt-1">{t('classNote')}</p>
             </div>
             <FieldInput label={t('fields.dose')} name="dose" placeholder={t('placeholders.dose')} value={form.dose} onChange={v => set('dose', v)} type="number" />
-            <FieldSelect label={t('fields.cpDrug')} value={form.cpDrug} onChange={v => set('cpDrug', v)} options={yesNoOpts} />
-            <FieldSelect label={t('fields.ctDrug')} value={form.ctDrug} onChange={v => set('ctDrug', v)} options={yesNoOpts} note={t('fields.ctDrugNote')} />
+            <div className="lg:col-span-4">
+              <FieldSelect
+                label={t('fields.cardiotoxicDrug')}
+                value={form.cardiotoxicDrug}
+                onChange={v => set('cardiotoxicDrug', v)}
+                options={yesNoOpts}
+                note={t('fields.cardiotoxicDrugNote')}
+              />
+              {form.cardiotoxicDrug === 'Yes' && (
+                <div className="mt-3">
+                  <FieldInput
+                    label={t('fields.cardiotoxicDrugName')}
+                    name="cardiotoxicDrugName"
+                    placeholder={t('placeholders.cardiotoxicDrugName')}
+                    value={form.cardiotoxicDrugName}
+                    onChange={v => set('cardiotoxicDrugName', v)}
+                  />
+                </div>
+              )}
+            </div>
           </SectionCard>
 
           {/* 3. 既往史与合并症 */}
@@ -334,9 +559,10 @@ export default function UploadPage() {
 
           {/* 4. 血清电解质 */}
           <SectionCard title={t('sections.electrolytes')}>
-            <FieldInput label={t('fields.K')}  name="K"  placeholder={t('placeholders.K')}  value={form.K}  onChange={v => set('K', v)}  type="number" />
-            <FieldInput label={t('fields.Mg')} name="Mg" placeholder={t('placeholders.Mg')} value={form.Mg} onChange={v => set('Mg', v)} type="number" />
-            <FieldInput label={t('fields.Ca')} name="Ca" placeholder={t('placeholders.Ca')} value={form.Ca} onChange={v => set('Ca', v)} type="number" />
+            <FieldInput label={t('fields.K')}   name="K"   placeholder={t('placeholders.K')}   value={form.K}   onChange={v => set('K', v)}   type="number" />
+            <FieldInput label={t('fields.Mg')}  name="Mg"  placeholder={t('placeholders.Mg')}  value={form.Mg}  onChange={v => set('Mg', v)}  type="number" />
+            <FieldInput label={t('fields.Ca')}  name="Ca"  placeholder={t('placeholders.Ca')}  value={form.Ca}  onChange={v => set('Ca', v)}  type="number" />
+            <FieldInput label={t('fields.BUN')} name="BUN" placeholder={t('placeholders.BUN')} value={form.BUN} onChange={v => set('BUN', v)} type="number" />
           </SectionCard>
 
           {/* 5. 肝肾功能 */}
@@ -398,6 +624,9 @@ export default function UploadPage() {
             <CardContent className="pt-4 space-y-3">
               {/* 拖拽 / 点击上传区域 */}
               <div
+                ref={dropZoneRef}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
                 onClick={() => fileInputRef.current?.click()}
                 className="border-2 border-dashed border-[#005EB8]/30 rounded-xl p-6 flex flex-col items-center
                   justify-center gap-2 cursor-pointer hover:border-[#005EB8]/60 hover:bg-[#F0F7FF]/50 transition"
@@ -483,9 +712,13 @@ export default function UploadPage() {
             />
             <label htmlFor="consent" className="text-sm text-[#757575] cursor-pointer leading-relaxed">
               {t('consent.label')}{' '}
-              <span className="text-[#005EB8] font-medium">{t('consent.linkText')}</span>
-              <span>：</span>
-              {t('consent.text')}
+              <button
+                type="button"
+                onClick={() => setShowPolicy(true)}
+                className="text-[#005EB8] font-medium underline hover:text-[#0073D1]"
+              >
+                {t('consent.linkText')}
+              </button>
             </label>
           </div>
 
@@ -503,7 +736,7 @@ export default function UploadPage() {
               type="button"
               onClick={handleReset}
               disabled={submitting}
-              className="flex-1 h-12 rounded-xl border-2 border-[#E0E0E0] text-[#757575] font-semibold
+              className="h-11 px-6 rounded-xl border-2 border-[#E0E0E0] text-[#757575] font-medium
                 text-sm hover:border-[#BDBDBD] hover:bg-[#F5F5F5] transition disabled:opacity-50"
             >
               {t('buttons.reset')}
@@ -511,18 +744,18 @@ export default function UploadPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="flex-[2] h-12 rounded-xl bg-gradient-to-r from-[#005EB8] to-[#0073D1] text-white
-                font-semibold text-base shadow-lg hover:shadow-xl hover:opacity-95 transition
+              className="flex-1 h-14 rounded-xl bg-gradient-to-r from-[#005EB8] to-[#0073D1] text-white
+                font-bold text-lg shadow-lg hover:shadow-xl hover:opacity-95 transition
                 disabled:opacity-60 flex items-center justify-center gap-2"
             >
               {submitting ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="w-5 h-5 animate-spin" />
                   {t('buttons.submitting')}
                 </>
               ) : (
                 <>
-                  <Upload className="w-4 h-4" />
+                  <Upload className="w-5 h-5" />
                   {t('buttons.submit')}
                 </>
               )}
@@ -532,6 +765,17 @@ export default function UploadPage() {
         </form>
       </div>
 
+      {/* 数据使用说明弹窗 */}
+      <AnimatePresence>
+        {showPolicy && (
+          <DataPolicyModal
+            onClose={() => setShowPolicy(false)}
+            onAgree={() => { setShowPolicy(false); setConsent(true) }}
+            t={t}
+          />
+        )}
+      </AnimatePresence>
+
       {/* 成功弹窗 */}
       <AnimatePresence>
         {success && (
@@ -539,6 +783,16 @@ export default function UploadPage() {
             submissionId={success.submissionId}
             onClose={() => setSuccess(null)}
             onNew={handleNewSubmit}
+            t={t}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* 重置确认弹窗 */}
+      <AnimatePresence>
+        {showResetConfirm && (
+          <ResetConfirmModal
+            onClose={() => setShowResetConfirm(false)}
             t={t}
           />
         )}
