@@ -63,7 +63,7 @@ export default function AboutPage() {
                 <div className="text-center">
                   <div className="relative w-32 h-32 mx-auto mb-4 bg-[#F5F5F5] rounded-lg flex items-center justify-center">
                     <Image
-                      src="/images/hospital-logo.svg"
+                      src="/images/hospital-logo.png"
                       alt="Hospital"
                       width={120}
                       height={48}
@@ -78,7 +78,7 @@ export default function AboutPage() {
                 <div className="text-center">
                   <div className="relative w-32 h-32 mx-auto mb-4 bg-[#F5F5F5] rounded-lg flex items-center justify-center">
                     <Image
-                      src="/images/university-logo.svg"
+                      src="/images/university-logo.png"
                       alt="University"
                       width={120}
                       height={48}

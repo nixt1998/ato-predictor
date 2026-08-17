@@ -57,14 +57,14 @@ export default function Footer() {
         <div className="border-t border-[#333333] pt-8 mb-8">
           <div className="flex flex-wrap items-center justify-center gap-8 opacity-60">
             <Image
-              src="/images/hospital-logo.svg"
+              src="/images/hospital-logo.png"
               alt="Hospital Logo"
               width={150}
               height={60}
               className="h-12 w-auto grayscale hover:grayscale-0 transition-all"
             />
             <Image
-              src="/images/university-logo.svg"
+              src="/images/university-logo.png"
               alt="University Logo"
               width={150}
               height={60}
@@ -106,7 +106,7 @@ export default function Footer() {
                 className="flex items-center gap-2 hover:text-[#41B6E6] transition-colors"
               >
                 <Image
-                  src="/images/beian-icon.svg"
+                  src="/images/beian-icon.png"
                   alt="公安备案"
                   width={16}
                   height={16}

@@ -37,8 +37,8 @@
     "algorithm": "Algorithm",
     "contact": "Contact",
     "copyright": "Copyright © 2026 The First Affiliated Hospital of Harbin Medical University",
-    "icpBeian": "ICP Registration No. XXXXX",
-    "policeBeian": "Police Registration No. XXXXX",
+    "icpBeian": "ICP Registration No. 黑ICP备2026000537号-1",
+    "policeBeian": "Police Registration No. 黑公网安备23010302001834号",
     "description": "This tool provides cardiotoxicity risk assessment for medical professionals to support clinical decision-making."
   },
   "predict": {

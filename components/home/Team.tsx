@@ -46,7 +46,7 @@ export default function Team() {
               >
                 <div className="relative w-48 h-48 rounded-xl overflow-hidden shadow-lg">
                   <Image
-                    src="/images/placeholder-avatar.svg"
+                    src="/images/placeholder-avatar.jpg"
                     alt={t('teamLeaderName')}
                     fill
                     className="object-cover"
@@ -88,7 +88,7 @@ export default function Team() {
             className="relative w-full h-[300px] rounded-2xl overflow-hidden shadow-xl"
           >
             <Image
-              src="/images/placeholder-team.svg"
+              src="/images/placeholder-team.jpg"
               alt="Team Photo"
               fill
               className="object-cover"

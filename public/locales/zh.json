@@ -37,9 +37,9 @@
     "algorithm": "算法说明",
     "contact": "联系我们",
     "copyright": "Copyright © 2026 哈尔滨医科大学附属第一医院",
-    "icpBeian": "黑ICP备XXXXX号",
-    "policeBeian": "黑公网安备 XXXXX号",
-    "description": "本工具为医疗专业人士提供砷剂心脏毒性风险评估，辅助临床决策。"
+    "icpBeian": "黑ICP备2026000537号-1",
+    "policeBeian": "黑公网安备23010302001834号",
+    "description": "本工具为医疗专业人士提供砷剂心脏毒性风险评估,辅助临床决策。"
   },
   "predict": {
     "title": "风险计算工具",
