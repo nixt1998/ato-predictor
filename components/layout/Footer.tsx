@@ -1,14 +1,17 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 
 export default function Footer() {
   const t = useTranslations()
+  const locale = useLocale()
 
   const quickLinks = [
-    { key: 'about', href: '/about' },
-    { key: 'algorithm', href: '/algorithm' },
-    { key: 'contact', href: '/contact' },
+    { key: 'about', originalHref: '/about' },
+    { key: 'algorithm', originalHref: '/algorithm' },
+    { key: 'contact', originalHref: '/contact' },
   ]
 
   return (
@@ -39,7 +42,7 @@ export default function Footer() {
               {quickLinks.map((link) => (
                 <li key={link.key}>
                   <Link
-                    href={link.href}
+                    href={`/${locale}${link.originalHref}`}
                     className="text-[#BDBDBD] hover:text-[#41B6E6] transition-colors text-sm"
                   >
                     {t(`footer.${link.key}`)}

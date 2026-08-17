@@ -54,10 +54,10 @@ export default function PredictionAnalysis() {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={shapData} layout="vertical" margin={{ top: 5, right: 30, left: 80, bottom: 5 }}>
+              <BarChart data={shapData} layout="vertical" margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E0E0E0" />
                 <XAxis type="number" stroke="#757575" />
-                <YAxis type="category" dataKey="name" stroke="#757575" />
+                <YAxis type="category" dataKey="name" stroke="#757575" width={140} />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: 'white',

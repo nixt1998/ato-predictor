@@ -49,7 +49,7 @@ export default function FeatureCards() {
                     <motion.div
                       whileHover={{ scale: 1.05, y: -8 }}
                       whileTap={{ scale: 0.98 }}
-                      className="relative h-64 rounded-2xl overflow-hidden cursor-pointer group"
+                      className="relative h-56 rounded-2xl overflow-hidden cursor-pointer group"
                     >
                       {/* 渐变背景 */}
                       <div className="absolute inset-0 bg-gradient-to-br from-[#005EB8] via-[#0073D1] to-[#41B6E6]" />
@@ -117,9 +117,7 @@ export default function FeatureCards() {
                     <motion.div
                       whileHover={{ y: -6 }}
                       whileTap={{ scale: 0.98 }}
-                      className="h-64 rounded-2xl border-2 border-[#E0E0E0] bg-white p-8
-                        transition-all duration-300 cursor-pointer
-                        hover:shadow-xl hover:border-[#005EB8]/30"
+                      className="h-56 rounded-2xl border-2 border-[#E0E0E0] bg-white p-8 transition-all duration-300 cursor-pointer hover:shadow-xl hover:border-[#005EB8]/30"
                     >
                       <div className="flex flex-col items-center text-center h-full justify-center">
                         <Icon className="w-12 h-12 mb-4 text-[#005EB8]" />

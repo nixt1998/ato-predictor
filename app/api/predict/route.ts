@@ -7,7 +7,9 @@ const API_TIMEOUT = 30000 // 30 秒超时
 
 export async function POST(request: NextRequest) {
   try {
-    const data: PredictionInput = await request.json()
+    const body = await request.json()
+    const locale: string = (body as any).locale || 'zh'
+    const data: PredictionInput = body as PredictionInput
 
     // 验证输入
     if (data.iAs < 0 || data.MMA < 0 || data.DMA < 0) {
@@ -73,7 +75,7 @@ export async function POST(request: NextRequest) {
       }
 
       // 生成临床建议（使用标量化后的结果）
-      const suggestions = generateSuggestions(normalizedResult, data)
+      const suggestions = generateSuggestions(normalizedResult, data, locale)
 
       // 返回标量化结果
       return NextResponse.json({
@@ -93,7 +95,7 @@ export async function POST(request: NextRequest) {
       console.error('R API fetch error:', fetchError)
 
       // 如果 R API 不可用，使用回退逻辑
-      return useFallbackPrediction(data)
+      return useFallbackPrediction(data, locale)
     }
   } catch (error) {
     console.error('Prediction error:', error)
@@ -105,66 +107,84 @@ export async function POST(request: NextRequest) {
 }
 
 // 生成临床建议
-function generateSuggestions(rResult: any, input: PredictionInput) {
-  const suggestions = []
+function generateSuggestions(rResult: any, input: PredictionInput, locale: string = 'zh') {
+  const suggestions: Array<{ risk_factor: string; suggestion: string }> = []
   const { metabolism } = rResult
   const { tAs, SMI, MMA_pct } = metabolism
+
+  const isZh = locale === 'zh'
 
   // 基于总砷浓度的建议
   if (tAs > 200) {
     suggestions.push({
-      risk_factor: 'High Total Arsenic',
-      suggestion: 'Consider adjusting ATO dosage or extending treatment intervals to reduce total arsenic exposure. Monitor renal function regularly.',
+      risk_factor: isZh ? '总砷浓度偏高' : 'High Total Arsenic',
+      suggestion: isZh
+        ? '建议适当调整砷剂给药剂量或延长治疗间隔以降低体内砷总暴露量，同时加强肾功能监测。\n(Consider adjusting ATO dosage or extending treatment intervals; monitor renal function.)'
+        : 'Consider adjusting ATO dosage or extending treatment intervals; monitor renal function.',
     })
   }
 
   // 基于 SMI 的建议
   if (SMI < 2) {
     suggestions.push({
-      risk_factor: 'Low Secondary Methylation Index (SMI)',
-      suggestion: 'Low methylation capacity detected. Consider supplementation with methyl donors (folate, vitamin B12) and monitor homocysteine levels.',
+      risk_factor: isZh ? '二级甲基化能力低下' : 'Low Secondary Methylation Index (SMI)',
+      suggestion: isZh
+        ? '检测到砷甲基化能力下降，建议适量补充叶酸、维生素B12等甲基供体，并监测同型半胱氨酸水平。\n(Low methylation capacity detected; consider methyl donor supplementation and monitor homocysteine.)'
+        : 'Low methylation capacity detected; consider methyl donor supplementation and monitor homocysteine.',
     })
   }
 
   // 基于 MMA 百分比的建议
   if (MMA_pct > 20) {
     suggestions.push({
-      risk_factor: 'Elevated MMA%',
-      suggestion: 'Increased cardiovascular risk. Recommend enhanced cardiac monitoring: weekly ECG, monthly echocardiography, and cardiac biomarkers (troponin, BNP).',
+      risk_factor: isZh ? '一甲基砷酸百分比升高' : 'Elevated MMA%',
+      suggestion: isZh
+        ? '心血管风险增高，建议增加心脏监测频率：每周心电图、每月超声心动图及心脏标志物检测（肌钙蛋白、BNP）。\n(Elevated cardiovascular risk; enhance cardiac monitoring: weekly ECG, monthly echocardiography and biomarkers.)'
+        : 'Elevated cardiovascular risk; enhance cardiac monitoring: weekly ECG, monthly echocardiography and biomarkers.',
     })
   } else if (MMA_pct > 15) {
     suggestions.push({
-      risk_factor: 'Moderately Elevated MMA%',
-      suggestion: 'Monitor cardiac function closely. Consider bi-weekly ECG and monthly cardiac biomarkers.',
+      risk_factor: isZh ? '一甲基砷酸百分比偏高' : 'Moderately Elevated MMA%',
+      suggestion: isZh
+        ? '建议密切监测心功能，每两周进行心电图检查，每月检测心脏生物标志物。\n(Monitor cardiac function closely; bi-weekly ECG and monthly cardiac biomarkers.)'
+        : 'Monitor cardiac function closely; bi-weekly ECG and monthly cardiac biomarkers.',
     })
   }
 
   // 基于心毒性药物的建议
   if (input.CT_drug === 'Yes') {
     suggestions.push({
-      risk_factor: 'Concurrent Cardiotoxic Drug',
-      suggestion: 'Carefully evaluate benefit-risk ratio of concurrent cardiotoxic medication. Consider alternative therapies if available, or implement intensive cardiac surveillance protocol.',
+      risk_factor: isZh ? '合并使用心毒性药物' : 'Concurrent Cardiotoxic Drug',
+      suggestion: isZh
+        ? '需仔细权衡合并用药的风险/获益比，必要时考虑替代治疗方案，或实施加强型心脏监测方案。\n(Carefully evaluate benefit-risk ratio; consider alternative therapies or intensive cardiac surveillance.)'
+        : 'Carefully evaluate benefit-risk ratio; consider alternative therapies or intensive cardiac surveillance.',
     })
   }
 
   // 基于风险等级的建议
   if (rResult.prediction.risk_level === 'high') {
     suggestions.push({
-      risk_factor: 'High Risk Assessment',
-      suggestion: 'Immediate cardiology consultation recommended. Consider dose reduction or treatment pause. Implement intensive monitoring protocol with daily symptom assessment.',
+      risk_factor: isZh ? '综合评估：高风险' : 'High Risk',
+      suggestion: isZh
+        ? '建议立即进行心脏科会诊，评估是否需要调整砷剂剂量或暂停治疗，并实施每日症状评估的强化监测方案。\n(Immediate cardiology consultation recommended; consider dose reduction or treatment pause with intensive daily monitoring.)'
+        : 'Immediate cardiology consultation recommended; consider dose reduction or treatment pause with intensive daily monitoring.',
     })
   } else if (rResult.prediction.risk_level === 'medium') {
     suggestions.push({
-      risk_factor: 'Medium Risk Assessment',
-      suggestion: 'Enhanced monitoring recommended. Weekly clinical assessment and bi-weekly cardiac evaluation. Educate patient on cardiac symptoms to report.',
+      risk_factor: isZh ? '综合评估：中等风险' : 'Medium Risk',
+      suggestion: isZh
+        ? '建议加强监测：每周临床评估，每两周心脏专项评估，并向患者充分说明需要报告的心脏相关症状。\n(Enhanced monitoring: weekly clinical assessment, bi-weekly cardiac evaluation; educate patient on cardiac symptoms.)'
+        : 'Enhanced monitoring: weekly clinical assessment, bi-weekly cardiac evaluation; educate patient on cardiac symptoms.',
     })
   }
 
   // 如果没有特殊风险
   if (suggestions.length === 0) {
     suggestions.push({
-      risk_factor: 'Low Risk - Routine Monitoring',
-      suggestion: 'Continue routine monitoring protocol. Maintain regular follow-up appointments and standard cardiac assessments as per treatment protocol.',
+      risk_factor: isZh ? '综合评估：低风险' : 'Low Risk',
+      suggestion: isZh
+        ? '继续执行常规监测方案，按治疗计划定期随访，进行标准化心脏功能评估。\n(Continue routine monitoring; maintain regular follow-up and standard cardiac assessments.)'
+        : 'Continue routine monitoring; maintain regular follow-up and standard cardiac assessments.',
     })
   }
 
@@ -172,7 +192,7 @@ function generateSuggestions(rResult: any, input: PredictionInput) {
 }
 
 // 回退预测逻辑（当 R API 不可用时）
-function useFallbackPrediction(data: PredictionInput) {
+function useFallbackPrediction(data: PredictionInput, locale: string = 'zh') {
   console.warn('Using fallback prediction logic - R API unavailable')
 
   // 计算砷代谢参数
@@ -247,7 +267,8 @@ function useFallbackPrediction(data: PredictionInput) {
         prediction: { risk_level: riskLevel },
         metabolism: { tAs, SMI, MMA_pct },
       },
-      data
+      data,
+      locale
     ),
     timestamp: new Date().toISOString(),
   }

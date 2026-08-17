@@ -1,25 +1,28 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import LanguageSwitcher from './LanguageSwitcher'
 
 export default function Header() {
   const t = useTranslations()
+  const locale = useLocale()
 
   const navItems = [
-    { key: 'home', href: '/' },
-    { key: 'about', href: '/about' },
-    { key: 'algorithm', href: '/algorithm' },
-    { key: 'privacy', href: '/privacy' },
-    { key: 'disclaimer', href: '/disclaimer' },
-    { key: 'contact', href: '/contact' },
+    { key: 'home', originalHref: '' },
+    { key: 'about', originalHref: '/about' },
+    { key: 'algorithm', originalHref: '/algorithm' },
+    { key: 'privacy', originalHref: '/privacy' },
+    { key: 'disclaimer', originalHref: '/disclaimer' },
+    { key: 'contact', originalHref: '/contact' },
   ]
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[#E0E0E0] bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
       <div className="container mx-auto flex h-20 items-center justify-between px-6">
         {/* Logo */}
-        <Link href="/" className="flex items-center space-x-3 transition-opacity hover:opacity-80">
+        <Link href={`/${locale}`} className="flex items-center space-x-3 transition-opacity hover:opacity-80">
           <Image
             src="/images/logo.svg"
             alt={t('common.appName')}
@@ -35,7 +38,7 @@ export default function Header() {
           {navItems.map((item) => (
             <Link
               key={item.key}
-              href={item.href}
+              href={`/${locale}${item.originalHref}`}
               className="text-lg font-bold text-[#212121] transition-colors hover:text-[#005EB8]"
             >
               {t(`nav.${item.key}`)}

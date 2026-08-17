@@ -12,9 +12,10 @@
     "contact": "Contact"
   },
   "home": {
-    "welcome": "Welcome to ATO Cardiotoxicity",
+    "welcome": "Welcome to",
+    "welcomeHighlight": "CardiTox",
     "welcomeLine2": "Risk Predictor",
-    "subtitle": "Arsenic predict cardiotoxicity risk in APL patients during ATO treatment",
+    "subtitle": "A Clinical Tool for Predicting Cardiotoxicity Risk in Patients with Acute Promyelocytic Leukaemia Receiving Arsenic Trioxide Treatment",
     "featureIntro": "Introduction",
     "featureIntroDesc": "Learn about the project",
     "featureCalc": "Start Calculation",
@@ -153,9 +154,9 @@
     "subtitle": "Learn about the prediction model and technical methods used",
     "overview": {
       "title": "Model Overview",
-      "content": "This tool employs a two-stage modeling strategy: first using Random Forest for feature selection, then using Accelerated Oblique Random Survival Forest (AORSF) for classification based on selected features, integrating arsenic metabolism parameters and clinical covariates to build a cardiotoxicity risk prediction system.",
+      "content": "This tool employs a two-stage modeling strategy: first using Random Forest for feature selection, then using Oblique Random Forest for cardiotoxicity risk classification based on the selected features.",
       "modelType": "Model Type",
-      "modelTypeValue": "Random Forest (feature selection) + AORSF (classifier)",
+      "modelTypeValue": "Random Forest (feature selection) + Oblique Random Forest (classifier)",
       "sampleSize": "Training Sample Size"
     },
     "features": {
@@ -168,7 +169,7 @@
     },
     "performance": {
       "title": "Model Performance",
-      "auc": "AUC-ROC",
+      "auc": "ROC-AUC",
       "accuracy": "Accuracy",
       "sensitivity": "Sensitivity",
       "specificity": "Specificity",

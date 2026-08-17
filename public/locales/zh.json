@@ -12,9 +12,10 @@
     "contact": "联系我们"
   },
   "home": {
-    "welcome": "Welcome to ATO Cardiotoxicity",
+    "welcome": "欢迎使用",
+    "welcomeHighlight": "CardiTox",
     "welcomeLine2": "Risk Predictor",
-    "subtitle": "Arsenic predict cardiotoxicity risk in APL patients during ATO treatment",
+    "subtitle": "用于预测接受三氧化二砷治疗的急性早幼粒细胞白血病患者心脏毒性风险的临床工具",
     "featureIntro": "项目简介",
     "featureIntroDesc": "了解项目背景和研究意义",
     "featureCalc": "开始计算",
@@ -153,9 +154,9 @@
     "subtitle": "了解本工具使用的预测模型与技术方法",
     "overview": {
       "title": "模型概述",
-      "content": "本工具采用两阶段建模策略：首先使用随机森林进行特征筛选，然后基于筛选后的特征使用加速斜随机生存森林（Accelerated Oblique Random Survival Forest, AORSF）进行分类预测，结合砷代谢参数与临床协变量，构建心脏毒性风险预测系统。",
+      "content": "本工具采用两阶段建模策略：首先使用随机森林进行特征筛选，然后基于筛选后的特征使用斜随机森林（Oblique Random Forest）进行心脏毒性风险分类预测。",
       "modelType": "模型类型",
-      "modelTypeValue": "随机森林（特征筛选）+ AORSF（分类器）",
+      "modelTypeValue": "随机森林（特征筛选）+ 斜随机森林（分类器）",
       "sampleSize": "训练样本量"
     },
     "features": {
@@ -168,7 +169,7 @@
     },
     "performance": {
       "title": "模型性能",
-      "auc": "AUC-ROC",
+      "auc": "ROC-AUC",
       "accuracy": "准确率",
       "sensitivity": "敏感性",
       "specificity": "特异性",

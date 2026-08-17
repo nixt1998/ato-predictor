@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
@@ -22,6 +22,7 @@ const predictionSchema = z.object({
 
 export default function PredictionInput() {
   const t = useTranslations('predict.input')
+  const locale = useLocale()
   const { setInput, setResult, setActiveTab, setIsCalculating, isCalculating } = useAppStore()
   const [showDrugList, setShowDrugList] = useState(false)
 
@@ -49,7 +50,7 @@ export default function PredictionInput() {
       const response = await fetch('/api/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, locale }),
       })
 
       if (!response.ok) throw new Error('Prediction failed')
