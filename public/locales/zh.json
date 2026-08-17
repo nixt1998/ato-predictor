@@ -386,5 +386,137 @@
       "title": "反馈与建议",
       "content": "欢迎通过邮件向我们反馈工具使用体验、发现的问题或改进建议，帮助我们持续优化。"
     }
+  },
+  "upload": {
+    "title": "数据共享",
+    "subtitle": "上传患者数据，助力砷剂心脏毒性研究",
+    "description": "感谢您愿意共享临床数据。您的贡献将帮助我们持续优化预测模型，造福更多患者。所有字段均为选填，可只填写您掌握的信息。",
+    "sections": {
+      "basicInfo": "患者基础信息",
+      "clinical": "临床分型与用药",
+      "comorbidities": "既往史与合并症",
+      "electrolytes": "血清电解质",
+      "liverKidney": "肝肾功能",
+      "cardiacEnzymes": "心肌酶",
+      "arsenic": "血砷检测结果",
+      "outcome": "临床结局",
+      "contactInfo": "联系方式（选填）",
+      "files": "文件上传",
+      "notes": "补充说明"
+    },
+    "fields": {
+      "sex": "性别",
+      "age": "年龄（岁）",
+      "height": "身高（cm）",
+      "weight": "体重（kg）",
+      "contactInfo": "联系方式",
+      "class": "疾病分型（APL 危险分层）",
+      "dose": "ATO 剂量（μg/kg）",
+      "smoking": "吸烟史",
+      "alcohol": "饮酒史",
+      "diabetes": "糖尿病",
+      "hyperlipidemia": "高血脂症",
+      "hypertension": "高血压",
+      "cpDrug": "合并非心毒性药物",
+      "ctDrug": "合并心毒性药物 *",
+      "ctDrugNote": "建议由专业医学人员填写",
+      "K": "钾 K（mmol/L）",
+      "Mg": "镁 Mg（mmol/L）",
+      "Ca": "钙 Ca（mmol/L）",
+      "ALT": "谷丙转氨酶 ALT（U/L）",
+      "AST": "谷草转氨酶 AST（U/L）",
+      "GGT": "γ-谷氨酰转移酶 GGT（U/L）",
+      "UA": "尿酸 UA（μmol/L）",
+      "Cr": "肌酐 Cr（μmol/L）",
+      "CK": "肌酸激酶 CK（U/L）",
+      "CKMB": "肌酸激酶同工酶 CK-MB（U/L）",
+      "LDH": "乳酸脱氢酶 LDH（U/L）",
+      "HBDH": "α-羟丁酸脱氢酶 HBDH（U/L）",
+      "iAs": "无机砷 iAs（ng/mL）",
+      "MMA": "一甲基砷酸 MMA（ng/mL）",
+      "DMA": "二甲基砷酸 DMA（ng/mL）",
+      "cardiotoxicity": "心毒性结局 *",
+      "cardiotoxicityNote": "建议由专业医学人员填写"
+    },
+    "options": {
+      "male": "男",
+      "female": "女",
+      "yes": "是",
+      "no": "否",
+      "na": "未知 / 未填",
+      "classHigh": "高危（WBC > 10×10⁹/L）",
+      "classLow": "低危（WBC ≤ 10×10⁹/L）"
+    },
+    "placeholders": {
+      "age": "例：45",
+      "height": "例：165",
+      "weight": "例：65",
+      "dose": "例：142.85",
+      "contactInfo": "邮箱或电话（选填，便于研究团队联系）",
+      "K": "例：3.5",
+      "Mg": "例：0.75",
+      "Ca": "例：2.11",
+      "ALT": "例：25",
+      "AST": "例：28",
+      "GGT": "例：35",
+      "UA": "例：320",
+      "Cr": "例：80",
+      "CK": "例：60",
+      "CKMB": "例：15",
+      "LDH": "例：180",
+      "HBDH": "例：120",
+      "iAs": "例：10",
+      "MMA": "例：20",
+      "DMA": "例：15",
+      "notes": "请输入任何补充说明，如治疗阶段、特殊用药情况、备注等…"
+    },
+    "template": {
+      "title": "数据模板下载",
+      "description": "如需批量填写，可下载 Excel 模板文件，填好后直接上传，无需在网页上逐项填写。",
+      "download": "下载 Excel 模板",
+      "orText": "或直接填写以下表单"
+    },
+    "fileUpload": {
+      "label": "上传相关文件（选填）",
+      "description": "支持 Word、Excel、PDF、TXT、图片等格式，最多10个文件，单个文件≤25MB",
+      "dragDrop": "拖拽文件到此处，或",
+      "browse": "点击选择文件",
+      "selectedFiles": "已选择的文件",
+      "remove": "移除",
+      "formats": "支持格式：.doc .docx .xls .xlsx .pdf .txt .jpg .jpeg .png .tif .tiff",
+      "limitFiles": "最多10个文件",
+      "limitSize": "单个文件≤25MB",
+      "errorTooMany": "最多上传10个文件",
+      "errorTooLarge": "文件{name}超过25MB限制，已跳过"
+    },
+    "consent": {
+      "label": "我已阅读并同意",
+      "linkText": "《数据使用说明》",
+      "text": "上传的数据将仅用于砷剂心脏毒性相关科学研究，采用加密存储，仅限授权研究人员访问，不会用于商业目的，且将进行适当的匿名化处理。"
+    },
+    "buttons": {
+      "submit": "提交数据",
+      "reset": "重置表单",
+      "submitting": "正在提交…"
+    },
+    "success": {
+      "title": "提交成功！",
+      "message": "您的数据已成功上传，感谢您对本研究的支持。",
+      "idLabel": "您的提交编号",
+      "saveNote": "请保存您的提交编号以备查询。研究团队收到数据后，如有需要将通过您留下的联系方式与您联系。",
+      "close": "关闭",
+      "newSubmit": "继续提交"
+    },
+    "errors": {
+      "submitFailed": "提交失败，请检查网络后重试",
+      "consentRequired": "请先阅读并同意《数据使用说明》后再提交",
+      "fileTooLarge": "文件超过25MB限制",
+      "tooManyFiles": "最多上传10个文件"
+    },
+    "notes": {
+      "allOptional": "所有字段均为选填，填写越完整对研究帮助越大",
+      "professional": "带 * 标注的字段建议由专业医学人员填写"
+    },
+    "classNote": "依据 NCCN（2025）指南，按初诊白细胞计数将患者分为高危/低危组"
   }
 }

@@ -386,5 +386,137 @@
       "title": "Feedback & Suggestions",
       "content": "We welcome feedback on your experience, issues encountered, or suggestions for improvement via email. Your input helps us continuously optimize the tool."
     }
+  },
+  "upload": {
+    "title": "Data Sharing",
+    "subtitle": "Upload patient data to advance ATO cardiotoxicity research",
+    "description": "Thank you for sharing your clinical data. Your contribution helps us continuously improve the prediction model and benefit more patients. All fields are optional — please fill in only what you have available.",
+    "sections": {
+      "basicInfo": "Patient Basic Information",
+      "clinical": "Clinical Classification & Medication",
+      "comorbidities": "Medical History & Comorbidities",
+      "electrolytes": "Serum Electrolytes",
+      "liverKidney": "Liver & Kidney Function",
+      "cardiacEnzymes": "Cardiac Enzymes",
+      "arsenic": "Blood Arsenic Test Results",
+      "outcome": "Clinical Outcome",
+      "contactInfo": "Contact Information (Optional)",
+      "files": "File Upload",
+      "notes": "Additional Notes"
+    },
+    "fields": {
+      "sex": "Sex",
+      "age": "Age (years)",
+      "height": "Height (cm)",
+      "weight": "Weight (kg)",
+      "contactInfo": "Contact Information",
+      "class": "APL Risk Classification",
+      "dose": "ATO Dose (μg/kg)",
+      "smoking": "Smoking History",
+      "alcohol": "Alcohol History",
+      "diabetes": "Diabetes Mellitus",
+      "hyperlipidemia": "Hyperlipidemia",
+      "hypertension": "Hypertension",
+      "cpDrug": "Co-use of Non-cardiotoxic Drugs",
+      "ctDrug": "Co-use of Cardiotoxic Drugs *",
+      "ctDrugNote": "Recommended to be filled in by a qualified medical professional",
+      "K": "Potassium K (mmol/L)",
+      "Mg": "Magnesium Mg (mmol/L)",
+      "Ca": "Calcium Ca (mmol/L)",
+      "ALT": "ALT (U/L)",
+      "AST": "AST (U/L)",
+      "GGT": "GGT (U/L)",
+      "UA": "Uric Acid UA (μmol/L)",
+      "Cr": "Creatinine Cr (μmol/L)",
+      "CK": "Creatine Kinase CK (U/L)",
+      "CKMB": "CK-MB (U/L)",
+      "LDH": "Lactate Dehydrogenase LDH (U/L)",
+      "HBDH": "Hydroxybutyrate Dehydrogenase HBDH (U/L)",
+      "iAs": "Inorganic Arsenic iAs (ng/mL)",
+      "MMA": "Monomethylarsonic Acid MMA (ng/mL)",
+      "DMA": "Dimethylarsinic Acid DMA (ng/mL)",
+      "cardiotoxicity": "Cardiotoxicity Outcome *",
+      "cardiotoxicityNote": "Recommended to be filled in by a qualified medical professional"
+    },
+    "options": {
+      "male": "Male",
+      "female": "Female",
+      "yes": "Yes",
+      "no": "No",
+      "na": "Unknown / Not filled",
+      "classHigh": "High-risk (WBC > 10×10⁹/L)",
+      "classLow": "Low-risk (WBC ≤ 10×10⁹/L)"
+    },
+    "placeholders": {
+      "age": "e.g. 45",
+      "height": "e.g. 165",
+      "weight": "e.g. 65",
+      "dose": "e.g. 142.85",
+      "contactInfo": "Email or phone (optional, for research team contact)",
+      "K": "e.g. 3.5",
+      "Mg": "e.g. 0.75",
+      "Ca": "e.g. 2.11",
+      "ALT": "e.g. 25",
+      "AST": "e.g. 28",
+      "GGT": "e.g. 35",
+      "UA": "e.g. 320",
+      "Cr": "e.g. 80",
+      "CK": "e.g. 60",
+      "CKMB": "e.g. 15",
+      "LDH": "e.g. 180",
+      "HBDH": "e.g. 120",
+      "iAs": "e.g. 10",
+      "MMA": "e.g. 20",
+      "DMA": "e.g. 15",
+      "notes": "Enter any additional notes, e.g. treatment phase, special medication, remarks…"
+    },
+    "template": {
+      "title": "Download Data Template",
+      "description": "For batch data entry, download the Excel template, fill it in, and upload it directly — no need to enter data field by field on this page.",
+      "download": "Download Excel Template",
+      "orText": "Or fill in the form below directly"
+    },
+    "fileUpload": {
+      "label": "Upload Related Files (Optional)",
+      "description": "Supports Word, Excel, PDF, TXT, images and more. Max 10 files, 25 MB per file.",
+      "dragDrop": "Drag and drop files here, or",
+      "browse": "Browse files",
+      "selectedFiles": "Selected files",
+      "remove": "Remove",
+      "formats": "Supported: .doc .docx .xls .xlsx .pdf .txt .jpg .jpeg .png .tif .tiff",
+      "limitFiles": "Up to 10 files",
+      "limitSize": "25 MB per file max",
+      "errorTooMany": "Maximum 10 files allowed",
+      "errorTooLarge": "File \"{name}\" exceeds the 25 MB limit and was skipped"
+    },
+    "consent": {
+      "label": "I have read and agree to the",
+      "linkText": "Data Usage Terms",
+      "text": "Uploaded data will be used solely for scientific research related to ATO cardiotoxicity. Data is stored with encryption, accessible only to authorised researchers, will not be used for commercial purposes, and will be appropriately anonymised."
+    },
+    "buttons": {
+      "submit": "Submit Data",
+      "reset": "Reset Form",
+      "submitting": "Submitting…"
+    },
+    "success": {
+      "title": "Submission Successful!",
+      "message": "Your data has been successfully uploaded. Thank you for supporting this research.",
+      "idLabel": "Your Submission ID",
+      "saveNote": "Please save your submission ID for future reference. If needed, the research team will contact you using the contact information you provided.",
+      "close": "Close",
+      "newSubmit": "Submit Another"
+    },
+    "errors": {
+      "submitFailed": "Submission failed. Please check your connection and try again.",
+      "consentRequired": "Please read and agree to the Data Usage Terms before submitting.",
+      "fileTooLarge": "File exceeds the 25 MB limit",
+      "tooManyFiles": "Maximum 10 files allowed"
+    },
+    "notes": {
+      "allOptional": "All fields are optional — the more you fill in, the more helpful it is for our research",
+      "professional": "Fields marked with * are recommended to be filled in by qualified medical professionals"
+    },
+    "classNote": "Based on NCCN (2025) guidelines: patients are classified into high/low-risk groups according to initial WBC count"
   }
 }
