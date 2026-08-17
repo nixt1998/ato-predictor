@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { useAppStore } from '@/lib/store'
 import { getRiskLevel, getRiskColor, formatPercentage } from '@/lib/utils'
@@ -9,6 +9,7 @@ import { AlertTriangle, CheckCircle2, AlertCircle } from 'lucide-react'
 
 export default function PredictionResult() {
   const t = useTranslations('predict.result')
+  const locale = useLocale()  // 添加 locale 以响应语言切换
   const { result } = useAppStore()
 
   if (!result) return null
