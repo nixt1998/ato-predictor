@@ -34,14 +34,11 @@ export default function ContactPage() {
                       <h3 className="font-semibold text-[#212121] mb-1">
                         {t('email.title')}
                       </h3>
-                      <p className="text-[#757575] text-sm mb-2">
-                        {t('email.desc')}
-                      </p>
                       <a
-                        href="mailto:contact@example.com"
+                        href={`mailto:${t('email.desc')}`}
                         className="text-[#005EB8] hover:underline font-medium"
                       >
-                        contact@example.com
+                        {t('email.desc')}
                       </a>
                     </div>
                   </div>
@@ -59,12 +56,12 @@ export default function ContactPage() {
                       <h3 className="font-semibold text-[#212121] mb-1">
                         {t('phone.title')}
                       </h3>
-                      <p className="text-[#757575] text-sm mb-2">
+                      <a
+                        href={`tel:${t('phone.desc')}`}
+                        className="text-[#005EB8] hover:underline font-medium"
+                      >
                         {t('phone.desc')}
-                      </p>
-                      <p className="text-[#005EB8] font-medium">
-                        [占位符: 联系电话]
-                      </p>
+                      </a>
                     </div>
                   </div>
                 </CardContent>
@@ -103,11 +100,8 @@ export default function ContactPage() {
                       <h3 className="font-semibold text-[#212121] mb-1">
                         {t('hours.title')}
                       </h3>
-                      <p className="text-[#757575] text-sm mb-2">
-                        {t('hours.desc')}
-                      </p>
                       <div className="text-[#212121] text-sm space-y-1">
-                        <p>{t('hours.weekday')}: 9:00 - 17:00</p>
+                        <p>{t('hours.weekday')}: 9:00–16:00</p>
                         <p>{t('hours.weekend')}: {t('hours.closed')}</p>
                       </div>
                     </div>

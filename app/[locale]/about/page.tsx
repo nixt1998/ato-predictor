@@ -61,46 +61,46 @@ export default function AboutPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* 机构 Logo */}
                 <div className="text-center">
-                  <div className="relative w-32 h-32 mx-auto mb-4 bg-white rounded-lg flex items-center justify-center p-4">
+                  <div className="relative w-48 h-48 mx-auto mb-6 bg-white rounded-lg flex items-center justify-center p-6">
                     <Image
                       src="/images/hospital-logo.png"
                       alt="Hospital"
-                      width={120}
-                      height={48}
+                      width={160}
+                      height={64}
                       className="object-contain"
                     />
                   </div>
-                  <p className="text-sm font-medium text-[#212121]">
+                  <p className="text-base font-medium text-[#212121]">
                     {t('team.hospital')}
                   </p>
                 </div>
 
                 <div className="text-center">
-                  <div className="relative w-32 h-32 mx-auto mb-4 bg-white rounded-lg flex items-center justify-center p-4">
+                  <div className="relative w-48 h-48 mx-auto mb-6 bg-white rounded-lg flex items-center justify-center p-6">
                     <Image
                       src="/images/university-logo.png"
                       alt="University"
-                      width={120}
-                      height={48}
+                      width={160}
+                      height={64}
                       className="object-contain"
                     />
                   </div>
-                  <p className="text-sm font-medium text-[#212121]">
+                  <p className="text-base font-medium text-[#212121]">
                     {t('team.university')}
                   </p>
                 </div>
 
                 <div className="text-center">
-                  <div className="relative w-32 h-32 mx-auto mb-4 bg-white rounded-lg flex items-center justify-center p-4">
+                  <div className="relative w-48 h-48 mx-auto mb-6 bg-white rounded-lg flex items-center justify-center p-6">
                     <Image
                       src="/images/lab-logo.png"
                       alt="Lab"
-                      width={120}
-                      height={48}
+                      width={160}
+                      height={64}
                       className="object-contain"
                     />
                   </div>
-                  <p className="text-sm font-medium text-[#212121]">
+                  <p className="text-base font-medium text-[#212121]">
                     {t('team.lab')}
                   </p>
                 </div>

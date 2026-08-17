@@ -174,8 +174,8 @@ export default function PrivacyPage() {
                 {t('contact.content')}
               </p>
               <div className="mt-4 space-y-2 text-sm text-[#757575]">
-                <p><strong className="text-[#212121]">{t('contact.email')}</strong> privacy@example.com</p>
-                <p><strong className="text-[#212121]">{t('contact.phone')}</strong> [占位符: 联系电话]</p>
+                <p><strong className="text-[#212121]">{t('contact.email')}</strong> {t('contact.email').split('：')[1]}</p>
+                <p><strong className="text-[#212121]">{t('contact.phone')}</strong> {t('contact.phone').split('：')[1]}</p>
               </div>
             </CardContent>
           </Card>

@@ -44,7 +44,7 @@ export default function Team() {
                 transition={{ type: "spring", stiffness: 300 }}
                 className="flex justify-center md:justify-start"
               >
-                <div className="relative w-48 h-48 rounded-xl overflow-hidden shadow-lg">
+                <div className="relative w-[178px] h-[205px] rounded-xl overflow-hidden shadow-lg">
                   <Image
                     src="/images/placeholder-avatar.jpg"
                     alt={t('teamLeaderName')}
