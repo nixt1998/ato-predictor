@@ -119,7 +119,7 @@ function generateSuggestions(rResult: any, input: PredictionInput, locale: strin
     suggestions.push({
       risk_factor: isZh ? '总砷浓度偏高' : 'High Total Arsenic',
       suggestion: isZh
-        ? '建议适当调整砷剂给药剂量或延长治疗间隔以降低体内砷总暴露量，同时加强肾功能监测。\n(Consider adjusting ATO dosage or extending treatment intervals; monitor renal function.)'
+        ? '建议适当调整砷剂给药剂量或延长治疗间隔以降低体内砷总暴露量，同时加强肾功能监测。'
         : 'Consider adjusting ATO dosage or extending treatment intervals; monitor renal function.',
     })
   }
@@ -129,7 +129,7 @@ function generateSuggestions(rResult: any, input: PredictionInput, locale: strin
     suggestions.push({
       risk_factor: isZh ? '二级甲基化能力低下' : 'Low Secondary Methylation Index (SMI)',
       suggestion: isZh
-        ? '检测到砷甲基化能力下降，建议适量补充叶酸、维生素B12等甲基供体，并监测同型半胱氨酸水平。\n(Low methylation capacity detected; consider methyl donor supplementation and monitor homocysteine.)'
+        ? '检测到砷甲基化能力下降，建议适量补充叶酸、维生素B12等甲基供体，并监测同型半胱氨酸水平。'
         : 'Low methylation capacity detected; consider methyl donor supplementation and monitor homocysteine.',
     })
   }
@@ -139,14 +139,14 @@ function generateSuggestions(rResult: any, input: PredictionInput, locale: strin
     suggestions.push({
       risk_factor: isZh ? '一甲基砷酸百分比升高' : 'Elevated MMA%',
       suggestion: isZh
-        ? '心血管风险增高，建议增加心脏监测频率：每周心电图、每月超声心动图及心脏标志物检测（肌钙蛋白、BNP）。\n(Elevated cardiovascular risk; enhance cardiac monitoring: weekly ECG, monthly echocardiography and biomarkers.)'
+        ? '心血管风险增高，建议增加心脏监测频率：每周心电图、每月超声心动图及心脏标志物检测（肌钙蛋白、BNP）。'
         : 'Elevated cardiovascular risk; enhance cardiac monitoring: weekly ECG, monthly echocardiography and biomarkers.',
     })
   } else if (MMA_pct > 15) {
     suggestions.push({
       risk_factor: isZh ? '一甲基砷酸百分比偏高' : 'Moderately Elevated MMA%',
       suggestion: isZh
-        ? '建议密切监测心功能，每两周进行心电图检查，每月检测心脏生物标志物。\n(Monitor cardiac function closely; bi-weekly ECG and monthly cardiac biomarkers.)'
+        ? '建议密切监测心功能，每两周进行心电图检查，每月检测心脏生物标志物。'
         : 'Monitor cardiac function closely; bi-weekly ECG and monthly cardiac biomarkers.',
     })
   }
@@ -156,7 +156,7 @@ function generateSuggestions(rResult: any, input: PredictionInput, locale: strin
     suggestions.push({
       risk_factor: isZh ? '合并使用心毒性药物' : 'Concurrent Cardiotoxic Drug',
       suggestion: isZh
-        ? '需仔细权衡合并用药的风险/获益比，必要时考虑替代治疗方案，或实施加强型心脏监测方案。\n(Carefully evaluate benefit-risk ratio; consider alternative therapies or intensive cardiac surveillance.)'
+        ? '需仔细权衡合并用药的风险/获益比，必要时考虑替代治疗方案，或实施加强型心脏监测方案。'
         : 'Carefully evaluate benefit-risk ratio; consider alternative therapies or intensive cardiac surveillance.',
     })
   }
@@ -166,14 +166,14 @@ function generateSuggestions(rResult: any, input: PredictionInput, locale: strin
     suggestions.push({
       risk_factor: isZh ? '综合评估：高风险' : 'High Risk',
       suggestion: isZh
-        ? '建议立即进行心脏科会诊，评估是否需要调整砷剂剂量或暂停治疗，并实施每日症状评估的强化监测方案。\n(Immediate cardiology consultation recommended; consider dose reduction or treatment pause with intensive daily monitoring.)'
+        ? '建议立即进行心脏科会诊，评估是否需要调整砷剂剂量或暂停治疗，并实施每日症状评估的强化监测方案。'
         : 'Immediate cardiology consultation recommended; consider dose reduction or treatment pause with intensive daily monitoring.',
     })
   } else if (rResult.prediction.risk_level === 'medium') {
     suggestions.push({
       risk_factor: isZh ? '综合评估：中等风险' : 'Medium Risk',
       suggestion: isZh
-        ? '建议加强监测：每周临床评估，每两周心脏专项评估，并向患者充分说明需要报告的心脏相关症状。\n(Enhanced monitoring: weekly clinical assessment, bi-weekly cardiac evaluation; educate patient on cardiac symptoms.)'
+        ? '建议加强监测：每周临床评估，每两周心脏专项评估，并向患者充分说明需要报告的心脏相关症状。'
         : 'Enhanced monitoring: weekly clinical assessment, bi-weekly cardiac evaluation; educate patient on cardiac symptoms.',
     })
   }
@@ -183,7 +183,7 @@ function generateSuggestions(rResult: any, input: PredictionInput, locale: strin
     suggestions.push({
       risk_factor: isZh ? '综合评估：低风险' : 'Low Risk',
       suggestion: isZh
-        ? '继续执行常规监测方案，按治疗计划定期随访，进行标准化心脏功能评估。\n(Continue routine monitoring; maintain regular follow-up and standard cardiac assessments.)'
+        ? '继续执行常规监测方案，按治疗计划定期随访，进行标准化心脏功能评估。'
         : 'Continue routine monitoring; maintain regular follow-up and standard cardiac assessments.',
     })
   }

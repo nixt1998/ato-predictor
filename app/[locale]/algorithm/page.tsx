@@ -76,19 +76,19 @@ export default function AlgorithmPage() {
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center p-4 bg-gradient-to-br from-[#F0F7FF] to-white rounded-lg">
-                  <p className="text-3xl font-bold text-[#005EB8] mb-1">0.85</p>
+                  <p className="text-3xl font-bold text-[#005EB8] mb-1">0.909</p>
                   <p className="text-sm text-[#757575]">{t('performance.auc')}</p>
                 </div>
                 <div className="text-center p-4 bg-gradient-to-br from-[#F0F7FF] to-white rounded-lg">
-                  <p className="text-3xl font-bold text-[#005EB8] mb-1">82%</p>
+                  <p className="text-3xl font-bold text-[#005EB8] mb-1">84.8%</p>
                   <p className="text-sm text-[#757575]">{t('performance.accuracy')}</p>
                 </div>
                 <div className="text-center p-4 bg-gradient-to-br from-[#F0F7FF] to-white rounded-lg">
-                  <p className="text-3xl font-bold text-[#005EB8] mb-1">78%</p>
+                  <p className="text-3xl font-bold text-[#005EB8] mb-1">78.7%</p>
                   <p className="text-sm text-[#757575]">{t('performance.sensitivity')}</p>
                 </div>
                 <div className="text-center p-4 bg-gradient-to-br from-[#F0F7FF] to-white rounded-lg">
-                  <p className="text-3xl font-bold text-[#005EB8] mb-1">85%</p>
+                  <p className="text-3xl font-bold text-[#005EB8] mb-1">93.3%</p>
                   <p className="text-sm text-[#757575]">{t('performance.specificity')}</p>
                 </div>
               </div>
@@ -121,6 +121,9 @@ export default function AlgorithmPage() {
                     <span>{t('shap.negative')}</span>
                   </li>
                 </ul>
+                <p className="text-sm text-[#757575] mt-4 bg-[#F5F5F5] rounded-lg p-3">
+                  {t('shap.barPlotNote')}
+                </p>
               </div>
             </CardContent>
           </Card>

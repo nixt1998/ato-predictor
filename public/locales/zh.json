@@ -93,7 +93,8 @@
         "MMA_per": "一甲基砷酸百分比 (MMA%)",
         "DMA_per": "二甲基砷酸百分比 (DMA%)",
         "CT_drug": "合并心毒性药物"
-      }
+      },
+      "thresholdNote": "风险等级判定阈值：低风险 < 20%；中风险 20%–50%；高风险 ≥ 50%。阈值基于模型校准结果确定，仅供参考，具体判断请结合临床情景。"
     },
     "analysis": {
       "shapTitle": "风险因素量化分析 (SHAP值)",
@@ -173,14 +174,15 @@
       "accuracy": "准确率",
       "sensitivity": "敏感性",
       "specificity": "特异性",
-      "note": "以上指标来自独立验证集，[占位符: 补充验证集信息]。"
+      "note": "以上指标来自独立测试集（ROC-AUC=0.909，95% CI: 0.861–0.957）。"
     },
     "shap": {
       "title": "SHAP 可解释性",
-      "content": "本工具采用 Kernel SHAP 方法对模型预测结果进行解释，量化每个特征对风险预测的贡献值。",
-      "interpretation": "SHAP值含义：",
-      "positive": "SHAP值为正：该特征促进心脏毒性风险增加",
-      "negative": "SHAP值为负：该特征对心脏毒性具有保护作用"
+      "content": "本工具采用 Kernel SHAP（SHapley Additive exPlanations）方法对模型预测结果进行解释。SHAP 分析基于合作博弈论中 Shapley 值的概念，将各特征视为"参与者"，通过计算每个特征在不同特征子集组合中的边际贡献，公平量化每个特征对单次预测结果偏离总体平均预测值的贡献。Kernel SHAP 是一种模型无关的近似方法，通过加权采样从背景数据集中估算 Shapley 值。对于本工具，背景数据集来自模型的训练集。SHAP 值具有效率性（所有特征贡献之和等于预测值与平均预测值之差）、对称性、可加性及零玩家等属性，保证了特征贡献量化的公平性与可解释性（Ponce-Bobadilla et al., Clin Transl Sci, 2024）。",
+      "interpretation": "SHAP 值解读：",
+      "positive": "SHAP 值为正值：该特征使个体预测的心毒性风险高于模型平均预测水平，提示该特征对心毒性具有促进作用",
+      "negative": "SHAP 值为负值：该特征使个体预测的心毒性风险低于模型平均预测水平，提示该特征对心毒性具有保护作用",
+      "barPlotNote": "条形图中条形越长，表示该特征对本次预测的影响越大；条形向右延伸表示促进风险，向左延伸表示降低风险。各特征的 SHAP 值之和等于预测概率与模型平均预测概率之差。"
     },
     "limitations": {
       "title": "局限性",
@@ -191,7 +193,7 @@
     "references": {
       "title": "参考文献",
       "ref1": "[占位符: 参考文献1，与砷代谢和心脏毒性相关]",
-      "ref2": "[占位符: 参考文献2，与 AORSF 模型相关]",
+      "ref2": "Ponce-Bobadilla AV, Schmitt V, Maier CS, Mensing S, Stodtmann S. Practical guide to SHAP analysis: Explaining supervised machine learning model predictions in drug development. Clin Transl Sci. 2024;17:e70056.",
       "ref3": "[占位符: 参考文献3，与 SHAP 可解释性相关]"
     }
   },

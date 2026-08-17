@@ -155,6 +155,11 @@ export default function PredictionResult() {
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* 风险等级阈值说明 */}
+      <p className="text-xs text-[#9E9E9E] text-center mt-4 px-4">
+        {t('thresholdNote')}
+      </p>
     </div>
   )
 }

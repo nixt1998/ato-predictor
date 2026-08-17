@@ -93,7 +93,8 @@
         "MMA_per": "MMA Percentage (MMA%)",
         "DMA_per": "DMA Percentage (DMA%)",
         "CT_drug": "Cardiotoxic Drug Use"
-      }
+      },
+      "thresholdNote": "Risk stratification thresholds: Low risk < 20%; Medium risk 20%–50%; High risk ≥ 50%. Thresholds are based on model calibration and are for reference only; clinical judgment should always be applied."
     },
     "analysis": {
       "shapTitle": "Risk Factor Quantification (SHAP Values)",
@@ -173,14 +174,15 @@
       "accuracy": "Accuracy",
       "sensitivity": "Sensitivity",
       "specificity": "Specificity",
-      "note": "Metrics from independent validation set. [Placeholder: add validation set details]."
+      "note": "Metrics are from the independent test set (ROC-AUC=0.909, 95% CI: 0.861–0.957)."
     },
     "shap": {
       "title": "SHAP Interpretability",
-      "content": "This tool uses Kernel SHAP to explain model predictions, quantifying each feature's contribution to the risk prediction.",
-      "interpretation": "SHAP Value Meaning:",
-      "positive": "Positive SHAP: the feature increases cardiotoxicity risk",
-      "negative": "Negative SHAP: the feature has a protective effect against cardiotoxicity"
+      "content": "This tool uses Kernel SHAP (SHapley Additive exPlanations) to explain individual model predictions. SHAP analysis is grounded in Shapley values from cooperative game theory, treating each model feature as a 'player' contributing to the prediction. It quantifies each feature's fair marginal contribution to the deviation of an individual prediction from the overall average model prediction, across all possible feature subsets. Kernel SHAP is a model-agnostic approximation method that estimates Shapley values using a weighted sampling strategy from a background dataset (derived from the training data). SHAP values satisfy the efficiency, symmetry, additivity, and null-player axioms, ensuring a fair and unbiased measure of each feature's contribution (Ponce-Bobadilla et al., Clin Transl Sci, 2024).",
+      "interpretation": "Interpretation of SHAP values:",
+      "positive": "Positive SHAP value: the feature drives the individual prediction above the model's average, indicating a risk-increasing contribution to cardiotoxicity",
+      "negative": "Negative SHAP value: the feature drives the individual prediction below the model's average, indicating a risk-reducing or protective contribution against cardiotoxicity",
+      "barPlotNote": "A longer bar indicates greater feature influence on the current prediction; bars extending right indicate risk-increasing effects, bars extending left indicate risk-reducing effects. The sum of all SHAP values equals the difference between the individual predicted probability and the model's mean prediction."
     },
     "limitations": {
       "title": "Limitations",
@@ -191,7 +193,7 @@
     "references": {
       "title": "References",
       "ref1": "[Placeholder: Reference 1 — related to arsenic metabolism and cardiotoxicity]",
-      "ref2": "[Placeholder: Reference 2 — related to the AORSF model]",
+      "ref2": "Ponce-Bobadilla AV, Schmitt V, Maier CS, Mensing S, Stodtmann S. Practical guide to SHAP analysis: Explaining supervised machine learning model predictions in drug development. Clin Transl Sci. 2024;17:e70056.",
       "ref3": "[Placeholder: Reference 3 — related to SHAP interpretability]"
     }
   },
