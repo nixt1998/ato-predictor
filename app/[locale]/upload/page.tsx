@@ -525,27 +525,27 @@ export default function UploadPage() {
               <FieldSelect label={t('fields.class')} value={form.class} onChange={v => set('class', v)} options={classOpts} />
               <p className="text-xs text-[#757575] mt-1">{t('classNote')}</p>
             </div>
-            <FieldInput label={t('fields.dose')} name="dose" placeholder={t('placeholders.dose')} value={form.dose} onChange={v => set('dose', v)} type="number" />
-            <div className="lg:col-span-4">
-              <FieldSelect
-                label={t('fields.cardiotoxicDrug')}
-                value={form.cardiotoxicDrug}
-                onChange={v => set('cardiotoxicDrug', v)}
-                options={yesNoOpts}
-                note={t('fields.cardiotoxicDrugNote')}
-              />
-              {form.cardiotoxicDrug === 'Yes' && (
-                <div className="mt-3">
-                  <FieldInput
-                    label={t('fields.cardiotoxicDrugName')}
-                    name="cardiotoxicDrugName"
-                    placeholder={t('placeholders.cardiotoxicDrugName')}
-                    value={form.cardiotoxicDrugName}
-                    onChange={v => set('cardiotoxicDrugName', v)}
-                  />
-                </div>
-              )}
+            <div className="lg:col-span-2">
+              <FieldInput label={t('fields.dose')} name="dose" placeholder={t('placeholders.dose')} value={form.dose} onChange={v => set('dose', v)} type="number" />
             </div>
+            <FieldSelect
+              label={t('fields.cardiotoxicDrug')}
+              value={form.cardiotoxicDrug}
+              onChange={v => set('cardiotoxicDrug', v)}
+              options={yesNoOpts}
+              note={t('fields.cardiotoxicDrugNote')}
+            />
+            {form.cardiotoxicDrug === 'Yes' && (
+              <div className="lg:col-span-2">
+                <FieldInput
+                  label={t('fields.cardiotoxicDrugName')}
+                  name="cardiotoxicDrugName"
+                  placeholder={t('placeholders.cardiotoxicDrugName')}
+                  value={form.cardiotoxicDrugName}
+                  onChange={v => set('cardiotoxicDrugName', v)}
+                />
+              </div>
+            )}
           </SectionCard>
 
           {/* 3. 既往史与合并症 */}
