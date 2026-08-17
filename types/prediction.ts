@@ -48,12 +48,16 @@ export interface PredictionResult {
 }
 
 /**
- * 建议
+ * 建议（含语言无关的 key，供前端翻译用）
  */
 export interface Suggestion {
   risk_factor: string;
   suggestion: string;
+  key?: string;           // 可选：语言无关的键名，供前端按当前语言重新渲染
+  ct_drug?: boolean;      // 是否因 CT_drug 触发
+  risk_level?: string;    // 触发此建议的风险等级
 }
+
 
 /**
  * 计算历史记录

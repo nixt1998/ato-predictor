@@ -162,11 +162,26 @@
     },
     "features": {
       "title": "Input Features",
-      "feature1": { "name": "Total Arsenic (tAs)", "desc": "Sum of iAs, MMA, and DMA; reflects total arsenic exposure" },
-      "feature2": { "name": "Secondary Methylation Index (SMI)", "desc": "DMA/MMA; reflects secondary methylation efficiency" },
-      "feature3": { "name": "MMA Percentage (MMA%)", "desc": "MMA as proportion of total arsenic; positively correlated with cardiotoxicity risk" },
-      "feature4": { "name": "DMA Percentage (DMA%)", "desc": "DMA as proportion of total arsenic; reflects detoxification capacity" },
-      "feature5": { "name": "Concurrent Cardiotoxic Drug (CT_drug)", "desc": "Whether the patient is concurrently using cardiotoxic medications" }
+      "feature1": {
+        "name": "Total Arsenic (tAs)",
+        "desc": "Sum of iAs, MMA, and DMA; reflects total arsenic exposure"
+      },
+      "feature2": {
+        "name": "Secondary Methylation Index (SMI)",
+        "desc": "DMA/MMA; reflects secondary methylation efficiency"
+      },
+      "feature3": {
+        "name": "MMA Percentage (MMA%)",
+        "desc": "MMA as proportion of total arsenic; positively correlated with cardiotoxicity risk"
+      },
+      "feature4": {
+        "name": "DMA Percentage (DMA%)",
+        "desc": "DMA as proportion of total arsenic; reflects detoxification capacity"
+      },
+      "feature5": {
+        "name": "Concurrent Cardiotoxic Drug (CT_drug)",
+        "desc": "Whether the patient is concurrently using cardiotoxic medications"
+      }
     },
     "performance": {
       "title": "Model Performance",
@@ -178,11 +193,11 @@
     },
     "shap": {
       "title": "SHAP Interpretability",
-      "content": "This tool uses Kernel SHAP (SHapley Additive exPlanations) to explain individual model predictions. SHAP analysis is grounded in Shapley values from cooperative game theory, treating each model feature as a 'player' contributing to the prediction. It quantifies each feature's fair marginal contribution to the deviation of an individual prediction from the overall average model prediction, across all possible feature subsets. Kernel SHAP is a model-agnostic approximation method that estimates Shapley values using a weighted sampling strategy from a background dataset (derived from the training data). SHAP values satisfy the efficiency, symmetry, additivity, and null-player axioms, ensuring a fair and unbiased measure of each feature's contribution (Ponce-Bobadilla et al., Clin Transl Sci, 2024).",
+      "content": "SHAP (SHapley Additive exPlanations) is a game-theory-based interpretability method for machine learning models. Each feature is treated as a player in a cooperative game; its SHAP value quantifies its average marginal contribution across all possible feature subsets, measuring how much it shifts an individual prediction away from the overall model mean. This tool applies Kernel SHAP, a model-agnostic variant using the training set as a reference background (Ponce-Bobadilla et al., Clin Transl Sci, 2024).",
       "interpretation": "Interpretation of SHAP values:",
-      "positive": "Positive SHAP value: the feature drives the individual prediction above the model's average, indicating a risk-increasing contribution to cardiotoxicity",
-      "negative": "Negative SHAP value: the feature drives the individual prediction below the model's average, indicating a risk-reducing or protective contribution against cardiotoxicity",
-      "barPlotNote": "A longer bar indicates greater feature influence on the current prediction; bars extending right indicate risk-increasing effects, bars extending left indicate risk-reducing effects. The sum of all SHAP values equals the difference between the individual predicted probability and the model's mean prediction."
+      "positive": "Positive value (bar extends right): the feature pushes the predicted cardiotoxicity risk above the model average, indicating it promotes cardiotoxicity occurrence",
+      "negative": "Negative value (bar extends left): the feature pushes the predicted cardiotoxicity risk below the model average, indicating it suppresses cardiotoxicity occurrence",
+      "barPlotNote": "Bar length represents the magnitude of influence. The sum of all SHAP values equals the difference between this prediction and the training-set mean prediction."
     },
     "limitations": {
       "title": "Limitations",

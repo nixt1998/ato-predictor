@@ -106,86 +106,62 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// 生成临床建议
-function generateSuggestions(rResult: any, input: PredictionInput, locale: string = 'zh') {
-  const suggestions: Array<{ risk_factor: string; suggestion: string }> = []
+// 语言无关的建议数据（key 供前端按当前语言渲染）
+function generateSuggestionKeys(rResult: any, input: PredictionInput) {
+  const keys: Array<{ key: string }> = []
   const { metabolism } = rResult
   const { tAs, SMI, MMA_pct } = metabolism
 
-  const isZh = locale === 'zh'
+  if (tAs > 200)    keys.push({ key: 'high_tAs' })
+  if (SMI < 2)      keys.push({ key: 'low_SMI' })
+  if (MMA_pct > 20) keys.push({ key: 'high_MMA' })
+  else if (MMA_pct > 15) keys.push({ key: 'mod_MMA' })
+  if (input.CT_drug === 'Yes') keys.push({ key: 'ct_drug' })
 
-  // 基于总砷浓度的建议
-  if (tAs > 200) {
-    suggestions.push({
-      risk_factor: isZh ? '总砷浓度偏高' : 'High Total Arsenic',
-      suggestion: isZh
-        ? '建议适当调整砷剂给药剂量或延长治疗间隔以降低体内砷总暴露量，同时加强肾功能监测。'
-        : 'Consider adjusting ATO dosage or extending treatment intervals; monitor renal function.',
-    })
+  const level = rResult.prediction.risk_level
+  if (level === 'high')   keys.push({ key: 'risk_high' })
+  else if (level === 'medium') keys.push({ key: 'risk_medium' })
+
+  if (keys.length === 0) keys.push({ key: 'risk_low' })
+
+  return keys
+}
+
+// 生成临床建议（locale 参数决定语言）
+function generateSuggestions(rResult: any, input: PredictionInput, locale: string = 'zh') {
+  const suggestions: Array<{ risk_factor: string; suggestion: string; key: string }> = []
+  const { metabolism } = rResult
+  const { tAs, SMI, MMA_pct } = metabolism
+  const isZh = locale !== 'en'   // 仅 'en' 使用英文，其余均用中文
+
+  const zh: Record<string, [string, string]> = {
+    high_tAs:    ['总砷浓度偏高',       '建议适当调整砷剂给药剂量或延长治疗间隔以降低体内砷总暴露量，同时加强肾功能监测。'],
+    low_SMI:     ['二级甲基化能力低下', '检测到砷甲基化能力下降，建议适量补充叶酸、维生素B12等甲基供体，并监测同型半胱氨酸水平。'],
+    high_MMA:    ['一甲基砷酸百分比升高','心血管风险增高，建议增加心脏监测频率：每周心电图、每月超声心动图及心脏标志物检测（肌钙蛋白、BNP）。'],
+    mod_MMA:     ['一甲基砷酸百分比偏高','建议密切监测心功能，每两周进行心电图检查，每月检测心脏生物标志物。'],
+    ct_drug:     ['合并使用心毒性药物', '需仔细权衡合并用药的风险/获益比，必要时考虑替代治疗方案，或实施加强型心脏监测方案。'],
+    risk_high:   ['综合评估：高风险',   '建议立即进行心脏科会诊，评估是否需要调整砷剂剂量或暂停治疗，并实施每日症状评估的强化监测方案。'],
+    risk_medium: ['综合评估：中等风险', '建议加强监测：每周临床评估，每两周心脏专项评估，并向患者充分说明需要报告的心脏相关症状。'],
+    risk_low:    ['综合评估：低风险',   '继续执行常规监测方案，按治疗计划定期随访，进行标准化心脏功能评估。'],
+  }
+  const en: Record<string, [string, string]> = {
+    high_tAs:    ['High Total Arsenic',                   'Consider adjusting ATO dosage or extending treatment intervals to reduce total arsenic exposure; monitor renal function regularly.'],
+    low_SMI:     ['Low Secondary Methylation Index (SMI)','Low methylation capacity detected; consider methyl donor supplementation (folate, vitamin B12) and monitor homocysteine levels.'],
+    high_MMA:    ['Elevated MMA%',                        'Elevated cardiovascular risk; enhance cardiac monitoring: weekly ECG, monthly echocardiography and cardiac biomarkers (troponin, BNP).'],
+    mod_MMA:     ['Moderately Elevated MMA%',             'Monitor cardiac function closely; consider bi-weekly ECG and monthly cardiac biomarker assessment.'],
+    ct_drug:     ['Concurrent Cardiotoxic Drug',          'Carefully evaluate the benefit-risk ratio of concomitant cardiotoxic medication; consider alternative therapies or an intensive cardiac surveillance protocol.'],
+    risk_high:   ['High Risk',                            'Immediate cardiology consultation is recommended; evaluate the need for dose reduction or treatment interruption and implement an intensive daily symptom-monitoring protocol.'],
+    risk_medium: ['Medium Risk',                          'Enhanced monitoring is recommended: weekly clinical assessment, bi-weekly cardiac evaluation; educate the patient on cardiac symptoms that should prompt immediate reporting.'],
+    risk_low:    ['Low Risk',                             'Continue routine monitoring; maintain regular follow-up appointments and standard cardiac function assessments as per the treatment protocol.'],
   }
 
-  // 基于 SMI 的建议
-  if (SMI < 2) {
-    suggestions.push({
-      risk_factor: isZh ? '二级甲基化能力低下' : 'Low Secondary Methylation Index (SMI)',
-      suggestion: isZh
-        ? '检测到砷甲基化能力下降，建议适量补充叶酸、维生素B12等甲基供体，并监测同型半胱氨酸水平。'
-        : 'Low methylation capacity detected; consider methyl donor supplementation and monitor homocysteine.',
-    })
-  }
+  const dict = isZh ? zh : en
 
-  // 基于 MMA 百分比的建议
-  if (MMA_pct > 20) {
-    suggestions.push({
-      risk_factor: isZh ? '一甲基砷酸百分比升高' : 'Elevated MMA%',
-      suggestion: isZh
-        ? '心血管风险增高，建议增加心脏监测频率：每周心电图、每月超声心动图及心脏标志物检测（肌钙蛋白、BNP）。'
-        : 'Elevated cardiovascular risk; enhance cardiac monitoring: weekly ECG, monthly echocardiography and biomarkers.',
-    })
-  } else if (MMA_pct > 15) {
-    suggestions.push({
-      risk_factor: isZh ? '一甲基砷酸百分比偏高' : 'Moderately Elevated MMA%',
-      suggestion: isZh
-        ? '建议密切监测心功能，每两周进行心电图检查，每月检测心脏生物标志物。'
-        : 'Monitor cardiac function closely; bi-weekly ECG and monthly cardiac biomarkers.',
-    })
-  }
-
-  // 基于心毒性药物的建议
-  if (input.CT_drug === 'Yes') {
-    suggestions.push({
-      risk_factor: isZh ? '合并使用心毒性药物' : 'Concurrent Cardiotoxic Drug',
-      suggestion: isZh
-        ? '需仔细权衡合并用药的风险/获益比，必要时考虑替代治疗方案，或实施加强型心脏监测方案。'
-        : 'Carefully evaluate benefit-risk ratio; consider alternative therapies or intensive cardiac surveillance.',
-    })
-  }
-
-  // 基于风险等级的建议
-  if (rResult.prediction.risk_level === 'high') {
-    suggestions.push({
-      risk_factor: isZh ? '综合评估：高风险' : 'High Risk',
-      suggestion: isZh
-        ? '建议立即进行心脏科会诊，评估是否需要调整砷剂剂量或暂停治疗，并实施每日症状评估的强化监测方案。'
-        : 'Immediate cardiology consultation recommended; consider dose reduction or treatment pause with intensive daily monitoring.',
-    })
-  } else if (rResult.prediction.risk_level === 'medium') {
-    suggestions.push({
-      risk_factor: isZh ? '综合评估：中等风险' : 'Medium Risk',
-      suggestion: isZh
-        ? '建议加强监测：每周临床评估，每两周心脏专项评估，并向患者充分说明需要报告的心脏相关症状。'
-        : 'Enhanced monitoring: weekly clinical assessment, bi-weekly cardiac evaluation; educate patient on cardiac symptoms.',
-    })
-  }
-
-  // 如果没有特殊风险
-  if (suggestions.length === 0) {
-    suggestions.push({
-      risk_factor: isZh ? '综合评估：低风险' : 'Low Risk',
-      suggestion: isZh
-        ? '继续执行常规监测方案，按治疗计划定期随访，进行标准化心脏功能评估。'
-        : 'Continue routine monitoring; maintain regular follow-up and standard cardiac assessments.',
-    })
+  const keys = generateSuggestionKeys(rResult, input)
+  for (const { key } of keys) {
+    if (dict[key]) {
+      suggestions.push({ key, risk_factor: dict[key][0], suggestion: dict[key][1] })
+    }
   }
 
   return suggestions
