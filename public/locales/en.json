@@ -25,10 +25,11 @@
     "introTitle": "Background",
     "introContent": "Arsenic trioxide (ATO) is a highly effective chemotherapeutic agent for acute promyelocytic leukemia (APL). However, its clinical application is significantly challenged by cardiotoxicity. Adverse cardiac events occur with notable frequency and can lead to prolonged hospitalization or fatal outcomes.\n\nOur free online ATO Cardiotoxicity Risk Predictor addresses this clinical need by integrating data from authoritative studies and real-world adverse event reports.",
     "teamTitle": "Our Team",
-    "teamLeaderName": "[Placeholder: Team Leader Name]",
-    "teamLeaderTitle": "Associate Chief Pharmacist / PhD",
+    "teamLeaderName": "Hai Xin",
+    "teamLeaderTitle": "Professor, Director of Pharmacy",
     "teamLeaderAffiliation": "The First Affiliated Hospital of Harbin Medical University",
-    "teamLeaderBio": "Specializing in clinical pharmacy and drug metabolism research, focusing on pharmacokinetics and cardiotoxicity mechanisms of arsenic agents. PI of 2 NSFC projects with 20+ SCI publications.",
+    "teamLeaderBio": "Professor, doctoral supervisor, chief pharmacist, and high-level talent in Heilongjiang Province. PhD in Pharmaceutical Analysis from KU Leuven (Belgium); former Associate Researcher at Case Western Reserve University School of Medicine. Director of the Department of Pharmacy and Phase I Clinical Trial Center. PI of NSFC and provincial R&D projects; 53 SCI publications; provincial science and technology award recipient.",
+    "teamGroupName": "Prof. Hai Xin Research Group, The First Affiliated Hospital of Harbin Medical University",
     "startPrediction": "Start Prediction"
   },
   "footer": {

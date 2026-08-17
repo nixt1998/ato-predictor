@@ -61,13 +61,13 @@ export default function AboutPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* 机构 Logo */}
                 <div className="text-center">
-                  <div className="relative w-32 h-32 mx-auto mb-4 bg-[#F5F5F5] rounded-lg flex items-center justify-center">
+                  <div className="relative w-32 h-32 mx-auto mb-4 bg-white rounded-lg flex items-center justify-center p-4">
                     <Image
                       src="/images/hospital-logo.png"
                       alt="Hospital"
                       width={120}
                       height={48}
-                      className="opacity-60"
+                      className="object-contain"
                     />
                   </div>
                   <p className="text-sm font-medium text-[#212121]">
@@ -76,13 +76,13 @@ export default function AboutPage() {
                 </div>
 
                 <div className="text-center">
-                  <div className="relative w-32 h-32 mx-auto mb-4 bg-[#F5F5F5] rounded-lg flex items-center justify-center">
+                  <div className="relative w-32 h-32 mx-auto mb-4 bg-white rounded-lg flex items-center justify-center p-4">
                     <Image
                       src="/images/university-logo.png"
                       alt="University"
                       width={120}
                       height={48}
-                      className="opacity-60"
+                      className="object-contain"
                     />
                   </div>
                   <p className="text-sm font-medium text-[#212121]">
@@ -91,13 +91,13 @@ export default function AboutPage() {
                 </div>
 
                 <div className="text-center">
-                  <div className="relative w-32 h-32 mx-auto mb-4 bg-[#F5F5F5] rounded-lg flex items-center justify-center">
+                  <div className="relative w-32 h-32 mx-auto mb-4 bg-white rounded-lg flex items-center justify-center p-4">
                     <Image
                       src="/images/lab-logo.svg"
                       alt="Lab"
                       width={120}
                       height={48}
-                      className="opacity-60"
+                      className="object-contain"
                     />
                   </div>
                   <p className="text-sm font-medium text-[#212121]">

@@ -100,7 +100,7 @@ export default function Team() {
             {/* 文字叠加 */}
             <div className="absolute bottom-6 left-6 right-6 text-white">
               <p className="text-lg font-semibold drop-shadow-lg">
-                {t('teamLeaderAffiliation')} 研究团队
+                {t('teamGroupName')}
               </p>
             </div>
           </motion.div>

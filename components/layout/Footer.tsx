@@ -55,27 +55,27 @@ export default function Footer() {
 
         {/* 机构 Logo 展示区 */}
         <div className="border-t border-[#333333] pt-8 mb-8">
-          <div className="flex flex-wrap items-center justify-center gap-8 opacity-60">
+          <div className="flex flex-wrap items-center justify-center gap-8">
             <Image
               src="/images/hospital-logo.png"
               alt="Hospital Logo"
               width={150}
               height={60}
-              className="h-12 w-auto grayscale hover:grayscale-0 transition-all"
+              className="h-12 w-auto hover:opacity-80 transition-opacity"
             />
             <Image
               src="/images/university-logo.png"
               alt="University Logo"
               width={150}
               height={60}
-              className="h-12 w-auto grayscale hover:grayscale-0 transition-all"
+              className="h-12 w-auto hover:opacity-80 transition-opacity"
             />
             <Image
               src="/images/lab-logo.svg"
               alt="Lab Logo"
               width={150}
               height={60}
-              className="h-12 w-auto grayscale hover:grayscale-0 transition-all"
+              className="h-12 w-auto hover:opacity-80 transition-opacity"
             />
           </div>
         </div>

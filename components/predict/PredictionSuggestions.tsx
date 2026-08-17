@@ -114,14 +114,10 @@ export default function PredictionSuggestions() {
         transition={{ duration: 0.4, delay: 0.3 }}
       >
         <Card className="bg-[#FFF9E6] border-[#ED8B00]">
-          <CardContent className="py-4">
-            <div className="space-y-1.5">
-              <p className="font-semibold text-[#ED8B00] text-sm">
-                {t('disclaimer.title')}
-              </p>
-              <p className="text-sm text-[#757575] leading-relaxed">
-                {t('disclaimer.content')}
-              </p>
+          <CardContent className="py-2 px-4">
+            <div className="flex items-start gap-2">
+              <p className="font-semibold text-[#ED8B00] text-xs whitespace-nowrap">{t('disclaimer.title')}</p>
+              <p className="text-xs text-[#757575]">{t('disclaimer.content')}</p>
             </div>
           </CardContent>
         </Card>
