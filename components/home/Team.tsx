@@ -44,13 +44,14 @@ export default function Team() {
                 transition={{ type: "spring", stiffness: 300 }}
                 className="flex justify-center md:justify-start"
               >
-                <div className="relative w-[213px] h-[245px] rounded-xl overflow-hidden shadow-lg">
+                <div className="relative rounded-xl overflow-hidden shadow-lg" style={{ width: '213px', height: '245px' }}>
                   <Image
                     src="/images/placeholder-avatar.jpg"
                     alt={t('teamLeaderName')}
-                    fill
-                    sizes="213px"
-                    className="object-cover"
+                    width={213}
+                    height={245}
+                    className="object-cover w-full h-full"
+                    priority
                   />
                 </div>
               </motion.div>
