@@ -460,6 +460,9 @@
       "cardiotoxicDrug": "合并心毒性药物",
       "cardiotoxicDrugName": "心毒性药物名称（选填）",
       "cardiotoxicDrugNote": "建议由专业医学人员填写",
+      "nonCardiotoxicDrug": "合并非心毒性药物",
+      "nonCardiotoxicDrugName": "非心毒性药物名称（选填）",
+      "nonCardiotoxicDrugNote": "建议由专业医学人员填写",
       "K": "钾 K（mmol/L）",
       "Mg": "镁 Mg（mmol/L）",
       "Ca": "钙 Ca（mmol/L）",
@@ -477,7 +480,8 @@
       "MMA": "一甲基砷酸 MMA（ng/mL）",
       "DMA": "二甲基砷酸 DMA（ng/mL）",
       "cardiotoxicity": "心毒性结局 *",
-      "cardiotoxicityNote": "建议由专业医学人员填写"
+      "cardiotoxicityNote": "建议由专业医学人员填写",
+      "cardiotoxicitySymptoms": "心毒性具体症状（选填）"
     },
     "options": {
       "male": "男",
@@ -494,7 +498,9 @@
       "weight": "例：65",
       "dose": "例：142.85",
       "cardiotoxicDrugName": "例：多柔比星、阿霉素等",
-      "contactInfo": "邮箱或电话（选填，便于研究团队联系）",
+      "nonCardiotoxicDrugName": "例：抗生素、降压药等",
+      "cardiotoxicitySymptoms": "例：心律失常、QT间期延长、心力衰竭等",
+      "contactInfo": "邮箱或电话（选填,便于研究团队联系）",
       "K": "例：3.5",
       "Mg": "例：0.75",
       "Ca": "例：2.11",

@@ -13,23 +13,25 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 interface FormState {
   sex: string; age: string; height: string; weight: string; contactInfo: string
   class: string; dose: string; cardiotoxicDrug: string; cardiotoxicDrugName: string
+  nonCardiotoxicDrug: string; nonCardiotoxicDrugName: string
   smoking: string; alcohol: string; diabetes: string; hyperlipidemia: string; hypertension: string
   K: string; Mg: string; Ca: string; BUN: string
   ALT: string; AST: string; GGT: string; UA: string; Cr: string
   CK: string; CKMB: string; LDH: string; HBDH: string
   iAs: string; MMA: string; DMA: string
-  cardiotoxicity: string; notes: string
+  cardiotoxicity: string; cardiotoxicitySymptoms: string; notes: string
 }
 
 const INITIAL: FormState = {
   sex: 'NA', age: '', height: '', weight: '', contactInfo: '',
   class: 'NA', dose: '', cardiotoxicDrug: 'NA', cardiotoxicDrugName: '',
+  nonCardiotoxicDrug: 'NA', nonCardiotoxicDrugName: '',
   smoking: 'NA', alcohol: 'NA', diabetes: 'NA', hyperlipidemia: 'NA', hypertension: 'NA',
   K: '', Mg: '', Ca: '', BUN: '',
   ALT: '', AST: '', GGT: '', UA: '', Cr: '',
   CK: '', CKMB: '', LDH: '', HBDH: '',
   iAs: '', MMA: '', DMA: '',
-  cardiotoxicity: 'NA', notes: '',
+  cardiotoxicity: 'NA', cardiotoxicitySymptoms: '', notes: '',
 }
 
 // ─── 子组件：文本输入框 ─────────────────────────────────────────────────────
@@ -533,7 +535,6 @@ export default function UploadPage() {
               value={form.cardiotoxicDrug}
               onChange={v => set('cardiotoxicDrug', v)}
               options={yesNoOpts}
-              note={t('fields.cardiotoxicDrugNote')}
             />
             {form.cardiotoxicDrug === 'Yes' && (
               <div className="lg:col-span-2">
@@ -544,6 +545,25 @@ export default function UploadPage() {
                   value={form.cardiotoxicDrugName}
                   onChange={v => set('cardiotoxicDrugName', v)}
                 />
+                <p className="text-xs text-[#757575] mt-1">{t('fields.cardiotoxicDrugNote')}</p>
+              </div>
+            )}
+            <FieldSelect
+              label={t('fields.nonCardiotoxicDrug')}
+              value={form.nonCardiotoxicDrug}
+              onChange={v => set('nonCardiotoxicDrug', v)}
+              options={yesNoOpts}
+            />
+            {form.nonCardiotoxicDrug === 'Yes' && (
+              <div className="lg:col-span-2">
+                <FieldInput
+                  label={t('fields.nonCardiotoxicDrugName')}
+                  name="nonCardiotoxicDrugName"
+                  placeholder={t('placeholders.nonCardiotoxicDrugName')}
+                  value={form.nonCardiotoxicDrugName}
+                  onChange={v => set('nonCardiotoxicDrugName', v)}
+                />
+                <p className="text-xs text-[#757575] mt-1">{t('fields.nonCardiotoxicDrugNote')}</p>
               </div>
             )}
           </SectionCard>
@@ -596,8 +616,19 @@ export default function UploadPage() {
               value={form.cardiotoxicity}
               onChange={v => set('cardiotoxicity', v)}
               options={yesNoOpts}
-              note={t('fields.cardiotoxicityNote')}
             />
+            {form.cardiotoxicity === 'Yes' && (
+              <div className="lg:col-span-3">
+                <FieldInput
+                  label={t('fields.cardiotoxicitySymptoms')}
+                  name="cardiotoxicitySymptoms"
+                  placeholder={t('placeholders.cardiotoxicitySymptoms')}
+                  value={form.cardiotoxicitySymptoms}
+                  onChange={v => set('cardiotoxicitySymptoms', v)}
+                />
+                <p className="text-xs text-[#757575] mt-1">{t('fields.cardiotoxicityNote')}</p>
+              </div>
+            )}
           </SectionCard>
 
           {/* 9. 联系方式 */}

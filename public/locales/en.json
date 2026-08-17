@@ -460,6 +460,9 @@
       "cardiotoxicDrug": "Co-use of Cardiotoxic Drugs",
       "cardiotoxicDrugName": "Cardiotoxic Drug Name (Optional)",
       "cardiotoxicDrugNote": "Recommended to be filled in by a qualified medical professional",
+      "nonCardiotoxicDrug": "Co-use of Non-Cardiotoxic Drugs",
+      "nonCardiotoxicDrugName": "Non-Cardiotoxic Drug Name (Optional)",
+      "nonCardiotoxicDrugNote": "Recommended to be filled in by a qualified medical professional",
       "K": "Potassium K (mmol/L)",
       "Mg": "Magnesium Mg (mmol/L)",
       "Ca": "Calcium Ca (mmol/L)",
@@ -477,7 +480,8 @@
       "MMA": "Monomethylarsonic Acid MMA (ng/mL)",
       "DMA": "Dimethylarsinic Acid DMA (ng/mL)",
       "cardiotoxicity": "Cardiotoxicity Outcome *",
-      "cardiotoxicityNote": "Recommended to be filled in by a qualified medical professional"
+      "cardiotoxicityNote": "Recommended to be filled in by a qualified medical professional",
+      "cardiotoxicitySymptoms": "Specific Cardiotoxicity Symptoms (Optional)"
     },
     "options": {
       "male": "Male",
@@ -494,6 +498,8 @@
       "weight": "e.g. 65",
       "dose": "e.g. 142.85",
       "cardiotoxicDrugName": "e.g. doxorubicin, daunorubicin, etc.",
+      "nonCardiotoxicDrugName": "e.g. antibiotics, antihypertensives, etc.",
+      "cardiotoxicitySymptoms": "e.g. arrhythmia, QT prolongation, heart failure, etc.",
       "contactInfo": "Email or phone (optional, for research team contact)",
       "K": "e.g. 3.5",
       "Mg": "e.g. 0.75",
