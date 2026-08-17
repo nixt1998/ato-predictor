@@ -115,10 +115,9 @@ export default function PredictionSuggestions() {
       >
         <Card className="bg-[#FFF9E6] border-[#ED8B00]">
           <CardContent className="pt-6">
-            {/* 图标和文字水平居中，但文字内部左对齐 */}
-            <div className="flex flex-col items-center gap-2">
-              <AlertCircle className="w-5 h-5 text-[#ED8B00] flex-shrink-0" />
-              <div className="space-y-1 text-sm text-[#757575] text-left max-w-prose">
+            <div className="flex gap-3">
+              <AlertCircle className="w-5 h-5 text-[#ED8B00] flex-shrink-0 mt-0.5" />
+              <div className="space-y-1 text-sm text-[#757575]">
                 <p className="font-semibold text-[#ED8B00]">
                   {t('disclaimer.title')}
                 </p>
