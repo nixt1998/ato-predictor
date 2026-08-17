@@ -41,15 +41,16 @@ export default function PredictionSuggestions() {
   const { suggestions, prediction } = result
   const riskLevel = prediction.risk_level
 
-  const dict = SUGGESTION_DICT[locale] ?? SUGGESTION_DICT['zh']
+  // locale 可能是 'zh' 或 'en'，确保 dict 选择正确
+  const dictLocale = locale === 'en' ? 'en' : 'zh'
+  const dict = SUGGESTION_DICT[dictLocale]
 
-  // 根据当前语言重新翻译建议（忽略 store 中存储时的语言）
+  // 每次渲染时根据当前 locale 重新翻译
   const localizedSuggestions = suggestions.map((s) => {
     const key = (s as any).key as string | undefined
     if (key && dict[key]) {
       return { risk_factor: dict[key][0], suggestion: dict[key][1] }
     }
-    // 无 key（旧数据）直接使用原文
     return s
   })
 
@@ -114,9 +115,10 @@ export default function PredictionSuggestions() {
       >
         <Card className="bg-[#FFF9E6] border-[#ED8B00]">
           <CardContent className="pt-6">
-            <div className="flex flex-col items-center text-center gap-2">
-              <AlertCircle className="w-5 h-5 text-[#ED8B00]" />
-              <div className="space-y-2 text-sm text-[#757575]">
+            {/* 图标和文字水平居中，但文字内部左对齐 */}
+            <div className="flex flex-col items-center gap-2">
+              <AlertCircle className="w-5 h-5 text-[#ED8B00] flex-shrink-0" />
+              <div className="space-y-1 text-sm text-[#757575] text-left max-w-prose">
                 <p className="font-semibold text-[#ED8B00]">
                   {t('disclaimer.title')}
                 </p>

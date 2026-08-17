@@ -4,12 +4,12 @@ import { motion } from 'framer-motion'
 import { useTranslations } from 'next-intl'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { useAppStore } from '@/lib/store'
-import { getRiskLevel, getRiskColor, getRiskLevelText, formatPercentage } from '@/lib/utils'
+import { getRiskLevel, getRiskColor, formatPercentage } from '@/lib/utils'
 import { AlertTriangle, CheckCircle2, AlertCircle } from 'lucide-react'
 
 export default function PredictionResult() {
   const t = useTranslations('predict.result')
-  const { result, locale } = useAppStore()
+  const { result } = useAppStore()
 
   if (!result) return null
 
@@ -52,7 +52,7 @@ export default function PredictionResult() {
               {/* 风险等级文本 */}
               <div>
                 <h2 className="text-3xl font-bold mb-2" style={{ color: riskColor }}>
-                  {getRiskLevelText(riskLevel, locale as 'zh' | 'en')}
+                  {t(`riskLevels.${riskLevel}`)}
                 </h2>
                 <p className="text-[#757575]">
                   {t('riskProbability')}: <span className="font-semibold text-[#212121]">

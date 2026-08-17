@@ -51,20 +51,9 @@ export function getRiskColor(level: 'low' | 'medium' | 'high'): string {
 }
 
 /**
- * 获取风险等级文本（中文）
+ * 获取风险等级的翻译 key
+ * 已废弃：请直接使用 t('predict.result.riskLevels.low') 等
  */
-export function getRiskLevelText(level: 'low' | 'medium' | 'high', locale: 'zh' | 'en'): string {
-  const texts = {
-    zh: {
-      low: '低风险',
-      medium: '中风险',
-      high: '高风险'
-    },
-    en: {
-      low: 'Low Risk',
-      medium: 'Medium Risk',
-      high: 'High Risk'
-    }
-  }
-  return texts[locale][level]
+export function getRiskLevelKey(level: 'low' | 'medium' | 'high'): string {
+  return `predict.result.riskLevels.${level}`
 }

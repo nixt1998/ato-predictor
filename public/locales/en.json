@@ -72,6 +72,11 @@
       "title": "Risk Assessment Result",
       "riskProbability": "Cardiotoxicity Risk",
       "riskLevel": "Risk Level",
+      "riskLevels": {
+        "low": "Low Risk",
+        "medium": "Medium Risk",
+        "high": "High Risk"
+      },
       "lowRisk": "Low Risk",
       "mediumRisk": "Medium Risk",
       "highRisk": "High Risk",
