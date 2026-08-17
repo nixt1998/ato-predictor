@@ -146,8 +146,8 @@
     "team": {
       "title": "研究机构",
       "hospital": "哈尔滨医科大学附属第一医院",
-      "university": "哈尔滨医科大学",
-      "lab": "[占位符: 实验室名称]"
+      "university": "齐齐哈尔医学院",
+      "lab": "黑龙江省精准药学研究重点实验室"
     },
     "scope": {
       "title": "适用范围",
@@ -272,8 +272,8 @@
     "contact": {
       "title": "联系我们",
       "content": "如您对隐私政策有任何疑问，请通过以下方式联系我们：",
-      "email": "邮箱：",
-      "phone": "电话："
+      "email": "邮箱：Haixin@hrmu.edu.cn",
+      "phone": "电话：15852962765"
     }
   },
   "disclaimer": {
@@ -345,11 +345,11 @@
     "subtitle": "如有问题或建议，欢迎随时联系我们",
     "email": {
       "title": "电子邮箱",
-      "desc": "学术合作与技术问题"
+      "desc": "Haixin@hrmu.edu.cn"
     },
     "phone": {
       "title": "联系电话",
-      "desc": "[占位符: 联系电话]"
+      "desc": "15852962765"
     },
     "address": {
       "title": "通讯地址",
@@ -358,9 +358,9 @@
     },
     "hours": {
       "title": "工作时间",
-      "desc": "我们的响应时间",
+      "desc": "9:00–16:00（工作日）",
       "weekday": "周一至周五",
-      "weekend": "周末",
+      "weekend": "周末及法定节假日",
       "closed": "休息"
     },
     "faq": {

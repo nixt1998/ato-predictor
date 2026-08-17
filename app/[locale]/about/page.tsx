@@ -93,7 +93,7 @@ export default function AboutPage() {
                 <div className="text-center">
                   <div className="relative w-32 h-32 mx-auto mb-4 bg-white rounded-lg flex items-center justify-center p-4">
                     <Image
-                      src="/images/lab-logo.svg"
+                      src="/images/lab-logo.png"
                       alt="Lab"
                       width={120}
                       height={48}

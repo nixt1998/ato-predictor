@@ -146,8 +146,8 @@
     "team": {
       "title": "Institutions",
       "hospital": "The First Affiliated Hospital of Harbin Medical University",
-      "university": "Harbin Medical University",
-      "lab": "[Placeholder: Laboratory Name]"
+      "university": "Qiqihar Medical University",
+      "lab": "Heilongjiang Province Key Laboratory of Precision Pharmaceutical Research"
     },
     "scope": {
       "title": "Scope of Application",
@@ -272,8 +272,8 @@
     "contact": {
       "title": "Contact Us",
       "content": "If you have any questions about this privacy policy, please contact us via:",
-      "email": "Email:",
-      "phone": "Phone:"
+      "email": "Email: Haixin@hrmu.edu.cn",
+      "phone": "Phone: +86 15852962765"
     }
   },
   "disclaimer": {
@@ -345,11 +345,11 @@
     "subtitle": "We welcome your questions and feedback",
     "email": {
       "title": "Email",
-      "desc": "Academic collaboration and technical questions"
+      "desc": "Haixin@hrmu.edu.cn"
     },
     "phone": {
       "title": "Phone",
-      "desc": "[Placeholder: Contact Phone]"
+      "desc": "+86 15852962765"
     },
     "address": {
       "title": "Address",
@@ -358,9 +358,9 @@
     },
     "hours": {
       "title": "Working Hours",
-      "desc": "Our response time",
-      "weekday": "Monday–Friday",
-      "weekend": "Weekends",
+      "desc": "9:00–16:00 (Weekdays)",
+      "weekday": "Monday to Friday",
+      "weekend": "Weekends & Holidays",
       "closed": "Closed"
     },
     "faq": {

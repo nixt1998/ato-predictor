@@ -71,7 +71,7 @@ export default function Footer() {
               className="h-12 w-auto hover:opacity-80 transition-opacity"
             />
             <Image
-              src="/images/lab-logo.svg"
+              src="/images/lab-logo.png"
               alt="Lab Logo"
               width={150}
               height={60}

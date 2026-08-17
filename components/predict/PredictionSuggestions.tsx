@@ -116,8 +116,8 @@ export default function PredictionSuggestions() {
         <Card className="bg-[#FFF9E6] border-[#ED8B00]">
           <CardContent className="py-2 px-4">
             <div className="flex items-start gap-2">
-              <p className="font-semibold text-[#ED8B00] text-xs whitespace-nowrap">{t('disclaimer.title')}</p>
-              <p className="text-xs text-[#757575]">{t('disclaimer.content')}</p>
+              <p className="font-semibold text-[#ED8B00] text-sm whitespace-nowrap">{t('disclaimer.title')}</p>
+              <p className="text-sm text-[#757575]">{t('disclaimer.content')}</p>
             </div>
           </CardContent>
         </Card>

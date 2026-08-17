@@ -43,7 +43,7 @@ export default function Introduction() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
                   transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                  className="text-[#212121] leading-relaxed mb-6 last:mb-0"
+                  className="text-[#212121] leading-relaxed mb-6 last:mb-0 indent-[2em]"
                 >
                   {paragraph}
                 </motion.p>
