@@ -1,9 +1,9 @@
 # 项目交接文档 (Project Handover)
 
 **项目名称**: ATO CardiTox Risk Predictor  
-**交接日期**: 2026-08-17  
+**最后更新**: 2026-08-18  
 **项目路径**: `F:\claudedata\workdata\20260816atocarditox-website\ato-predictor`  
-**技术栈**: Next.js 16.3.1 (Turbopack) + React + TypeScript + Tailwind CSS + Shiny R API
+**技术栈**: Next.js 16.3.1 (Turbopack) + React + TypeScript + Tailwind CSS + Shiny R API + Nodemailer
 
 ---
 
@@ -14,9 +14,10 @@
 **核心功能**:
 1. 风险预测计算器（输入5个临床指标）
 2. 多语言支持（中文/英文）
-3. 数据上传功能（CSV批量预测）
+3. **数据上传功能**（表单填写 + 文件上传）
 4. PDF报告生成
 5. R Shiny API 后端集成
+6. **邮件通知系统**（自动抄送到 hai_xin@163.com）
 
 ---
 
@@ -27,10 +28,14 @@ ato-predictor/
 ├── app/[locale]/              # 多语言页面路由
 │   ├── page.tsx               # 首页
 │   ├── predict/               # 预测功能
-│   ├── upload/                # 数据上传
+│   ├── upload/                # 数据上传（新增）
+│   │   └── page.tsx           # 完整表单 + 文件上传
 │   ├── about/                 # 简介页面
 │   ├── privacy/               # 隐私政策
 │   └── contact/               # 联系我们
+├── app/api/
+│   └── upload/                # 上传 API（新增）
+│       └── route.ts           # 处理表单提交 + 邮件发送
 ├── components/
 │   ├── home/                  # 首页组件
 │   │   ├── Hero.tsx           # 首屏
@@ -39,7 +44,14 @@ ato-predictor/
 │   ├── layout/                # 布局组件
 │   │   ├── Header.tsx         # 导航栏
 │   │   └── Footer.tsx         # 页脚（含备案信息）
-│   └── predict/               # 预测相关组件
+│   ├── predict/               # 预测相关组件
+│   └── ui/                    # UI 基础组件
+│       └── Card.tsx           # 卡片组件
+├── data/
+│   └── uploads/               # 上传数据存储（新增）
+│       ├── counter.json       # 提交编号计数器
+│       ├── submissions/       # JSON 表单数据
+│       └── files/             # 用户上传的文件
 ├── public/
 │   ├── images/                # 图片资源
 │   │   ├── hospital-logo.png  # 哈尔滨医科大学附属第一医院
@@ -48,6 +60,8 @@ ato-predictor/
 │   │   ├── placeholder-avatar.jpg   # 海鑫教授头像 (356x409)
 │   │   ├── placeholder-team.jpg     # 团队合照
 │   │   └── beian-icon.png     # 备案图标
+│   ├── templates/             # 文件模板（新增）
+│   │   └── upload-template.xlsx  # Excel 上传模板
 │   └── locales/               # 翻译文件
 │       ├── zh.json            # 中文
 │       └── en.json            # 英文
@@ -62,7 +76,104 @@ ato-predictor/
 
 ## 🎯 最近完成的工作（按时间倒序）
 
-### Commit: `50c41bb` (2026-08-17 最新)
+### Commit: `4350f7a` (2026-08-18 最新)
+**标题**: feat: improve upload form - add cardiotoxicity symptoms, non-cardiotoxic drugs, and professional guidance notes
+
+**修改内容**:
+1. ✅ 心毒性结局：选择"是"时新增"心毒性具体症状"输入框
+2. ✅ 合并非心毒性药物：新增下拉选择和药物名称输入框
+3. ✅ 专业人员填写提示：统一三个字段（心毒性药物、非心毒性药物、心毒性症状）的提示位置
+4. ✅ 所有提示文字现在都显示在输入框下方，样式一致
+
+---
+
+### Commit: `36c5418`
+**标题**: fix: adjust clinical section layout - dose same width as class, cardiotoxicDrug input visible
+
+**修改内容**:
+1. ✅ 三氧化二砷剂量：调整为和疾病分型同宽（`lg:col-span-2`）
+2. ✅ 合并心毒性药物：修复药物名称输入框显示问题
+3. ✅ 布局优化：确保所有字段在响应式网格中正确对齐
+
+---
+
+### Commit: `60197b9`
+**标题**: fix: replace string interpolation with next-intl parameter syntax for countdown
+
+**修改内容**:
+1. ✅ 修复倒计时显示：使用 `next-intl` 正确的参数语法 `t('key', {value})`
+2. ✅ 解决字符串插值导致的显示问题
+
+---
+
+### Commit: `0836c00`
+**标题**: feat: implement data upload page with file upload, Excel template, and email notification
+
+**修改内容**:
+1. ✅ **完整数据上传页面**（`/upload`）：
+   - 患者基础信息（姓名、性别、年龄、身高、体重，自动计算 BMI）
+   - 血清离子（钾、镁、钙）
+   - 血砷检测结果（时间点、浓度）
+   - 临床分型与用药（疾病分型、剂量、合并心毒性药物）
+   - 实验室检查（QTc、ALT、AST、肌酐、肌酸激酶）
+   - 既往史（是/否选择）
+   - 用药史（文本输入）
+   - 临床结局（心毒性是/否）
+   - 联系方式（邮箱/电话）
+   - 文件上传（支持多种格式）
+
+2. ✅ **文件上传功能**：
+   - 支持格式：`.doc, .docx, .xls, .xlsx, .pdf, .txt, .jpg, .jpeg, .png, .tif, .tiff`
+   - 单次最多 10 个文件
+   - 单文件最大 25MB
+   - 拖拽上传 + 点击选择
+   - 文件列表显示（文件名、大小、删除按钮）
+
+3. ✅ **Excel 模板下载**：
+   - 预留模板链接：`/templates/upload-template.xlsx`
+   - 用户可填写模板后上传代替手填表单
+
+4. ✅ **后端 API** (`/api/upload/route.ts`)：
+   - 表单数据保存为 JSON（`data/uploads/submissions/`）
+   - 文件保存到服务器（`data/uploads/files/`）
+   - 自动生成提交编号（`ATO-YYYYMMDD-XXXX`）
+   - Nodemailer 邮件通知（抄送到 `hai_xin@163.com`）
+
+5. ✅ **UI/UX 优化**：
+   - 提交成功弹窗（显示提交编号）
+   - 重置确认弹窗（防止误操作）
+   - 倒计时按钮（提交后 5 秒冷却）
+   - 响应式布局（移动端友好）
+   - 加载动画和错误提示
+
+6. ✅ **中英文翻译**：
+   - 所有字段和提示文字完整翻译
+   - `public/locales/zh.json` 和 `en.json` 同步更新
+
+---
+
+### Commit: `3677ed9`
+**标题**: fix: team leader avatar not displaying - switch from fill to fixed dimensions
+
+**修改内容**:
+1. ✅ 首页团队负责人头像显示修复
+2. ✅ 从 `fill` 布局切换为固定尺寸 `width={213} height={245}`
+3. ✅ 添加 `priority` 属性优化首屏加载
+4. ✅ 保持 356:409 原图比例（0.6x 缩放）
+
+---
+
+### Commit: `a457770`
+**标题**: docs: add comprehensive project handover document
+
+**修改内容**:
+1. ✅ 生成 400+ 行完整项目交接文档
+2. ✅ 包含所有提交历史、配置信息、故障排查步骤
+3. ✅ 记录开发环境设置、已知问题、部署注意事项
+
+---
+
+### Commit: `50c41bb` (2026-08-17)
 **标题**: fix: about title to 简介, privacy duplicate contact, paragraph indent, avatar ratio
 
 **修改内容**:
@@ -133,6 +244,97 @@ ato-predictor/
 **修改内容**:
 1. ✅ 移除 disclaimer 警告图标
 2. ✅ 减少黄色框高度
+
+---
+
+## 📦 新增功能详解
+
+### 数据上传页面 (`/upload`)
+
+**功能概述**：
+- 完整的临床数据采集表单（可选填，无需填满所有字段）
+- 文件上传功能（支持多种医疗文档和图片格式）
+- Excel 模板下载（用户可离线填写后上传）
+- 自动生成提交编号（`ATO-YYYYMMDD-XXXX` 格式）
+- 邮件通知系统（自动抄送到 `hai_xin@163.com`）
+
+**表单字段分类**：
+
+1. **患者基础信息**
+   - 姓名、性别、年龄、身高、体重
+   - BMI 自动计算（用户无需手动输入）
+
+2. **血清离子**
+   - 血清钾、镁、钙浓度
+
+3. **血砷检测结果**
+   - 采样时间点、血砷浓度
+
+4. **临床分型与用药**
+   - 疾病分型（高危/中危/低危）
+   - 三氧化二砷剂量
+   - 合并心毒性药物（是/否 + 药物名称）
+   - 合并非心毒性药物（是/否 + 药物名称）
+   - **专业人员提示**：药物名称字段下方显示"建议由专业医学人员填写"
+
+5. **实验室检查**
+   - QTc 间期、ALT、AST、肌酐、肌酸激酶
+
+6. **既往史**
+   - 是/否选择
+
+7. **用药史**
+   - 自由文本输入
+
+8. **临床结局**
+   - 心毒性是/否
+   - 如选择"是"，显示"心毒性具体症状"输入框
+   - **专业人员提示**：症状字段下方显示"建议由专业医学人员填写"
+
+9. **联系方式**
+   - 邮箱或电话（选填）
+
+10. **文件上传**
+    - 支持格式：`.doc, .docx, .xls, .xlsx, .pdf, .txt, .jpg, .jpeg, .png, .tif, .tiff`
+    - 单次最多 10 个文件
+    - 单文件最大 25MB
+    - 拖拽上传 + 点击浏览
+
+**后端 API 实现** (`/api/upload/route.ts`)：
+
+```typescript
+// 核心功能
+1. 文件保存：data/uploads/files/{submissionId}/
+2. JSON 数据：data/uploads/submissions/{submissionId}.json
+3. 计数器管理：data/uploads/counter.json
+4. 邮件发送：Nodemailer (抄送 hai_xin@163.com)
+5. 提交编号：ATO-20260818-0001 格式
+```
+
+**环境变量配置** (`.env.local`)：
+```env
+# 邮件服务配置（需要配置）
+EMAIL_HOST=smtp.example.com
+EMAIL_PORT=465
+EMAIL_USER=your-email@example.com
+EMAIL_PASS=your-password
+EMAIL_FROM=noreply@example.com
+EMAIL_CC=hai_xin@163.com
+```
+
+**数据存储结构**：
+```
+data/uploads/
+├── counter.json              # 提交编号计数器
+├── submissions/              # 表单数据 JSON
+│   ├── ATO-20260818-0001.json
+│   └── ATO-20260818-0002.json
+└── files/                    # 用户上传文件
+    ├── ATO-20260818-0001/
+    │   ├── report.pdf
+    │   └── image.jpg
+    └── ATO-20260818-0002/
+```
 
 ---
 
@@ -217,6 +419,13 @@ ato-predictor/
 3. 第二次：标题与内容同行 + `py-2` + `text-xs`
 4. **当前**：保持同行 + `py-2` + **`text-sm`**（字号稍大）
 
+### 数据上传表单演变
+| 日期 | 修改内容 | 说明 |
+|------|---------|------|
+| 2026-08-18 | 初版完成 | 完整表单 + 文件上传 + 邮件通知 |
+| 2026-08-18 | 布局优化 | 剂量字段与分型同宽，心毒性药物输入框显示修复 |
+| 2026-08-18 | 字段增强 | 新增心毒性症状、非心毒性药物，统一专业人员提示 |
+
 ---
 
 ## 🚀 开发环境设置
@@ -288,6 +497,13 @@ rm -rf .next/cache/images
 - [x] 头像比例调整为竖向
 - [x] 关于页面标题改为"简介"
 - [x] 隐私政策联系信息重复显示修复
+- [x] **数据上传页面完整实现**（表单 + 文件上传 + 邮件通知）
+- [x] **心毒性症状字段**（条件显示）
+- [x] **合并非心毒性药物字段**（下拉 + 输入框）
+- [x] **专业人员填写提示**（三个字段统一样式）
+- [x] **Excel 模板下载功能**
+- [x] **提交编号自动生成**（ATO-YYYYMMDD-XXXX）
+- [x] **Nodemailer 邮件系统**（抄送 hai_xin@163.com）
 
 ### ⚠️ 已知警告（无害）
 1. **Image `sizes` prop missing**: `placeholder-avatar.jpg` 在 Team.tsx 中（已添加 sizes="213px"）
@@ -302,9 +518,16 @@ rm -rf .next/cache/images
 2. **功能增强**:
    - R API 健康检查机制
    - 离线模式支持（R API 不可用时的降级方案）
-   - 批量上传进度条优化
+   - 上传文件进度条显示
+   - Excel 模板自动填充功能（读取上传的 Excel 并填充表单）
    
-3. **国际化**:
+3. **数据上传待完善**:
+   - ⚠️ **邮件服务配置**：需要配置 `.env.local` 中的 SMTP 信息
+   - ⚠️ **Excel 模板文件**：需要设计并替换 `public/templates/upload-template.xlsx`
+   - ⚠️ **服务器存储权限**：确保 `data/uploads/` 目录有写入权限
+   - 考虑添加数据导出功能（管理员查看所有提交）
+   
+4. **国际化**:
    - 考虑添加繁体中文支持
    - 优化英文翻译质量
 
@@ -331,13 +554,35 @@ rm -rf .next/cache/images
 ```env
 # R Shiny API endpoint
 NEXT_PUBLIC_R_API_URL=http://localhost:8000
+
+# 邮件服务配置（数据上传功能需要）
+EMAIL_HOST=smtp.example.com          # SMTP 服务器地址
+EMAIL_PORT=465                        # SMTP 端口（465 为 SSL）
+EMAIL_USER=your-email@example.com    # 发件邮箱
+EMAIL_PASS=your-password              # 邮箱密码或应用专用密码
+EMAIL_FROM=noreply@example.com       # 发件人显示地址
+EMAIL_CC=hai_xin@163.com              # 抄送邮箱（固定）
 ```
+
+**⚠️ 重要**：
+- 生产环境必须配置邮件服务，否则数据上传功能会报错
+- 建议使用应用专用密码（如 Gmail App Password、QQ 邮箱授权码）
+- 抄送邮箱 `hai_xin@163.com` 已硬编码在 API 中
 
 ### 生产构建
 ```bash
 npm run build
 npm run start
 ```
+
+**部署前检查清单**：
+- [ ] 配置 `.env.local` 邮件服务变量
+- [ ] 确保 `data/uploads/` 目录存在且有写入权限
+- [ ] 替换 `public/templates/upload-template.xlsx` 为实际模板
+- [ ] 测试文件上传功能（单个/多个文件）
+- [ ] 测试邮件发送功能（检查收件箱和抄送）
+- [ ] 验证提交编号生成正常
+- [ ] 检查所有表单字段的必填/选填逻辑
 
 ### 图片优化
 当前图片清单：
@@ -361,6 +606,8 @@ beian-icon.png         48KB
 - **Turbopack 文档**: https://turbo.build/pack/docs
 - **Tailwind CSS**: https://tailwindcss.com/docs
 - **Framer Motion**: https://www.framer.com/motion/
+- **Nodemailer 文档**: https://nodemailer.com/
+- **next-intl 文档**: https://next-intl-docs.vercel.app/
 
 ---
 
@@ -391,10 +638,25 @@ git checkout -b feature/new-feature
 
 ## 📊 项目统计
 
-- **总提交数**: 6 次重要修复提交（最近一周）
-- **文件修改数**: ~20 个组件和配置文件
+- **总提交数**: 10+ 次提交（2026-08-17 至 2026-08-18）
+- **文件修改数**: ~30 个组件和配置文件
 - **图片资源**: 7 个文件（总计 ~660KB）
-- **翻译条目**: 中文约 150 条，英文同步
+- **翻译条目**: 中文约 200+ 条，英文同步
+- **新增页面**: 数据上传页面 `/upload`
+- **API 路由**: `/api/upload` (文件处理 + 邮件发送)
+- **依赖包新增**: `nodemailer`, `@types/nodemailer`, `exceljs`
+
+### 最近 Git 提交记录
+```bash
+4350f7a - feat: improve upload form - add cardiotoxicity symptoms, non-cardiotoxic drugs, and professional guidance notes
+[前序提交] - fix: upload form layout and cardiotoxic drug field display
+[前序提交] - feat: complete upload page with form, file upload, and email notification
+3677ed9 - fix: team leader avatar not displaying - switch from fill to fixed dimensions
+a457770 - docs: add comprehensive HANDOVER.md for project continuation
+50c41bb - fix: about title to 简介, privacy duplicate contact, paragraph indent, avatar ratio
+f5bf0fd - fix: enlarge logos, remove placeholders, adjust work hours, fix avatar aspect ratio
+8a98c67 - fix: university name, lab logo, contact info, disclaimer font size, paragraph indent
+```
 
 ---
 
@@ -402,11 +664,12 @@ git checkout -b feature/new-feature
 
 **项目负责人**: 海鑫教授  
 **邮箱**: Haixin@hrmu.edu.cn  
+**抄送邮箱**: hai_xin@163.com (数据上传自动抄送)  
 **电话**: 15852962765  
 **工作时间**: 周一至周五 9:00–16:00
 
 ---
 
-**文档版本**: v1.0  
-**最后更新**: 2026-08-17  
+**文档版本**: v1.1  
+**最后更新**: 2026-08-18  
 **生成工具**: Claude Opus 5 (1M context)
