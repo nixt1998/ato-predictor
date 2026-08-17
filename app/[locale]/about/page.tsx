@@ -25,7 +25,7 @@ export default function AboutPage() {
               <CardTitle>{t('background.title')}</CardTitle>
             </CardHeader>
             <CardContent className="prose prose-lg max-w-none">
-              <p className="text-[#212121] leading-relaxed">
+              <p className="text-[#212121] leading-relaxed indent-[2em]">
                 {t('background.content')}
               </p>
             </CardContent>
