@@ -178,7 +178,7 @@
     },
     "shap": {
       "title": "SHAP 可解释性",
-      "content": "本工具采用 Kernel SHAP（SHapley Additive exPlanations）方法对模型预测结果进行解释。SHAP 分析基于合作博弈论中 Shapley 值的概念，将各特征视为"参与者"，通过计算每个特征在不同特征子集组合中的边际贡献，公平量化每个特征对单次预测结果偏离总体平均预测值的贡献。Kernel SHAP 是一种模型无关的近似方法，通过加权采样从背景数据集中估算 Shapley 值。对于本工具，背景数据集来自模型的训练集。SHAP 值具有效率性（所有特征贡献之和等于预测值与平均预测值之差）、对称性、可加性及零玩家等属性，保证了特征贡献量化的公平性与可解释性（Ponce-Bobadilla et al., Clin Transl Sci, 2024）。",
+      "content": "本工具采用 Kernel SHAP（SHapley Additive exPlanations）方法对模型预测结果进行解释。SHAP 分析基于合作博弈论中 Shapley 值的概念，将各特征视为参与者，通过计算每个特征在不同特征子集组合中的边际贡献，公平量化每个特征对单次预测结果偏离总体平均预测值的贡献。Kernel SHAP 是一种模型无关的近似方法，通过加权采样从背景数据集中估算 Shapley 值。对于本工具，背景数据集来自模型的训练集。SHAP 值具有效率性（所有特征贡献之和等于预测值与平均预测值之差）、对称性、可加性及零玩家等属性，保证了特征贡献量化的公平性与可解释性（Ponce-Bobadilla et al., Clin Transl Sci, 2024）。",
       "interpretation": "SHAP 值解读：",
       "positive": "SHAP 值为正值：该特征使个体预测的心毒性风险高于模型平均预测水平，提示该特征对心毒性具有促进作用",
       "negative": "SHAP 值为负值：该特征使个体预测的心毒性风险低于模型平均预测水平，提示该特征对心毒性具有保护作用",
