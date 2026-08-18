@@ -11,12 +11,13 @@ import "../globals.css";
 export const metadata: Metadata = {
   title: "ATO Cardiotoxicity Risk Predictor | 砷剂心脏毒性风险预测工具",
   description: "Arsenic predict cardiotoxicity risk in APL patients during ATO treatment",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-  },
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
 };
 
 export default async function LocaleLayout({

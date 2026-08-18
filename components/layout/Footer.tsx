@@ -110,7 +110,7 @@ export default function Footer() {
                   alt="公安备案"
                   width={16}
                   height={16}
-                  className="opacity-80"
+                  className="w-4 h-auto opacity-80"
                 />
                 <span>{t('footer.policeBeian')}</span>
               </a>

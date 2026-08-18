@@ -50,7 +50,8 @@ export default function Team() {
                     alt={t('teamLeaderName')}
                     width={213}
                     height={245}
-                    className="object-cover w-full h-full"
+                    className="object-cover"
+                    style={{ width: '213px', height: '245px' }}
                     priority
                   />
                 </div>
