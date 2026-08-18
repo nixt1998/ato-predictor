@@ -164,6 +164,12 @@ export default function AlgorithmPage() {
                 <li>
                   <span className="font-medium text-[#212121]">[3]</span> {t('references.ref3')}
                 </li>
+                <li>
+                  <span className="font-medium text-[#212121]">[4]</span> {t('references.ref4')}
+                </li>
+                <li>
+                  <span className="font-medium text-[#212121]">[5]</span> {t('references.ref5')}
+                </li>
               </ol>
             </CardContent>
           </Card>
