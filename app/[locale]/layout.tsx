@@ -31,6 +31,22 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale}>
+      <head>
+        {/* 百度统计 */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6a7768dce4cfaf5ffb38d7729b386782";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+            `,
+          }}
+        />
+      </head>
       <body className="antialiased">
         <NextIntlClientProvider messages={messages}>
           <div className="flex flex-col min-h-screen">
