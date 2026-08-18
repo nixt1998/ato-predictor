@@ -65,17 +65,12 @@ export default function DownloadReportDialog({ isOpen, onClose }: DownloadDialog
 
       const data = await response.json()
 
-      // 下载 PDF
-      const downloadResponse = await fetch(data.downloadUrl)
-      if (!downloadResponse.ok) {
-        throw new Error('Failed to download report')
-      }
-
-      const blob = await downloadResponse.blob()
-      const url = window.URL.createObjectURL(blob)
+      // 将 base64 转换为 Blob 并下载
+      const pdfBlob = base64ToBlob(data.pdfBase64, 'application/pdf')
+      const url = window.URL.createObjectURL(pdfBlob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `${data.reportNumber}.pdf`
+      a.download = data.filename || `${data.reportNumber}.pdf`
       document.body.appendChild(a)
       a.click()
       window.URL.revokeObjectURL(url)
@@ -206,4 +201,26 @@ export default function DownloadReportDialog({ isOpen, onClose }: DownloadDialog
       </div>
     </div>
   )
+}
+
+/**
+ * 将 base64 字符串转换为 Blob
+ */
+function base64ToBlob(base64: string, contentType: string): Blob {
+  const byteCharacters = atob(base64)
+  const byteArrays = []
+
+  for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+    const slice = byteCharacters.slice(offset, offset + 512)
+    const byteNumbers = new Array(slice.length)
+
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i)
+    }
+
+    const byteArray = new Uint8Array(byteNumbers)
+    byteArrays.push(byteArray)
+  }
+
+  return new Blob(byteArrays, { type: contentType })
 }

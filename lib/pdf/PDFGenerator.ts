@@ -97,6 +97,7 @@ export class PDFGenerator {
         Creator: 'www.atocarditox.com',
         CreationDate: new Date(config.generatedAt),
       },
+      bufferPages: true, // 启用页面缓冲
     }
 
     this.doc = new PDFDocument(options)
