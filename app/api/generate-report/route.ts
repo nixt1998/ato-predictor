@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { SimplePDFGenerator } from '@/lib/pdf/SimplePDFGenerator'
-import type { PredictionData, PDFConfig } from '@/lib/pdf/PDFGenerator'
+import { jsPDFGenerator } from '@/lib/pdf/jsPDFGenerator'
 
 export const dynamic = 'force-dynamic'
 
 /**
  * POST /api/generate-report
- * 使用 jsPDF 生成简化版 PDF 报告
+ * 使用 jsPDF 生成 PDF 报告
  */
 export async function POST(request: NextRequest) {
   try {
@@ -24,14 +23,14 @@ export async function POST(request: NextRequest) {
     const reportNumber = generateReportNumber()
 
     // 创建 PDF 配置
-    const config: PDFConfig = {
+    const config = {
       language: language as 'zh' | 'en',
       reportNumber,
       generatedAt: new Date().toISOString(),
     }
 
-    // 使用简化版生成器（jsPDF）
-    const generator = new SimplePDFGenerator(config, predictionData as PredictionData)
+    // 使用 jsPDF 生成器
+    const generator = new jsPDFGenerator(config, predictionData)
     const doc = generator.generate()
 
     // 转换为 base64
