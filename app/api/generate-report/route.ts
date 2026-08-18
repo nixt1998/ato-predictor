@@ -1,26 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { PDFGenerator, type PredictionData, type PDFConfig } from '@/lib/pdf/PDFGenerator'
+
+// 使用动态导入避免 Edge Runtime 问题
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 /**
  * POST /api/generate-report
  *
  * 生成 PDF 报告
- *
- * Body:
- * {
- *   language: 'zh' | 'en',
- *   predictionData: PredictionData
- * }
- *
- * Response:
- * {
- *   success: true,
- *   reportNumber: 'ATO-20260818-000001',
- *   pdfBase64: 'JVBERi0xLjM...'
- * }
  */
 export async function POST(request: NextRequest) {
   try {
+    const { PDFGenerator } = await import('@/lib/pdf/PDFGenerator')
     const body = await request.json()
     const { language = 'zh', predictionData } = body
 
@@ -35,14 +26,14 @@ export async function POST(request: NextRequest) {
     const reportNumber = generateReportNumber()
 
     // 创建 PDF 配置
-    const config: PDFConfig = {
+    const config = {
       language: language as 'zh' | 'en',
       reportNumber,
       generatedAt: new Date().toISOString(),
     }
 
     // 创建 PDF 生成器
-    const generator = new PDFGenerator(config, predictionData as PredictionData)
+    const generator = new (PDFGenerator as any)(config, predictionData)
     const doc = await generator.generate()
 
     // 收集 PDF 数据到 Buffer
@@ -94,7 +85,6 @@ export async function POST(request: NextRequest) {
 
 /**
  * 生成报告编号
- * 格式：ATO-YYYYMMDD-NNNNNN
  */
 function generateReportNumber(): string {
   const now = new Date()
@@ -103,7 +93,6 @@ function generateReportNumber(): string {
   const day = String(now.getDate()).padStart(2, '0')
   const dateStr = `${year}${month}${day}`
 
-  // 使用时间戳的最后6位
   const timestamp = Date.now().toString().slice(-4)
   const random = Math.floor(Math.random() * 100).toString().padStart(2, '0')
   const serial = `${timestamp}${random}`
