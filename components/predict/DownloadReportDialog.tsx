@@ -12,7 +12,7 @@ interface DownloadDialogProps {
 
 export default function DownloadReportDialog({ isOpen, onClose }: DownloadDialogProps) {
   const t = useTranslations('predict.download')
-  const { result } = useAppStore()
+  const { result, input } = useAppStore()
   const [language, setLanguage] = useState<'zh' | 'en'>('zh')
   const [isGenerating, setIsGenerating] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -21,29 +21,29 @@ export default function DownloadReportDialog({ isOpen, onClose }: DownloadDialog
   if (!isOpen) return null
 
   const handleDownload = async () => {
-    if (!result) return
+    if (!result || !input) return
 
     setIsGenerating(true)
     setError(null)
     setSuccess(false)
 
     try {
-      // 准备预测数据
+      // 准备预测数据 - 直接传递完整的 result + input
       const predictionData = {
-        inputs: result.inputs,
-        results: {
-          probability: result.prediction.probability,
-          riskLevel: result.prediction.risk_level,
+        input: {
+          iAs: input.iAs,
+          MMA: input.MMA,
+          DMA: input.DMA,
+          CT_drug: input.CT_drug,
         },
-        shapValues: result.shap_values || {},
-        arsMetabolism: result.metabolism ? {
-          PMI: result.metabolism.PMI,
-          SMI: result.metabolism.SMI,
-          iAsPercent: result.metabolism.iAs_percent,
-          MMAPercent: result.metabolism.MMA_percent,
-          DMAPercent: result.metabolism.DMA_percent,
-        } : undefined,
-        timestamp: new Date().toISOString(),
+        result: {
+          prediction: result.prediction,
+          metabolism: result.metabolism,
+          shap_values: result.shap_values,
+          major_risk_factor: result.major_risk_factor,
+          suggestions: result.suggestions,
+        },
+        timestamp: result.timestamp || new Date().toISOString(),
       }
 
       // 调用 API 生成 PDF

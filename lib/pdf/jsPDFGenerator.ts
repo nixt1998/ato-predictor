@@ -11,7 +11,7 @@ export interface PredictionData {
     iAs: number
     MMA: number
     DMA: number
-    CT_drug: number
+    CT_drug: string
   }
   result: {
     prediction: {
@@ -35,8 +35,13 @@ export interface PredictionData {
       CT_drug: number
     }
     major_risk_factor: string
+    suggestions: Array<{
+      key?: string
+      risk_factor: string
+      suggestion: string
+    }>
   }
-  suggestions: string[]
+  timestamp: string
 }
 
 export interface PDFConfig {
@@ -247,10 +252,13 @@ export class jsPDFGenerator {
     this.doc.setFontSize(10)
     this.doc.setTextColor(COLORS.text)
 
-    this.data.suggestions.forEach((suggestion, index) => {
+    const suggestions = this.data.result.suggestions || []
+
+    suggestions.forEach((suggestion, index) => {
       const bullet = `${index + 1}. `
+      const text = `${suggestion.risk_factor}: ${suggestion.suggestion}`
       const lines = this.doc.splitTextToSize(
-        suggestion,
+        text,
         this.pageWidth - 2 * this.margin - 10
       )
 
