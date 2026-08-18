@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -120,7 +120,7 @@ function DataPolicyModal({
   const [countdown, setCountdown] = useState(10)
   const [canAgree, setCanAgree] = useState(false)
 
-  useState(() => {
+  useEffect(() => {
     const timer = setInterval(() => {
       setCountdown(prev => {
         if (prev <= 1) {
@@ -132,7 +132,7 @@ function DataPolicyModal({
       })
     }, 1000)
     return () => clearInterval(timer)
-  })
+  }, [])
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
@@ -755,15 +755,36 @@ export default function UploadPage() {
               id="consent"
               type="checkbox"
               checked={consent}
-              onChange={e => { setConsent(e.target.checked); setSubmitError('') }}
+              onChange={() => {
+                // 如果未勾选，打开弹窗要求阅读并同意
+                if (!consent) {
+                  setShowPolicy(true)
+                } else {
+                  // 如果已勾选，可以取消
+                  setConsent(false)
+                  setSubmitError('')
+                }
+              }}
               className="mt-0.5 w-4 h-4 rounded border-[#BDBDBD] text-[#005EB8] cursor-pointer
                 focus:ring-2 focus:ring-[#005EB8]/40 flex-shrink-0"
             />
-            <label htmlFor="consent" className="text-sm text-[#757575] cursor-pointer leading-relaxed">
+            <label
+              htmlFor="consent"
+              className="text-sm text-[#757575] cursor-pointer leading-relaxed"
+              onClick={(e) => {
+                e.preventDefault()
+                if (!consent) {
+                  setShowPolicy(true)
+                }
+              }}
+            >
               {t('consent.label')}{' '}
               <button
                 type="button"
-                onClick={() => setShowPolicy(true)}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setShowPolicy(true)
+                }}
                 className="text-[#005EB8] font-medium underline hover:text-[#0073D1]"
               >
                 {t('consent.linkText')}
