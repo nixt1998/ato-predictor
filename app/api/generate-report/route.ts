@@ -1,17 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { SimplePDFGenerator } from '@/lib/pdf/SimplePDFGenerator'
+import type { PredictionData, PDFConfig } from '@/lib/pdf/PDFGenerator'
 
-// 使用动态导入避免 Edge Runtime 问题
 export const dynamic = 'force-dynamic'
-export const runtime = 'nodejs'
 
 /**
  * POST /api/generate-report
- *
- * 生成 PDF 报告
+ * 使用 jsPDF 生成简化版 PDF 报告
  */
 export async function POST(request: NextRequest) {
   try {
-    const { PDFGenerator } = await import('@/lib/pdf/PDFGenerator')
     const body = await request.json()
     const { language = 'zh', predictionData } = body
 
@@ -26,50 +24,24 @@ export async function POST(request: NextRequest) {
     const reportNumber = generateReportNumber()
 
     // 创建 PDF 配置
-    const config = {
+    const config: PDFConfig = {
       language: language as 'zh' | 'en',
       reportNumber,
       generatedAt: new Date().toISOString(),
     }
 
-    // 创建 PDF 生成器
-    const generator = new (PDFGenerator as any)(config, predictionData)
-    const doc = await generator.generate()
+    // 使用简化版生成器（jsPDF）
+    const generator = new SimplePDFGenerator(config, predictionData as PredictionData)
+    const doc = generator.generate()
 
-    // 收集 PDF 数据到 Buffer
-    const chunks: Buffer[] = []
+    // 转换为 base64
+    const pdfBase64 = doc.output('datauristring').split(',')[1]
 
-    return new Promise((resolve) => {
-      doc.on('data', (chunk: Buffer) => {
-        chunks.push(chunk)
-      })
-
-      doc.on('end', () => {
-        const pdfBuffer = Buffer.concat(chunks)
-        const pdfBase64 = pdfBuffer.toString('base64')
-
-        resolve(
-          NextResponse.json({
-            success: true,
-            reportNumber,
-            pdfBase64,
-            filename: `${reportNumber}.pdf`,
-          })
-        )
-      })
-
-      doc.on('error', (error: Error) => {
-        console.error('PDF generation error:', error)
-        resolve(
-          NextResponse.json(
-            {
-              error: 'Failed to generate PDF',
-              details: error.message,
-            },
-            { status: 500 }
-          )
-        )
-      })
+    return NextResponse.json({
+      success: true,
+      reportNumber,
+      pdfBase64,
+      filename: `${reportNumber}.pdf`,
     })
   } catch (error) {
     console.error('PDF generation error:', error)
@@ -83,9 +55,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-/**
- * 生成报告编号
- */
 function generateReportNumber(): string {
   const now = new Date()
   const year = now.getFullYear()
