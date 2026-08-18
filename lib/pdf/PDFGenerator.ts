@@ -1,5 +1,6 @@
 import PDFDocument from 'pdfkit'
 import type { TOptions } from 'pdfkit'
+import { ChartGenerator, type SHAPValue, type ArsenicMetabolismData } from './ChartGenerator'
 
 /**
  * PDF 报告数据接口
@@ -52,6 +53,7 @@ export class PDFGenerator {
   private config: PDFConfig
   private data: PredictionData
   private currentPage: number = 1
+  private chartGenerator: ChartGenerator
 
   // 页面布局常量
   private readonly PAGE_WIDTH = 595.28  // A4宽度（点）
@@ -98,6 +100,7 @@ export class PDFGenerator {
     }
 
     this.doc = new PDFDocument(options)
+    this.chartGenerator = new ChartGenerator(this.doc)
   }
 
   /**
@@ -130,9 +133,26 @@ export class PDFGenerator {
       this.addFooter()
     }
 
-    // TODO: 第5-6页：SHAP图表（后续实现）
-    // TODO: 第7页：建议和注意事项
-    // TODO: 第8页：参考文献
+    // 第5-6页：SHAP图表
+    this.doc.addPage()
+    this.currentPage++
+    this.addHeader()
+    this.addSHAPPage()
+    this.addFooter()
+
+    // 第7页：临床建议和注意事项
+    this.doc.addPage()
+    this.currentPage++
+    this.addHeader()
+    this.addRecommendationsPage()
+    this.addFooter()
+
+    // 第8页：参考文献
+    this.doc.addPage()
+    this.currentPage++
+    this.addHeader()
+    this.addReferencesPage()
+    this.addFooter()
 
     // 结束文档
     this.doc.end()
@@ -491,6 +511,320 @@ export class PDFGenerator {
       })
 
     // TODO: 砷代谢饼图和柱状图（后续实现）
+  }
+
+  /**
+   * 第5-6页：SHAP解释图表
+   */
+  private addSHAPPage(): void {
+    let y = this.MARGIN_TOP + 40
+
+    // 页面标题
+    this.doc
+      .fontSize(16)
+      .font('Helvetica-Bold')
+      .fillColor(this.COLORS.textDark)
+      .text(this.t('shapTitle'), this.MARGIN_LEFT, y)
+
+    y += 30
+
+    // 说明文字
+    this.doc
+      .fontSize(9)
+      .font('Helvetica')
+      .fillColor(this.COLORS.textMedium)
+      .text(this.t('shapExplanation'), this.MARGIN_LEFT, y, {
+        width: this.CONTENT_WIDTH,
+        lineGap: 2,
+      })
+
+    y += 50
+
+    // 转换 SHAP 数据
+    const shapValues: SHAPValue[] = Object.entries(this.data.shapValues).map(([key, value]) => ({
+      featureName: this.t(`shap.${key}`),
+      value,
+    }))
+
+    // 按绝对值排序
+    const sortedByAbs = [...shapValues].sort((a, b) => Math.abs(b.value) - Math.abs(a.value))
+
+    // 绘制 SHAP Waterfall 图
+    this.chartGenerator.drawSHAPWaterfall(
+      sortedByAbs.slice(0, 6), // 只显示前6个最重要的特征
+      0.5, // 基准值（示例）
+      this.MARGIN_LEFT,
+      y,
+      this.CONTENT_WIDTH,
+      180
+    )
+
+    y += 230
+
+    // 绘制 SHAP Bar 图（特征重要性）
+    this.chartGenerator.drawSHAPBar(
+      sortedByAbs.slice(0, 6),
+      this.MARGIN_LEFT,
+      y,
+      this.CONTENT_WIDTH,
+      160
+    )
+
+    // 如果有砷代谢数据，添加第6页的图表
+    if (this.data.arsMetabolism) {
+      this.doc.addPage()
+      this.currentPage++
+      this.addHeader()
+
+      y = this.MARGIN_TOP + 40
+
+      // 砷代谢分布饼图
+      this.chartGenerator.drawArsenicMetabolismPie(
+        this.data.arsMetabolism,
+        this.MARGIN_LEFT + 120,
+        y + 100,
+        80
+      )
+
+      y += 220
+
+      // PMI和SMI柱状图
+      this.chartGenerator.drawArsenicMetabolismBar(
+        this.data.arsMetabolism,
+        this.MARGIN_LEFT,
+        y,
+        this.CONTENT_WIDTH,
+        180
+      )
+
+      this.addFooter()
+    }
+  }
+
+  /**
+   * 第7页：临床建议和注意事项
+   */
+  private addRecommendationsPage(): void {
+    let y = this.MARGIN_TOP + 40
+
+    // 页面标题
+    this.doc
+      .fontSize(16)
+      .font('Helvetica-Bold')
+      .fillColor(this.COLORS.textDark)
+      .text(this.t('recommendationsTitle'), this.MARGIN_LEFT, y)
+
+    y += 40
+
+    // 根据风险等级给出个性化建议
+    const riskLevel = this.data.results.riskLevel
+
+    // 1. 监测建议
+    this.addSectionTitle(this.t('monitoringTitle'), y)
+    y += 25
+
+    const monitoringRec = this.getMonitoringRecommendation(riskLevel)
+    this.doc
+      .fontSize(10)
+      .font('Helvetica')
+      .fillColor(this.COLORS.textDark)
+      .text(monitoringRec, this.MARGIN_LEFT + 15, y, {
+        width: this.CONTENT_WIDTH - 15,
+        lineGap: 3,
+      })
+
+    y += this.doc.heightOfString(monitoringRec, {
+      width: this.CONTENT_WIDTH - 15,
+      lineGap: 3,
+    }) + 25
+
+    // 2. 预防措施
+    this.addSectionTitle(this.t('preventionTitle'), y)
+    y += 25
+
+    const preventionItems = this.getPreventionItems(riskLevel)
+    preventionItems.forEach((item) => {
+      this.doc
+        .fontSize(10)
+        .text(`• ${item}`, this.MARGIN_LEFT + 15, y, {
+          width: this.CONTENT_WIDTH - 15,
+          lineGap: 2,
+        })
+      y += this.doc.heightOfString(`• ${item}`, {
+        width: this.CONTENT_WIDTH - 15,
+        lineGap: 2,
+      }) + 8
+    })
+
+    y += 15
+
+    // 3. 电解质管理
+    if (this.needsElectrolyteWarning()) {
+      this.addSectionTitle(this.t('electrolyteTitle'), y)
+      y += 25
+
+      const electrolyteWarning = this.t('electrolyteWarning')
+      this.doc
+        .fontSize(10)
+        .fillColor(this.COLORS.textDark)
+        .text(electrolyteWarning, this.MARGIN_LEFT + 15, y, {
+          width: this.CONTENT_WIDTH - 15,
+          lineGap: 3,
+        })
+
+      y += this.doc.heightOfString(electrolyteWarning, {
+        width: this.CONTENT_WIDTH - 15,
+        lineGap: 3,
+      }) + 25
+    }
+
+    // 4. 重要提示框
+    this.addImportantNotice(y)
+  }
+
+  /**
+   * 第8页：参考文献
+   */
+  private addReferencesPage(): void {
+    let y = this.MARGIN_TOP + 40
+
+    // 页面标题
+    this.doc
+      .fontSize(16)
+      .font('Helvetica-Bold')
+      .fillColor(this.COLORS.textDark)
+      .text(this.t('referencesTitle'), this.MARGIN_LEFT, y)
+
+    y += 40
+
+    // 参考文献列表
+    const references = [
+      '1. Platzbecker U, Avvisati G, Cicconi L, et al. Improved Outcomes With Retinoic Acid and Arsenic Trioxide Compared With Retinoic Acid and Chemotherapy in Non-High-Risk Acute Promyelocytic Leukemia: Final Results of the Randomized Italian-German APL0406 Trial. J Clin Oncol. 2017;35(6):605-612.',
+      '2. Lo-Coco F, Avvisati G, Vignetti M, et al. Retinoic acid and arsenic trioxide for acute promyelocytic leukemia. N Engl J Med. 2013;369(2):111-121.',
+      '3. Burnett AK, Russell NH, Hills RK, et al. Arsenic trioxide and all-trans retinoic acid treatment for acute promyelocytic leukaemia in all risk groups (AML17): results of a randomised, controlled, phase 3 trial. Lancet Oncol. 2015;16(13):1295-1305.',
+      '4. Zhu HH, Huang XJ. Oral arsenic and retinoic acid for non-high-risk acute promyelocytic leukemia. N Engl J Med. 2014;371(23):2239-2241.',
+      '5. Shen ZX, Shi ZZ, Fang J, et al. All-trans retinoic acid/As2O3 combination yields a high quality remission and survival in newly diagnosed acute promyelocytic leukemia. Proc Natl Acad Sci U S A. 2004;101(15):5328-5335.',
+      '6. Unnikrishnan D, Dutcher JP, Varshneya N, et al. Torsades de pointes in 3 patients with leukemia treated with arsenic trioxide. Blood. 2001;97(5):1514-1516.',
+      '7. Barbey JT, Pezzullo JC, Soignet SL. Effect of arsenic trioxide on QT interval in patients with advanced malignancies. J Clin Oncol. 2003;21(19):3609-3615.',
+    ]
+
+    references.forEach((ref, index) => {
+      // 绘制参考文献
+      this.doc
+        .fontSize(9)
+        .font('Helvetica')
+        .fillColor(this.COLORS.textDark)
+        .text(ref, this.MARGIN_LEFT, y, {
+          width: this.CONTENT_WIDTH,
+          align: 'justify',
+          lineGap: 2,
+        })
+
+      y += this.doc.heightOfString(ref, {
+        width: this.CONTENT_WIDTH,
+        align: 'justify',
+        lineGap: 2,
+      }) + 12
+    })
+
+    y += 30
+
+    // 模型来源说明
+    this.doc
+      .fontSize(9)
+      .fillColor(this.COLORS.textLight)
+      .text(this.t('modelSource'), this.MARGIN_LEFT, y, {
+        width: this.CONTENT_WIDTH,
+        lineGap: 2,
+      })
+  }
+
+  /**
+   * 添加小节标题
+   */
+  private addSectionTitle(title: string, y: number): void {
+    this.doc
+      .fontSize(12)
+      .font('Helvetica-Bold')
+      .fillColor(this.COLORS.primary)
+      .text(title, this.MARGIN_LEFT, y)
+  }
+
+  /**
+   * 根据风险等级获取监测建议
+   */
+  private getMonitoringRecommendation(level: 'low' | 'medium' | 'high'): string {
+    const recommendations = {
+      low: this.t('monitoring.low'),
+      medium: this.t('monitoring.medium'),
+      high: this.t('monitoring.high'),
+    }
+    return recommendations[level]
+  }
+
+  /**
+   * 根据风险等级获取预防措施
+   */
+  private getPreventionItems(level: 'low' | 'medium' | 'high'): string[] {
+    const baseItems = [
+      this.t('prevention.electrolyte'),
+      this.t('prevention.drugInteraction'),
+      this.t('prevention.baseline'),
+    ]
+
+    if (level === 'medium' || level === 'high') {
+      baseItems.push(this.t('prevention.prophylactic'))
+    }
+
+    if (level === 'high') {
+      baseItems.push(this.t('prevention.intensive'))
+    }
+
+    return baseItems
+  }
+
+  /**
+   * 判断是否需要电解质警告
+   */
+  private needsElectrolyteWarning(): boolean {
+    const { K, Mg, Ca } = this.data.inputs
+    return K < 3.5 || Mg < 0.7 || Ca < 2.0
+  }
+
+  /**
+   * 添加重要提示框
+   */
+  private addImportantNotice(y: number): void {
+    const boxHeight = 80
+
+    // 绘制黄色背景框
+    this.doc
+      .rect(this.MARGIN_LEFT, y, this.CONTENT_WIDTH, boxHeight)
+      .fillColor('#FFF9E6')
+      .fill()
+
+    // 绘制左侧橙色边框
+    this.doc
+      .rect(this.MARGIN_LEFT, y, 4, boxHeight)
+      .fillColor('#ED8B00')
+      .fill()
+
+    // 标题
+    this.doc
+      .fontSize(11)
+      .font('Helvetica-Bold')
+      .fillColor('#ED8B00')
+      .text(this.t('importantNotice.title'), this.MARGIN_LEFT + 15, y + 12)
+
+    // 内容
+    this.doc
+      .fontSize(9)
+      .font('Helvetica')
+      .fillColor(this.COLORS.textDark)
+      .text(this.t('importantNotice.content'), this.MARGIN_LEFT + 15, y + 32, {
+        width: this.CONTENT_WIDTH - 25,
+        lineGap: 2,
+      })
   }
 
   /**
