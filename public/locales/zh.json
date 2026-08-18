@@ -214,11 +214,11 @@
     },
     "references": {
       "title": "参考文献",
-      "ref1": "Park YG, Park NK, Lee Y, et al. A machine learning platform for genotype-specific cardiotoxicity risk prediction using patient-derived iPSC-CMs. Cardiovascular Research. 2025;cvaf068. doi:10.1093/cvr/cvaf068",
-      "ref2": "Ponce-Bobadilla AV, Schmitt V, Maier CS, Mensing S, Stodtmann S. Practical guide to SHAP analysis: Explaining supervised machine learning model predictions in drug development. Clin Transl Sci. 2024;17:e70056. doi:10.1111/cts.70056",
-      "ref3": "Zhang N, Wang J, Shen C, et al. XGBoost based machine learning prediction model for major adverse cardiovascular events after PCI in STEMI patients. Cardiovascular Diagnosis and Therapy. 2024;14(6):1057-1071. doi:10.21037/cdt-24-335",
-      "ref4": "Zhou H, Li F, Liu X. Early prediction of septic shock in ICU patients using machine learning: development, external validation, and explainability with SHAP. BMC Medical Informatics and Decision Making. 2025;25:51. doi:10.1186/s12911-025-02901-5",
-      "ref5": "Lundberg SM, Erion G, Chen H, et al. From local explanations to global understanding with explainable AI for trees. Nature Machine Intelligence. 2020;2(1):56-67. doi:10.1038/s42256-019-0138-9"
+      "ref1": "Lundberg SM, Erion G, Chen H, et al. From local explanations to global understanding with explainable AI for trees. Nature Machine Intelligence. 2020;2(1):56-67. doi:10.1038/s42256-019-0138-9",
+      "ref2": "Park YG, Park NK, Lee Y, et al. A machine learning platform for genotype-specific cardiotoxicity risk prediction using patient-derived iPSC-CMs. Cardiovascular Research. 2025;cvaf068. doi:10.1093/cvr/cvaf068",
+      "ref3": "Ponce-Bobadilla AV, Schmitt V, Maier CS, Mensing S, Stodtmann S. Practical guide to SHAP analysis: Explaining supervised machine learning model predictions in drug development. Clin Transl Sci. 2024;17:e70056. doi:10.1111/cts.70056",
+      "ref4": "Zhang N, Wang J, Shen C, et al. XGBoost based machine learning prediction model for major adverse cardiovascular events after PCI in STEMI patients. Cardiovascular Diagnosis and Therapy. 2024;14(6):1057-1071. doi:10.21037/cdt-24-335",
+      "ref5": "Zhou H, Li F, Liu X. Early prediction of septic shock in ICU patients using machine learning: development, external validation, and explainability with SHAP. BMC Medical Informatics and Decision Making. 2025;25:51. doi:10.1186/s12911-025-02901-5"
     }
   },
   "privacy": {
