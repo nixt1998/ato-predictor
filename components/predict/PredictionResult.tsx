@@ -1,16 +1,19 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useTranslations, useLocale } from 'next-intl'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { useAppStore } from '@/lib/store'
 import { getRiskLevel, getRiskColor, formatPercentage } from '@/lib/utils'
-import { AlertTriangle, CheckCircle2, AlertCircle } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, AlertCircle, Download } from 'lucide-react'
+import DownloadReportDialog from './DownloadReportDialog'
 
 export default function PredictionResult() {
   const t = useTranslations('predict.result')
-  const locale = useLocale()  // 添加 locale 以响应语言切换
+  const locale = useLocale()
   const { result } = useAppStore()
+  const [showDownloadDialog, setShowDownloadDialog] = useState(false)
 
   if (!result) return null
 
@@ -161,6 +164,28 @@ export default function PredictionResult() {
       <p className="text-xs text-[#9E9E9E] text-center mt-4 px-4">
         {t('thresholdNote')}
       </p>
+
+      {/* 下载报告按钮 */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.5 }}
+        className="flex justify-center mt-6"
+      >
+        <button
+          onClick={() => setShowDownloadDialog(true)}
+          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#005EB8] to-[#0073D1] text-white rounded-lg hover:shadow-lg transition-all transform hover:scale-105"
+        >
+          <Download className="w-5 h-5" />
+          {t('downloadReport')}
+        </button>
+      </motion.div>
+
+      {/* 下载对话框 */}
+      <DownloadReportDialog
+        isOpen={showDownloadDialog}
+        onClose={() => setShowDownloadDialog(false)}
+      />
     </div>
   )
 }

@@ -101,7 +101,28 @@
         "DMA_per": "二甲基砷酸百分比 (DMA%)",
         "CT_drug": "合并心毒性药物"
       },
-      "thresholdNote": "风险等级判定阈值：低风险 < 20%；中风险 20%–50%；高风险 ≥ 50%。阈值基于模型校准结果确定，仅供参考，具体判断请结合临床情景。"
+      "thresholdNote": "风险等级判定阈值：低风险 < 20%；中风险 20%–50%；高风险 ≥ 50%。阈值基于模型校准结果确定，仅供参考，具体判断请结合临床情景。",
+      "downloadReport": "下载预测报告"
+    },
+    "download": {
+      "title": "下载预测报告",
+      "subtitle": "生成专业医学检验报告（PDF格式）",
+      "languageLabel": "选择报告语言",
+      "contentLabel": "报告内容包含：",
+      "content": {
+        "cover": "封面及免责声明",
+        "inputData": "预测输入数据表",
+        "riskResult": "风险预测结果",
+        "metabolism": "砷代谢参数",
+        "shap": "SHAP可解释性图表",
+        "recommendations": "临床建议与注意事项",
+        "references": "参考文献"
+      },
+      "cancel": "取消",
+      "download": "生成并下载",
+      "generating": "生成中...",
+      "completed": "已完成",
+      "success": "PDF报告已成功生成并下载！"
     },
     "analysis": {
       "shapTitle": "风险因素量化分析 (SHAP值)",
