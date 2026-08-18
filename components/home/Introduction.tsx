@@ -11,8 +11,8 @@ export default function Introduction() {
   const isInView = useInView(ref, { once: true, margin: "-100px" })
 
   return (
-    <section ref={ref} className="py-20 bg-[#F5F5F5]">
-      <div className="container mx-auto px-6">
+    <section ref={ref} className="py-12 md:py-20 bg-[#F5F5F5]">
+      <div className="container mx-auto px-4 md:px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
@@ -24,7 +24,7 @@ export default function Introduction() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-3xl md:text-4xl font-bold text-[#212121] text-center mb-8"
+            className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#212121] text-center mb-6 md:mb-8"
           >
             {t('introTitle')}
           </motion.h2>
@@ -34,16 +34,16 @@ export default function Introduction() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="bg-white rounded-2xl p-8 md:p-12 shadow-lg"
+            className="bg-white rounded-xl md:rounded-2xl p-6 md:p-12 shadow-lg"
           >
-            <div className="prose prose-lg max-w-none">
+            <div className="prose prose-base md:prose-lg max-w-none">
               {t('introContent').split('\n\n').map((paragraph, index) => (
                 <motion.p
                   key={index}
                   initial={{ opacity: 0, x: -20 }}
                   animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
                   transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                  className="text-[#212121] leading-relaxed mb-6 last:mb-0 indent-[2em]"
+                  className="text-[#212121] text-sm sm:text-base leading-relaxed mb-4 md:mb-6 last:mb-0 indent-[2em]"
                 >
                   {paragraph}
                 </motion.p>

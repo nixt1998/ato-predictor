@@ -1,13 +1,16 @@
 'use client'
 
+import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useTranslations, useLocale } from 'next-intl'
+import { motion, AnimatePresence } from 'framer-motion'
 import LanguageSwitcher from './LanguageSwitcher'
 
 export default function Header() {
   const t = useTranslations()
   const locale = useLocale()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const navItems = [
     { key: 'home', originalHref: '' },
@@ -20,7 +23,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[#E0E0E0] bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
-      <div className="container mx-auto flex h-20 items-center justify-between px-6">
+      <div className="container mx-auto flex h-16 md:h-20 items-center justify-between px-4 md:px-6">
         {/* Logo */}
         <Link href={`/${locale}`} className="flex items-center space-x-3 transition-opacity hover:opacity-80">
           <Image
@@ -28,7 +31,7 @@ export default function Header() {
             alt={t('common.appName')}
             width={200}
             height={80}
-            className="h-12 w-auto"
+            className="h-10 md:h-12 w-auto"
             priority
           />
         </Link>
@@ -46,14 +49,15 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Language Switcher */}
-        <div className="flex items-center">
+        {/* Desktop Language Switcher */}
+        <div className="hidden lg:flex items-center">
           <LanguageSwitcher />
         </div>
 
         {/* Mobile Menu Button */}
         <button
-          className="lg:hidden flex items-center justify-center w-10 h-10 rounded-md hover:bg-[#F5F5F5]"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="lg:hidden flex items-center justify-center w-10 h-10 rounded-md hover:bg-[#F5F5F5] transition-colors"
           aria-label="Toggle menu"
         >
           <svg
@@ -62,15 +66,55 @@ export default function Header() {
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16M4 18h16"
-            />
+            {mobileMenuOpen ? (
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            ) : (
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            )}
           </svg>
         </button>
       </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="lg:hidden border-t border-[#E0E0E0] bg-white"
+          >
+            <nav className="container mx-auto px-4 py-4 space-y-1">
+              {navItems.map((item) => (
+                <Link
+                  key={item.key}
+                  href={`/${locale}${item.originalHref}`}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block px-4 py-3 text-base font-medium text-[#212121] hover:bg-[#F0F7FF] hover:text-[#005EB8] rounded-lg transition-colors"
+                >
+                  {t(`nav.${item.key}`)}
+                </Link>
+              ))}
+
+              {/* Mobile Language Switcher */}
+              <div className="px-4 py-3 border-t border-[#E0E0E0] mt-2 pt-4">
+                <LanguageSwitcher />
+              </div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   )
 }

@@ -12,8 +12,8 @@ export default function Team() {
   const isInView = useInView(ref, { once: true, margin: "-100px" })
 
   return (
-    <section ref={ref} className="py-20 bg-white">
-      <div className="container mx-auto px-6">
+    <section ref={ref} className="py-12 md:py-20 bg-white">
+      <div className="container mx-auto px-4 md:px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
@@ -25,7 +25,7 @@ export default function Team() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-3xl md:text-4xl font-bold text-[#212121] text-center mb-12"
+            className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#212121] text-center mb-8 md:mb-12"
           >
             {t('teamTitle')}
           </motion.h2>
@@ -35,9 +35,9 @@ export default function Team() {
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="bg-gradient-to-br from-white to-[#F5F5F5] rounded-2xl p-8 md:p-10 shadow-xl border border-[#E0E0E0] mb-12"
+            className="bg-gradient-to-br from-white to-[#F5F5F5] rounded-xl md:rounded-2xl p-6 md:p-10 shadow-xl border border-[#E0E0E0] mb-8 md:mb-12"
           >
-            <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 md:gap-8">
               {/* 左侧：头像 */}
               <motion.div
                 whileHover={{ scale: 1.05 }}
@@ -58,16 +58,16 @@ export default function Team() {
               </motion.div>
 
               {/* 右侧：信息 */}
-              <div className="flex flex-col justify-center space-y-4">
+              <div className="flex flex-col justify-center space-y-3 md:space-y-4">
                 {/* 姓名和职称 */}
                 <div>
-                  <h3 className="text-2xl font-bold text-[#212121] mb-2">
+                  <h3 className="text-xl md:text-2xl font-bold text-[#212121] mb-2">
                     {t('teamLeaderName')}
                   </h3>
-                  <p className="text-lg text-[#005EB8] font-medium mb-1">
+                  <p className="text-base md:text-lg text-[#005EB8] font-medium mb-1">
                     {t('teamLeaderTitle')}
                   </p>
-                  <p className="text-base text-[#757575]">
+                  <p className="text-sm md:text-base text-[#757575]">
                     {t('teamLeaderAffiliation')}
                   </p>
                 </div>
@@ -76,7 +76,7 @@ export default function Team() {
                 <div className="border-t border-[#E0E0E0] my-2" />
 
                 {/* 个人简介 */}
-                <p className="text-[#212121] leading-relaxed">
+                <p className="text-sm md:text-base text-[#212121] leading-relaxed">
                   {t('teamLeaderBio')}
                 </p>
               </div>
@@ -88,7 +88,7 @@ export default function Team() {
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="relative w-full h-[300px] rounded-2xl overflow-hidden shadow-xl"
+            className="relative w-full h-[200px] sm:h-[250px] md:h-[300px] rounded-xl md:rounded-2xl overflow-hidden shadow-xl"
           >
             <Image
               src="/images/placeholder-team.jpg"
@@ -101,8 +101,8 @@ export default function Team() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
 
             {/* 文字叠加 */}
-            <div className="absolute bottom-6 left-6 right-6 text-white">
-              <p className="text-lg font-semibold drop-shadow-lg">
+            <div className="absolute bottom-4 md:bottom-6 left-4 md:left-6 right-4 md:right-6 text-white">
+              <p className="text-base md:text-lg font-semibold drop-shadow-lg">
                 {t('teamGroupName')}
               </p>
             </div>
