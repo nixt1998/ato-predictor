@@ -24,7 +24,7 @@ export default function Header() {
         {/* Logo */}
         <Link href={`/${locale}`} className="flex items-center space-x-3 transition-opacity hover:opacity-80">
           <Image
-            src="/images/logo.svg"
+            src="/images/logo.png"
             alt={t('common.appName')}
             width={200}
             height={80}

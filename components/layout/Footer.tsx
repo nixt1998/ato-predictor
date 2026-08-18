@@ -22,7 +22,7 @@ export default function Footer() {
           {/* 左侧：Logo + 简介 */}
           <div className="space-y-4">
             <Image
-              src="/images/logo-white.svg"
+              src="/images/logo-white.png"
               alt={t('common.appName')}
               width={200}
               height={80}
