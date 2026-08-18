@@ -54,35 +54,41 @@ export default function Header() {
           <LanguageSwitcher />
         </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="lg:hidden flex items-center justify-center w-10 h-10 rounded-md hover:bg-[#F5F5F5] transition-colors"
-          aria-label="Toggle menu"
-        >
-          <svg
-            className="w-6 h-6 text-[#212121]"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+        {/* Mobile: Language Switcher + Menu Button */}
+        <div className="lg:hidden flex items-center gap-3">
+          {/* 语言切换器（始终可见）*/}
+          <LanguageSwitcher />
+
+          {/* 汉堡菜单按钮 */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="flex items-center justify-center w-10 h-10 rounded-md hover:bg-[#F5F5F5] transition-colors"
+            aria-label="Toggle menu"
           >
-            {mobileMenuOpen ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            )}
-          </svg>
-        </button>
+            <svg
+              className="w-6 h-6 text-[#212121]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              {mobileMenuOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              )}
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -106,11 +112,6 @@ export default function Header() {
                   {t(`nav.${item.key}`)}
                 </Link>
               ))}
-
-              {/* Mobile Language Switcher */}
-              <div className="px-4 py-3 border-t border-[#E0E0E0] mt-2 pt-4">
-                <LanguageSwitcher />
-              </div>
             </nav>
           </motion.div>
         )}

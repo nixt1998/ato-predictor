@@ -413,18 +413,36 @@ export default function UploadPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!consent) { setSubmitError(t('errors.consentRequired')); return }
+    if (submitting) return // 防止重复提交
+
     setSubmitting(true)
     setSubmitError('')
+
     const fd = new FormData()
     Object.entries(form).forEach(([k, v]) => fd.append(k, v))
     files.forEach(f => fd.append('files', f, f.name))
+
     try {
-      const res  = await fetch('/api/upload', { method: 'POST', body: fd })
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 120000) // 2分钟超时
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: fd,
+        signal: controller.signal,
+      })
+
+      clearTimeout(timeoutId)
+
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Failed')
       setSuccess({ submissionId: data.submissionId })
     } catch (err: any) {
-      setSubmitError(err.message || t('errors.submitFailed'))
+      if (err.name === 'AbortError') {
+        setSubmitError(t('errors.timeout') || 'Request timeout')
+      } else {
+        setSubmitError(err.message || t('errors.submitFailed'))
+      }
     } finally {
       setSubmitting(false)
     }
