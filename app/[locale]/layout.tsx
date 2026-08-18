@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -37,9 +38,11 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale}>
-      <head>
+      <body className="antialiased">
         {/* 百度统计 */}
-        <script
+        <Script
+          id="baidu-analytics"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
 var _hmt = _hmt || [];
@@ -52,8 +55,6 @@ var _hmt = _hmt || [];
             `,
           }}
         />
-      </head>
-      <body className="antialiased">
         <NextIntlClientProvider messages={messages}>
           <div className="flex flex-col min-h-screen">
             <Header />
