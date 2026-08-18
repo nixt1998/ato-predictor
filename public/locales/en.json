@@ -7,6 +7,7 @@
     "home": "Home",
     "about": "About",
     "algorithm": "Algorithm",
+    "references": "References",
     "privacy": "Privacy",
     "disclaimer": "Disclaimer",
     "contact": "Contact"
@@ -573,5 +574,14 @@
       "professional": "Fields marked with * are recommended to be filled in by qualified medical professionals"
     },
     "classNote": "Based on NCCN (2025) guidelines: patients are classified into high/low-risk groups according to initial WBC count"
+  },
+  "references": {
+    "title": "References",
+    "subtitle": "Scientific evidence supporting our model development, risk stratification, and arsenic metabolism research",
+    "description": "The following literature supports the risk stratification thresholds (low risk < 20%, moderate risk 20%-50%, high risk ≥ 50%), arsenic metabolism parameter interpretation, SHAP value methodology, and clinical research basis for arsenic trioxide cardiotoxicity used in this prediction system.",
+    "listTitle": "Scientific Literature",
+    "viewOnline": "View Online",
+    "version": "System Version",
+    "lastUpdated": "Last Updated"
   }
 }

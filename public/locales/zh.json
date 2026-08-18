@@ -7,6 +7,7 @@
     "home": "首页",
     "about": "关于",
     "algorithm": "算法",
+    "references": "参考文献",
     "privacy": "隐私政策",
     "disclaimer": "免责声明",
     "contact": "联系我们"
@@ -573,5 +574,14 @@
       "professional": "带 * 标注的字段建议由专业医学人员填写"
     },
     "classNote": "依据 NCCN（2025）指南，按初诊白细胞计数将患者分为高危/低危组"
+  },
+  "references": {
+    "title": "参考文献",
+    "subtitle": "本系统模型开发、风险分级和砷代谢研究的科学依据",
+    "description": "以下文献支持本预测系统的风险分级标准（低风险 < 20%，中风险 20%-50%，高风险 ≥ 50%）、砷代谢参数解释、SHAP 值方法论以及三氧化二砷心脏毒性的临床研究基础。",
+    "listTitle": "科学文献列表",
+    "viewOnline": "在线查看",
+    "version": "系统版本",
+    "lastUpdated": "最后更新"
   }
 }

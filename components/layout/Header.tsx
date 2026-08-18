@@ -16,6 +16,7 @@ export default function Header() {
     { key: 'home', originalHref: '' },
     { key: 'about', originalHref: '/about' },
     { key: 'algorithm', originalHref: '/algorithm' },
+    { key: 'references', originalHref: '/references' },
     { key: 'privacy', originalHref: '/privacy' },
     { key: 'disclaimer', originalHref: '/disclaimer' },
     { key: 'contact', originalHref: '/contact' },
