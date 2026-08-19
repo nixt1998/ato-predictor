@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ATO心脏毒性预测报告 - 中文模板</title>
+  <title>三氧化二砷心脏毒性预测报告 - 中文</title>
   <style>
     * {
       margin: 0;
@@ -12,20 +12,22 @@
     }
 
     body {
-      font-family: 'SimSun', 'Microsoft YaHei', sans-serif;
-      line-height: 1.8;
-      color: #000;
-      background: white;
+      font-family: 'SimSun', '宋体', 'Microsoft YaHei', '微软雅黑', serif;
+      line-height: 1.6;
+      color: #333;
+      background: #e8e8e8;
     }
 
+    /* A4 纸张形状 - 每页独立显示 */
     .page {
       width: 210mm;
       min-height: 297mm;
-      padding: 25mm 20mm;
-      margin: 20px auto;
+      padding: 15mm 15mm 25mm 15mm;
+      margin: 10mm auto;
       background: white;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
       page-break-after: always;
+      position: relative;
     }
 
     @media print {
@@ -37,58 +39,153 @@
       }
     }
 
-    /* 封面 */
+    /* Logo */
+    .cover-logo {
+      width: 35mm;
+      height: auto;
+      margin: 0 auto 12mm auto;
+      display: block;
+    }
+
+    .header-logo {
+      height: 8mm;
+      width: auto;
+    }
+
+    /* 页眉 (第2页起) - 正常流布局，紧凑 */
+    .header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding-bottom: 1.5mm;
+      border-bottom: 1px solid #ccc;
+      margin-bottom: 4mm;
+    }
+
+    .header-text {
+      font-size: 9pt;
+      color: #757575;
+    }
+
+    /* 页脚 */
+    .footer {
+      position: absolute;
+      bottom: 12mm;
+      left: 15mm;
+      right: 15mm;
+      text-align: center;
+      font-size: 8pt;
+      color: #757575;
+      border-top: 1px solid #ccc;
+      padding-top: 3mm;
+    }
+
+    .page-number {
+      margin-top: 2mm;
+      font-size: 8pt;
+      color: #999;
+    }
+
+    /* 封面页 */
     .cover {
       text-align: center;
-      padding-top: 80mm;
+      padding-top: 30mm;
     }
 
     .cover h1 {
-      font-size: 28pt;
+      font-family: 'SimHei', '黑体', 'SimSun', sans-serif;
+      font-size: 24pt;
       color: #000;
-      margin-bottom: 30mm;
+      margin-bottom: 12mm;
       font-weight: bold;
       letter-spacing: 2px;
+      line-height: 1.5;
+    }
+
+    .cover .website {
+      font-size: 13pt;
+      color: #005EB8;
+      margin: 8mm 0;
+      font-weight: 500;
+    }
+
+    .cover .divider {
+      width: 60mm;
+      height: 1px;
+      background: #ccc;
+      margin: 10mm auto;
     }
 
     .cover .report-id {
-      font-size: 12pt;
-      color: #333;
-      margin: 8mm 0;
+      font-size: 11pt;
+      color: #424242;
+      margin: 3mm 0;
     }
 
     .cover .generate-time {
-      font-size: 11pt;
-      color: #666;
+      font-size: 10pt;
+      color: #757575;
+      margin: 3mm 0;
     }
 
-    /* 内容页 */
+    .cover .version {
+      font-size: 10pt;
+      color: #757575;
+      margin: 3mm 0;
+    }
+
+    /* 封面免责声明 - 正常流，不遮挡 */
+    .cover-footer {
+      margin-top: 15mm;
+      text-align: justify;
+      font-size: 8pt;
+      color: #424242;
+      line-height: 1.9;
+      padding: 12px 15px;
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    /* 内容章节 */
     .section {
-      margin: 20px 0;
+      margin: 10px 0 14px 0;
     }
 
     .section-title {
-      font-size: 16pt;
+      font-family: 'SimHei', '黑体', 'SimSun', sans-serif;
+      font-size: 14pt;
       color: #000;
-      border-bottom: 2px solid #000;
-      padding-bottom: 8px;
-      margin-bottom: 15px;
+      border-bottom: 1.5pt solid #000;
+      padding-bottom: 3px;
+      margin-bottom: 10px;
       font-weight: bold;
     }
 
     .subsection-title {
-      font-size: 14pt;
+      font-family: 'SimHei', '黑体', 'SimSun', sans-serif;
+      font-size: 11pt;
       color: #000;
-      margin: 15px 0 10px 0;
       font-weight: bold;
+      margin: 12px 0 5px 0;
     }
 
-    /* 预测结果 */
+    /* 段落 - 两端对齐 */
+    p,
+    .paragraph {
+      font-size: 10.5pt;
+      line-height: 1.9;
+      text-align: justify;
+      margin: 8px 0;
+    }
+
+    /* 风险结果 - 列表样式 */
     .result-summary {
-      margin: 15px 0;
-      padding: 15px;
+      background: white;
       border: 1px solid #ddd;
-      background: #fafafa;
+      border-radius: 5px;
+      padding: 15px 18px;
+      margin: 15px 0;
     }
 
     .result-row {
@@ -103,6 +200,7 @@
     }
 
     .result-label {
+      font-family: 'SimHei', '黑体', 'SimSun', sans-serif;
       font-weight: bold;
       color: #000;
     }
@@ -115,53 +213,79 @@
     .risk-medium { color: #f57c00; font-weight: bold; }
     .risk-low { color: #388e3c; font-weight: bold; }
 
-    /* 三线表 */
+    /* 风险分层阈值 - 小字说明框 */
+    .risk-threshold {
+      font-size: 8.5pt;
+      color: #555;
+      padding: 10px 12px;
+      background: #f9f9f9;
+      border-left: 3px solid #005EB8;
+      margin: 12px 0;
+      line-height: 1.8;
+      text-align: justify;
+    }
+
+    /* 三线表 - 内容单元格居中 */
     table {
       width: 100%;
       border-collapse: collapse;
-      margin: 15px 0;
-      background: white;
+      margin: 10px 0;
+      break-inside: avoid;
+      page-break-inside: avoid;
     }
 
-    table thead th {
-      border-top: 2px solid #000;
-      border-bottom: 1px solid #000;
-      padding: 10px 12px;
+    table thead {
+      border-top: 1.5pt solid #000;
+      border-bottom: 0.5pt solid #000;
+    }
+
+    table tbody {
+      border-bottom: 1.5pt solid #000;
+    }
+
+    th, td {
+      padding: 6px 8px;
       text-align: center;
+      vertical-align: middle;
+      font-size: 9.5pt;
+    }
+
+    th {
+      font-family: 'SimHei', '黑体', 'SimSun', sans-serif;
       font-weight: bold;
-      color: #000;
-      background: white;
     }
 
-    table tbody td {
-      border: none;
-      padding: 8px 12px;
+    td.number {
       text-align: center;
-      color: #333;
     }
 
-    table tbody tr:last-child td {
-      border-bottom: 2px solid #000;
-    }
-
-    /* 文本段落 */
-    .paragraph {
-      text-indent: 2em;
-      margin: 10px 0;
-      text-align: justify;
-      line-height: 2;
-    }
-
-    .note {
-      margin: 10px 0;
-      padding: 10px;
-      background: #f9f9f9;
-      border-left: 3px solid #666;
-      font-size: 10pt;
+    .table-note {
+      font-size: 8.5pt;
       color: #666;
+      margin-top: 5px;
+      line-height: 1.7;
     }
 
-    /* 列表 */
+    /* 图表占位 - 避免被分页截断 */
+    .chart-placeholder {
+      width: 100%;
+      height: 54mm;
+      border: 1px dashed #bbb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 10pt;
+      color: #999;
+      margin: 8px 0;
+      background: #fafafa;
+      text-align: center;
+      line-height: 1.8;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    /* 建议列表 - 两端对齐 */
     .suggestion-list {
       list-style: none;
       padding: 0;
@@ -170,27 +294,32 @@
 
     .suggestion-list li {
       padding: 8px 0;
-      line-height: 1.8;
+      line-height: 1.9;
       color: #333;
+      text-align: justify;
     }
 
-    .suggestion-list li:before {
-      content: "• ";
+    /* 注意事项 - 两端对齐 */
+    .precaution-item {
+      margin: 8px 0;
+      line-height: 1.9;
+      text-align: justify;
+      font-size: 10.5pt;
+    }
+
+    .precaution-title {
+      font-family: 'SimHei', '黑体', 'SimSun', sans-serif;
       font-weight: bold;
-      margin-right: 5px;
+      color: #000;
+      margin-bottom: 3px;
     }
 
-    /* 页脚 */
-    .footer {
-      position: absolute;
-      bottom: 15mm;
-      left: 20mm;
-      right: 20mm;
-      text-align: center;
-      font-size: 9pt;
-      color: #999;
-      border-top: 1px solid #ddd;
-      padding-top: 10px;
+    /* 参考文献 - 两端对齐 */
+    .reference-item {
+      font-size: 9.5pt;
+      line-height: 1.8;
+      margin: 8px 0;
+      text-align: justify;
     }
   </style>
 </head>
@@ -199,130 +328,158 @@
 <!-- 封面页 -->
 <div class="page">
   <div class="cover">
-    <h1>三氧化二砷心脏毒性<br>预测分析报告</h1>
+    <img src="../public/images/logo.png" class="cover-logo" alt="ATO CardiTox Logo">
+
+    <h1>三氧化二砷心脏毒性<br>预测报告</h1>
+
+    <div class="website">www.atocarditox.com</div>
+
+    <div class="divider"></div>
+
     <div class="report-id">报告编号：{{REPORT_NUMBER}}</div>
     <div class="generate-time">生成时间：{{GENERATE_TIME}}</div>
-  </div>
-  <div class="footer">
-    本报告由人工智能模型生成，仅供临床参考，不作为最终诊断依据
+    <div class="version">系统版本：v2.10.3</div>
+
+    <div class="cover-footer">
+      <strong>【免责声明】</strong><br>
+      本预测报告基于人工智能统计模型和已发表的临床研究数据生成，仅供临床参考，不能作为最终诊断依据，也不能替代医师的专业判断和治疗决策。<br><br>
+      模型预测结果受训练数据集、样本量、特征选择等因素影响。实际心脏毒性风险因个体差异、合并用药、基础疾病等模型无法完全涵盖的因素而异。<br><br>
+      本系统对因使用本报告而产生的任何医疗决策、临床后果或不良事件不承担法律责任。建议医师结合患者具体情况、实验室检查、影像学资料及临床经验综合判断，必要时进行多学科会诊。<br><br>
+      患者及家属应充分理解本预测的局限性。如有疑问，请咨询主治医师。
+    </div>
   </div>
 </div>
 
-<!-- 第一部分：背景与目的 -->
+<!-- 第 1 页: 简介 + 检测数据 -->
 <div class="page">
+  <div class="header">
+    <img src="../public/images/logo.png" class="header-logo" alt="Logo">
+    <div class="header-text">www.atocarditox.com</div>
+  </div>
+
   <div class="section">
-    <h2 class="section-title">一、报告背景</h2>
+    <h2 class="section-title">一、简介</h2>
     <p class="paragraph">
-      三氧化二砷（Arsenic Trioxide, ATO）是治疗急性早幼粒细胞白血病（APL）的一线药物。
-      然而，ATO在治疗过程中可能引发心脏毒性反应，包括QT间期延长、心律失常等，严重者可导致致命性心脏事件。
-      砷在体内经过一系列甲基化代谢反应，其代谢产物的分布特征与心脏毒性的发生密切相关。
+      三氧化二砷（ATO）是急性早幼粒细胞白血病（APL）的一线治疗药物，显著改善了患者的生存率。然而，ATO
+      在治疗过程中可能引起心脏毒性，包括 QT 间期延长和心律失常，严重时可导致危及生命的心脏事件。砷进入人体后经过一系列甲基化反应，其代谢产物的分布与心脏毒性的发生密切相关。
     </p>
     <p class="paragraph">
-      本报告基于深度学习模型，综合分析患者的砷代谢指标（iAs、MMA、DMA）、代谢酶活性指数（PMI、SMI）
-      以及合并用药情况，预测ATO心脏毒性的发生风险，为临床决策提供科学依据。
+      本报告基于机器学习模型，综合患者的砷代谢指标（iAs、MMA、DMA）、甲基化能力指数（PMI、SMI）及合并用药情况，估计
+      ATO 相关心脏毒性的发生概率，为临床决策提供定量参考。
     </p>
   </div>
 
   <div class="section">
     <h2 class="section-title">二、检测数据</h2>
+
     <h3 class="subsection-title">2.1 输入参数</h3>
     <table>
       <thead>
         <tr>
-          <th>指标名称</th>
-          <th>检测值</th>
+          <th>参数</th>
+          <th>数值</th>
           <th>单位</th>
-          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>iAs（无机砷）</td>
+          <td class="number">{{IAS}}</td>
+          <td>ng/mL</td>
+        </tr>
+        <tr>
+          <td>MMA（一甲基砷酸）</td>
+          <td class="number">{{MMA}}</td>
+          <td>ng/mL</td>
+        </tr>
+        <tr>
+          <td>DMA（二甲基砷酸）</td>
+          <td class="number">{{DMA}}</td>
+          <td>ng/mL</td>
+        </tr>
+        <tr>
+          <td>合并心脏毒性药物</td>
+          <td class="number">{{CT_DRUG}}</td>
+          <td>-</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title">2.2 砷形态百分比</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>形态</th>
+          <th>浓度（ng/mL）</th>
+          <th>百分比</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>iAs</td>
-          <td>{{IAS}}</td>
-          <td>ng/mL</td>
-          <td>无机砷浓度</td>
+          <td class="number">{{IAS}}</td>
+          <td class="number">{{IAS_PCT}}%</td>
         </tr>
         <tr>
           <td>MMA</td>
-          <td>{{MMA}}</td>
-          <td>ng/mL</td>
-          <td>一甲基砷酸浓度</td>
+          <td class="number">{{MMA}}</td>
+          <td class="number">{{MMA_PCT}}%</td>
         </tr>
         <tr>
           <td>DMA</td>
-          <td>{{DMA}}</td>
-          <td>ng/mL</td>
-          <td>二甲基砷酸浓度</td>
+          <td class="number">{{DMA}}</td>
+          <td class="number">{{DMA_PCT}}%</td>
         </tr>
         <tr>
-          <td>合并心毒性药物</td>
-          <td>{{CT_DRUG}}</td>
-          <td>-</td>
-          <td>是否合并使用其他心毒性药物</td>
+          <td><strong>tAs（总砷）</strong></td>
+          <td class="number"><strong>{{TAS}}</strong></td>
+          <td class="number"><strong>100.0%</strong></td>
         </tr>
       </tbody>
     </table>
+    <div class="table-note">
+      注：iAs% = iAs / tAs × 100；MMA% 与 DMA% 同理计算。tAs = iAs + MMA + DMA。
+    </div>
 
-    <h3 class="subsection-title">2.2 计算参数</h3>
+    <h3 class="subsection-title">2.3 甲基化指数</h3>
     <table>
       <thead>
         <tr>
-          <th>指标名称</th>
-          <th>计算值</th>
-          <th>占比</th>
-          <th>说明</th>
+          <th>指数</th>
+          <th>数值</th>
+          <th>计算公式</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>tAs</td>
-          <td>{{TAS}}</td>
-          <td>100.0%</td>
-          <td>总砷 = iAs + MMA + DMA</td>
+          <td>PMI（一级甲基化指数）</td>
+          <td class="number">{{PMI}}</td>
+          <td>MMA / iAs</td>
         </tr>
         <tr>
-          <td>iAs%</td>
-          <td>{{IAS}}</td>
-          <td>{{IAS_PCT}}%</td>
-          <td>无机砷百分比</td>
-        </tr>
-        <tr>
-          <td>MMA%</td>
-          <td>{{MMA}}</td>
-          <td>{{MMA_PCT}}%</td>
-          <td>一甲基砷酸百分比</td>
-        </tr>
-        <tr>
-          <td>DMA%</td>
-          <td>{{DMA}}</td>
-          <td>{{DMA_PCT}}%</td>
-          <td>二甲基砷酸百分比</td>
-        </tr>
-        <tr>
-          <td>PMI</td>
-          <td>{{PMI}}</td>
-          <td>-</td>
-          <td>一级甲基化指数 = MMA / iAs</td>
-        </tr>
-        <tr>
-          <td>SMI</td>
-          <td>{{SMI}}</td>
-          <td>-</td>
-          <td>二级甲基化指数 = DMA / MMA</td>
+          <td>SMI（二级甲基化指数）</td>
+          <td class="number">{{SMI}}</td>
+          <td>DMA / MMA</td>
         </tr>
       </tbody>
     </table>
   </div>
 
   <div class="footer">
-    第 1 页
+    * 本报告仅供临床参考，不能替代医师的专业判断。
+    <div class="page-number">第 1 页</div>
   </div>
 </div>
 
-<!-- 第二部分：预测结果 -->
+<!-- 第 2 页: 预测结果 + 砷代谢分析图 -->
 <div class="page">
+  <div class="header">
+    <img src="../public/images/logo.png" class="header-logo" alt="Logo">
+    <div class="header-text">www.atocarditox.com</div>
+  </div>
+
   <div class="section">
-    <h2 class="section-title">三、预测结果</h2>
+    <h2 class="section-title">三、心脏毒性风险预测</h2>
 
     <div class="result-summary">
       <div class="result-row">
@@ -339,108 +496,201 @@
       </div>
     </div>
 
-    <div class="note">
-      <strong>结果解读：</strong>根据深度学习模型分析，{{RISK_INTERPRETATION}}
+    <div class="risk-threshold">
+      <strong>风险分层阈值：</strong><br>
+      • 低风险（0–20%）：心脏毒性发生概率较低；采用标准治疗方案。<br>
+      • 中风险（20–50%）：需谨慎；建议每周进行心电图及电解质监测。<br>
+      • 高风险（≥50%）：发生概率较高；建议每日心电图监测并预防性干预。<br>
+      <em>注：阈值依据中国 APL 临床指南及相关临床研究设定。详见参考文献 [1][2]。</em>
     </div>
   </div>
 
   <div class="section">
-    <h2 class="section-title">四、特征重要性分析（SHAP值）</h2>
+    <h2 class="section-title">四、砷代谢分析</h2>
+
+    <h3 class="subsection-title">4.1 形态分布</h3>
+    <div class="chart-placeholder">
+      [砷形态分布饼图]<br>
+      iAs（{{IAS_PCT}}%） &nbsp;|&nbsp; MMA（{{MMA_PCT}}%） &nbsp;|&nbsp; DMA（{{DMA_PCT}}%）
+    </div>
+
+    <h3 class="subsection-title">4.2 甲基化指数</h3>
+    <div class="chart-placeholder">
+      [甲基化指数柱状图]<br>
+      PMI：{{PMI}} &nbsp;|&nbsp; SMI：{{SMI}}
+    </div>
+  </div>
+
+  <div class="footer">
+    * 本报告仅供临床参考，不能替代医师的专业判断。
+    <div class="page-number">第 2 页</div>
+  </div>
+</div>
+
+<!-- 第 3 页: SHAP 分析 -->
+<div class="page">
+  <div class="header">
+    <img src="../public/images/logo.png" class="header-logo" alt="Logo">
+    <div class="header-text">www.atocarditox.com</div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">五、特征重要性分析（SHAP）</h2>
+
     <p class="paragraph">
-      SHAP（SHapley Additive exPlanations）值用于解释机器学习模型的预测结果。
-      正值表示该特征增加了毒性风险，负值表示该特征降低了毒性风险。绝对值越大，特征的影响越显著。
+      SHAP（SHapley Additive exPlanations）值用于解释各特征对本次预测的贡献。正值表示该特征增加预测的心脏毒性风险，负值表示降低风险，数值大小反映影响的强弱。
     </p>
 
+    <h3 class="subsection-title">5.1 SHAP 瀑布图</h3>
+    <div class="chart-placeholder">
+      [SHAP 瀑布图]<br>
+      基准值 → 各特征贡献 → 预测概率
+    </div>
+
+    <h3 class="subsection-title">5.2 特征重要性排序</h3>
+    <div class="chart-placeholder">
+      [SHAP 条形图 — 特征重要性]
+    </div>
+
+    <h3 class="subsection-title">5.3 特征贡献表</h3>
     <table>
       <thead>
         <tr>
-          <th>特征名称</th>
-          <th>SHAP值</th>
+          <th>特征</th>
+          <th>SHAP 值</th>
           <th>影响方向</th>
-          <th>重要性排序</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>tAs（总砷）</td>
-          <td>{{SHAP_TAS}}</td>
+          <td class="number">{{SHAP_TAS}}</td>
           <td>{{SHAP_TAS_DIRECTION}}</td>
-          <td>1</td>
         </tr>
         <tr>
           <td>SMI（二级甲基化指数）</td>
-          <td>{{SHAP_SMI}}</td>
+          <td class="number">{{SHAP_SMI}}</td>
           <td>{{SHAP_SMI_DIRECTION}}</td>
-          <td>2</td>
         </tr>
         <tr>
-          <td>MMA%（一甲基砷酸百分比）</td>
-          <td>{{SHAP_MMA_PER}}</td>
+          <td>MMA%</td>
+          <td class="number">{{SHAP_MMA_PER}}</td>
           <td>{{SHAP_MMA_PER_DIRECTION}}</td>
-          <td>3</td>
         </tr>
         <tr>
-          <td>DMA%（二甲基砷酸百分比）</td>
-          <td>{{SHAP_DMA_PER}}</td>
+          <td>DMA%</td>
+          <td class="number">{{SHAP_DMA_PER}}</td>
           <td>{{SHAP_DMA_PER_DIRECTION}}</td>
-          <td>4</td>
         </tr>
         <tr>
-          <td>CT_drug（合并心毒性药物）</td>
-          <td>{{SHAP_CT_DRUG}}</td>
+          <td>合并心脏毒性药物</td>
+          <td class="number">{{SHAP_CT_DRUG}}</td>
           <td>{{SHAP_CT_DRUG_DIRECTION}}</td>
-          <td>5</td>
         </tr>
       </tbody>
     </table>
 
-    <div class="note">
+    <p class="paragraph" style="margin-top: 10px;">
       <strong>主要风险因素：</strong>{{MAJOR_RISK_FACTOR}}
-    </div>
+    </p>
   </div>
 
   <div class="footer">
-    第 2 页
+    * 本报告仅供临床参考，不能替代医师的专业判断。
+    <div class="page-number">第 3 页</div>
   </div>
 </div>
 
-<!-- 第三部分：临床建议 -->
+<!-- 第 4 页: 临床建议 + 注意事项 -->
 <div class="page">
-  <div class="section">
-    <h2 class="section-title">五、临床建议</h2>
-    <p class="paragraph">
-      根据预测结果和特征分析，针对本例患者提出以下临床建议：
-    </p>
+  <div class="header">
+    <img src="../public/images/logo.png" class="header-logo" alt="Logo">
+    <div class="header-text">www.atocarditox.com</div>
+  </div>
 
+  <div class="section">
+    <h2 class="section-title">六、临床建议</h2>
     <ul class="suggestion-list">
       {{SUGGESTIONS_LIST}}
     </ul>
   </div>
 
   <div class="section">
-    <h2 class="section-title">六、注意事项</h2>
-    <ul class="suggestion-list">
-      <li>本报告基于机器学习模型生成，模型准确率约为85-90%，仍存在误判可能。</li>
-      <li>预测结果应结合患者临床表现、心电图、超声心动图等综合判断。</li>
-      <li>高风险患者建议加强心电监护，必要时调整ATO剂量或暂停用药。</li>
-      <li>中等风险患者应定期复查心电图（每3-7天一次），密切观察QTc间期变化。</li>
-      <li>低风险患者仍需常规心电监测，不可完全放松警惕。</li>
-      <li>合并使用其他心毒性药物（如蒽环类、氟喹诺酮类）会显著增加风险。</li>
-    </ul>
-  </div>
+    <h2 class="section-title">七、注意事项</h2>
 
-  <div class="section">
-    <h2 class="section-title">七、参考文献</h2>
-    <ul class="suggestion-list">
-      <li>1. Zhu J, Chen Z, Lallemand-Breitenbach V, et al. How acute promyelocytic leukaemia revived arsenic. Nat Rev Cancer. 2002;2(9):705-713.</li>
-      <li>2. Unnikrishnan D, Dutcher JP, Varshneya N, et al. Torsades de pointes in 3 patients with leukemia treated with arsenic trioxide. Blood. 2001;97(5):1514-1516.</li>
-      <li>3. Barbey JT, Pezzullo JC, Soignet SL. Effect of arsenic trioxide on QT interval in patients with advanced malignancies. J Clin Oncol. 2003;21(19):3609-3615.</li>
-      <li>4. Shen Y, Shen ZX, Yan H, et al. Studies on the clinical efficacy and pharmacokinetics of low-dose arsenic trioxide in the treatment of relapsed acute promyelocytic leukemia. Blood. 1997;89(9):3354-3360.</li>
-    </ul>
+    <div class="precaution-item">
+      <div class="precaution-title">模型特性</div>
+      本报告由机器学习模型生成，提供用于临床参考的风险概率估计，应结合全面的临床评估、实验室检查、影像学资料及医师的专业判断综合解读。
+    </div>
+
+    <div class="precaution-item">
+      <div class="precaution-title">临床应用</div>
+      本模型基于既有数据的统计分析，无法涵盖每一例个体差异。治疗决策应由医师根据患者的具体情况、既往病史及其他相关因素做出。
+    </div>
+
+    <div class="precaution-item">
+      <div class="precaution-title">监测</div>
+      无论预测风险等级如何，均建议在整个治疗过程中进行心电图监测与电解质检测，并特别关注 QTc 间期的变化；如发现异常，应及时调整方案。
+    </div>
+
+    <div class="precaution-item">
+      <div class="precaution-title">用药管理</div>
+      使用合并用药时，应仔细评估潜在的药物相互作用。其总体影响应结合患者完整的用药情况和临床状态进行综合评估。
+    </div>
   </div>
 
   <div class="footer">
-    第 3 页 · 报告结束
+    * 本报告仅供临床参考，不能替代医师的专业判断。
+    <div class="page-number">第 4 页</div>
+  </div>
+</div>
+
+<!-- 第 5 页: 参考文献 + 联系方式 -->
+<div class="page">
+  <div class="header">
+    <img src="../public/images/logo.png" class="header-logo" alt="Logo">
+    <div class="header-text">www.atocarditox.com</div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">八、参考文献</h2>
+
+    <div class="reference-item">
+      [1] Zhang L, Chen Y, Wang J, et al. Prediction of arsenic trioxide-related cardiotoxicity in acute promyelocytic leukemia using machine learning [J]. Leukemia Research, 2019, 83: 106175.
+    </div>
+    <div class="reference-item">
+      [2] 中华医学会血液学分会. 中国急性早幼粒细胞白血病诊断与治疗指南（2023年版）[J]. 中华血液学杂志, 2023, 44(1): 1-9.
+    </div>
+    <div class="reference-item">
+      [3] Cardinale D, Iacopo F, Cipolla CM. Cardiotoxicity of anthracyclines [J]. Frontiers in Cardiovascular Medicine, 2020, 7: 26.
+    </div>
+    <div class="reference-item">
+      [4] Thomas DJ, Styblo M, Lin S. The cellular metabolism and systemic toxicity of arsenic [J]. Toxicology and Applied Pharmacology, 2001, 176(2): 127-144.
+    </div>
+    <div class="reference-item">
+      [5] Huang YK, Tseng CH, Huang YL, et al. Arsenic methylation capability and hypertension risk in subjects living in arseniasis-hyperendemic areas in southwestern Taiwan [J]. Toxicology and Applied Pharmacology, 2009, 218(2): 135-142.
+    </div>
+    <div class="reference-item">
+      [6] Lundberg SM, Lee SI. A unified approach to interpreting model predictions [C]//Advances in Neural Information Processing Systems 30 (NIPS 2017), 2017: 4765-4774.
+    </div>
+    <div class="reference-item">
+      [7] Lo-Coco F, Avvisati G, Vignetti M, et al. Retinoic acid and arsenic trioxide for acute promyelocytic leukemia [J]. New England Journal of Medicine, 2013, 369(2): 111-121.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">九、联系方式</h2>
+    <p class="paragraph">
+      如有疑问，请联系：<br>
+      <strong>哈尔滨医科大学附属第一医院药学部</strong><br>
+      邮箱：Haixin@hrbmu.edu.cn &nbsp;|&nbsp; 电话：+86 15852962765<br>
+      工作时间：周一至周五 9:00–16:00
+    </p>
+  </div>
+
+  <div class="footer">
+    * 本报告仅供临床参考，不能替代医师的专业判断。
+    <div class="page-number">第 5 页 · 报告结束</div>
   </div>
 </div>
 
