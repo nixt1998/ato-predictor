@@ -75,8 +75,22 @@ export class HtmlToPdfGenerator {
 
     let htmlTemplate = await fs.readFile(templatePath, 'utf-8')
 
+    // 获取 Logo 路径
+    const logoPath = path.join(process.cwd(), 'public', 'logo.png')
+    let logoDataUrl = ''
+
+    try {
+      const logoBuffer = await fs.readFile(logoPath)
+      const logoBase64 = logoBuffer.toString('base64')
+      logoDataUrl = `data:image/png;base64,${logoBase64}`
+    } catch (error) {
+      console.warn('Logo file not found, using placeholder')
+      // 使用 SVG 占位符
+      logoDataUrl = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 60'%3E%3Ctext x='100' y='35' font-family='Arial' font-size='20' font-weight='bold' text-anchor='middle' fill='%23005EB8'%3EATO CardiTox%3C/text%3E%3C/svg%3E"
+    }
+
     // 替换占位符
-    htmlTemplate = this.fillTemplate(htmlTemplate, this.data)
+    htmlTemplate = this.fillTemplate(htmlTemplate, this.data, logoDataUrl)
 
     // 使用 Puppeteer 生成 PDF
     const browser = await puppeteer.launch({
@@ -110,7 +124,7 @@ export class HtmlToPdfGenerator {
   /**
    * 填充模板数据
    */
-  private fillTemplate(template: string, data: PredictionData): string {
+  private fillTemplate(template: string, data: PredictionData, logoDataUrl: string): string {
     const { input, result } = data
     const { prediction, metabolism, shap_values, major_risk_factor, suggestions } = result
 
@@ -201,5 +215,6 @@ export class HtmlToPdfGenerator {
       .replace(/{{SHAP_CT_DRUG_DIRECTION}}/g, getDirection(shap_values.CT_drug))
       .replace(/{{MAJOR_RISK_FACTOR}}/g, major_risk_factor)
       .replace(/{{SUGGESTIONS_LIST}}/g, suggestionsList)
+      .replace(/{{LOGO_PATH}}/g, logoDataUrl)
   }
 }
