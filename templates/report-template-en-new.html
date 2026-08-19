@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATO Cardiotoxicity Prediction Report - English</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Times New Roman', serif;
+      line-height: 1.6;
+      color: #333;
+      background: #fff;
+    }
+
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      padding: 25mm 15mm 20mm 15mm;
+      margin: 0 auto;
+      background: white;
+      page-break-after: always;
+      position: relative;
+    }
+
+    @media print {
+      body { background: white; }
+      .page {
+        margin: 0;
+        page-break-after: always;
+      }
+    }
+
+    /* Logo */
+    .cover-logo {
+      width: 80mm;
+      height: auto;
+      margin-bottom: 15mm;
+    }
+
+    .header-logo {
+      height: 12mm;
+      width: auto;
+    }
+
+    /* Header (from page 2) */
+    .header {
+      position: absolute;
+      top: 10mm;
+      left: 15mm;
+      right: 15mm;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 5mm;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .header-text {
+      font-size: 9pt;
+      color: #757575;
+    }
+
+    /* Footer */
+    .footer {
+      position: absolute;
+      bottom: 10mm;
+      left: 15mm;
+      right: 15mm;
+      text-align: center;
+      font-size: 8pt;
+      color: #757575;
+      border-top: 1px solid #ddd;
+      padding-top: 5mm;
+    }
+
+    .page-number {
+      margin-top: 3mm;
+      font-size: 8pt;
+      color: #757575;
+    }
+
+    /* Cover Page */
+    .cover {
+      text-align: center;
+      padding-top: 50mm;
+    }
+
+    .cover h1 {
+      font-size: 24pt;
+      color: #000;
+      margin-bottom: 25mm;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      line-height: 1.4;
+    }
+
+    .cover .website {
+      font-size: 11pt;
+      color: #005EB8;
+      margin: 10mm 0;
+      font-weight: 500;
+    }
+
+    .cover .divider {
+      width: 60mm;
+      height: 1px;
+      background: #ddd;
+      margin: 15mm auto;
+    }
+
+    .cover .report-id {
+      font-size: 11pt;
+      color: #424242;
+      margin: 4mm 0;
+    }
+
+    .cover .generate-time {
+      font-size: 10pt;
+      color: #757575;
+      margin: 4mm 0;
+    }
+
+    .cover .version {
+      font-size: 10pt;
+      color: #757575;
+      margin: 4mm 0;
+    }
+
+    .cover-footer {
+      position: absolute;
+      bottom: 20mm;
+      left: 15mm;
+      right: 15mm;
+      text-align: left;
+      font-size: 8pt;
+      color: #424242;
+      line-height: 1.8;
+      padding: 10px 15px;
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    /* Content Sections */
+    .section {
+      margin: 15px 0;
+    }
+
+    .section-title {
+      font-size: 14pt;
+      color: #000;
+      border-bottom: 1.5pt solid #000;
+      padding-bottom: 3px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .subsection-title {
+      font-size: 11pt;
+      color: #000;
+      font-weight: bold;
+      margin: 10px 0 5px 0;
+    }
+
+    .paragraph {
+      font-size: 10.5pt;
+      line-height: 1.8;
+      text-align: justify;
+      margin: 8px 0;
+    }
+
+    /* Risk Result Box */
+    .result-box {
+      border: 2px solid #000;
+      padding: 15px;
+      text-align: center;
+      margin: 15px 0;
+    }
+
+    .result-box .risk-level {
+      font-size: 16pt;
+      font-weight: bold;
+      margin: 5px 0;
+    }
+
+    .result-box .probability {
+      font-size: 24pt;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .result-box .description {
+      font-size: 10pt;
+      margin: 5px 0;
+    }
+
+    .result-box.high { border-color: #dc3545; color: #dc3545; }
+    .result-box.medium { border-color: #fd7e14; color: #fd7e14; }
+    .result-box.low { border-color: #28a745; color: #28a745; }
+
+    /* Risk Threshold */
+    .risk-threshold {
+      font-size: 8pt;
+      color: #666;
+      padding: 8px;
+      background: #f9f9f9;
+      border-left: 3px solid #005EB8;
+      margin: 10px 0;
+      line-height: 1.6;
+    }
+
+    /* Table (Three-line style) */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+    }
+
+    table thead {
+      border-top: 1.5pt solid #000;
+      border-bottom: 0.5pt solid #000;
+    }
+
+    table tbody {
+      border-bottom: 1.5pt solid #000;
+    }
+
+    th, td {
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 9pt;
+    }
+
+    th {
+      font-weight: bold;
+      text-align: center;
+    }
+
+    td.number {
+      text-align: right;
+    }
+
+    /* Chart Placeholder */
+    .chart-placeholder {
+      width: 100%;
+      height: 100mm;
+      border: 1px dashed #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10pt;
+      color: #999;
+      margin: 10px 0;
+      background: #fafafa;
+    }
+
+    /* Suggestions List */
+    .suggestion-list {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0;
+    }
+
+    .suggestion-list li {
+      padding: 8px 0;
+      line-height: 1.8;
+      color: #333;
+    }
+
+    /* Precautions Section */
+    .precaution-item {
+      margin: 8px 0;
+      line-height: 1.8;
+    }
+
+    .precaution-title {
+      font-weight: bold;
+      color: #000;
+      margin-bottom: 3px;
+    }
+
+    /* References */
+    .reference-item {
+      font-size: 9pt;
+      line-height: 1.8;
+      margin: 8px 0;
+      text-align: justify;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Cover Page -->
+<div class="page">
+  <div class="cover">
+    <img src="{{LOGO_PATH}}" class="cover-logo" alt="ATO CardiTox Logo">
+
+    <h1>Arsenic Trioxide Cardiotoxicity<br>Prediction Report</h1>
+
+    <div class="website">www.atocarditox.com</div>
+
+    <div class="divider"></div>
+
+    <div class="report-id">Report No.: {{REPORT_NUMBER}}</div>
+    <div class="generate-time">Generated: {{GENERATED_AT}}</div>
+    <div class="version">System Version: v2.10.3</div>
+  </div>
+
+  <div class="cover-footer">
+    <strong>【Disclaimer】</strong><br><br>
+    This prediction report is generated based on an artificial intelligence statistical model and published clinical research data. It is for clinical reference only and cannot be used as a final diagnosis or substitute for physician's professional judgment and treatment decisions.<br><br>
+    Model prediction results are subject to training dataset, sample size, feature selection and other factors, and have certain errors. Actual cardiotoxicity risk varies due to individual differences, concomitant medications, underlying diseases and other factors that the model cannot fully predict.<br><br>
+    This system assumes no legal liability for any medical decisions, clinical consequences or adverse events resulting from the use of this report. Physicians are advised to make comprehensive judgments based on patient-specific conditions, laboratory tests, imaging studies and clinical experience. Multidisciplinary consultation is recommended when necessary.<br><br>
+    Patients and their families should fully understand the limitations of the prediction. Please consult your attending physician if you have any questions.<br><br>
+    System Version: v2.10.3 | Last Updated: August 19, 2026
+  </div>
+</div>
+
+<!-- Page 2: Test Data -->
+<div class="page">
+  <div class="header">
+    <img src="{{LOGO_PATH}}" class="header-logo" alt="Logo">
+    <div class="header-text">
+      <span>www.atocarditox.com</span>
+    </div>
+  </div>
+
+  <div class="section" style="margin-top: 25mm;">
+    <h2 class="section-title">I. Test Data</h2>
+
+    <h3 class="subsection-title">1.1 Input Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Parameter</th>
+          <th>Value</th>
+          <th>Unit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>iAs (Inorganic Arsenic)</td>
+          <td class="number">{{IAS}}</td>
+          <td>ng/mL</td>
+        </tr>
+        <tr>
+          <td>MMA (Monomethylarsonic Acid)</td>
+          <td class="number">{{MMA}}</td>
+          <td>ng/mL</td>
+        </tr>
+        <tr>
+          <td>DMA (Dimethylarsinic Acid)</td>
+          <td class="number">{{DMA}}</td>
+          <td>ng/mL</td>
+        </tr>
+        <tr>
+          <td>Concomitant Cardiotoxic Drug</td>
+          <td class="number">{{CT_DRUG}}</td>
+          <td>-</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title">1.2 Arsenic Metabolite Distribution</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Metabolite</th>
+          <th>Concentration</th>
+          <th>Percentage</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>iAs</td>
+          <td class="number">{{IAS}}</td>
+          <td class="number">{{IAS_PCT}}%</td>
+        </tr>
+        <tr>
+          <td>MMA</td>
+          <td class="number">{{MMA}}</td>
+          <td class="number">{{MMA_PCT}}%</td>
+        </tr>
+        <tr>
+          <td>DMA</td>
+          <td class="number">{{DMA}}</td>
+          <td class="number">{{DMA_PCT}}%</td>
+        </tr>
+        <tr>
+          <td><strong>tAs (Total Arsenic)</strong></td>
+          <td class="number"><strong>{{TAS}}</strong></td>
+          <td class="number"><strong>100.0%</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title">1.3 Methylation Indices</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Index</th>
+          <th>Value</th>
+          <th>Formula</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>PMI (Primary Methylation Index)</td>
+          <td class="number">{{PMI}}</td>
+          <td>MMA / iAs</td>
+        </tr>
+        <tr>
+          <td>SMI (Secondary Methylation Index)</td>
+          <td class="number">{{SMI}}</td>
+          <td>DMA / MMA</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    * This report is for clinical reference only and cannot replace physician's professional judgment.
+    <div class="page-number">Page 1</div>
+  </div>
+</div>
+
+<!-- Page 3: Prediction Result -->
+<div class="page">
+  <div class="header">
+    <img src="{{LOGO_PATH}}" class="header-logo" alt="Logo">
+    <div class="header-text">
+      <span>www.atocarditox.com</span>
+    </div>
+  </div>
+
+  <div class="section" style="margin-top: 25mm;">
+    <h2 class="section-title">II. Cardiotoxicity Risk Prediction</h2>
+
+    <div class="result-box {{RISK_CLASS}}">
+      <div class="risk-level">{{RISK_LEVEL_TEXT}}</div>
+      <div class="probability">{{PROBABILITY}}%</div>
+      <div class="description">{{RISK_INTERPRETATION}}</div>
+    </div>
+
+    <div class="risk-threshold">
+      <strong>Risk Stratification Thresholds:</strong><br>
+      • Low Risk (0-20%): Low probability of cardiotoxicity, standard treatment protocol<br>
+      • Moderate Risk (20-50%): Caution advised, weekly ECG and electrolyte monitoring recommended<br>
+      • High Risk (≥50%): High probability, daily ECG monitoring and preventive intervention recommended<br><br>
+      <em>Note: Thresholds are based on Chinese APL Clinical Guidelines and related clinical studies. See references [1][2].</em>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">III. Arsenic Metabolism Analysis</h2>
+
+    <h3 class="subsection-title">3.1 Metabolite Distribution (Pie Chart)</h3>
+    <div class="chart-placeholder">
+      [Arsenic Metabolite Distribution Pie Chart]<br>
+      iAs ({{IAS_PCT}}%) | MMA ({{MMA_PCT}}%) | DMA ({{DMA_PCT}}%)
+    </div>
+
+    <h3 class="subsection-title">3.2 Methylation Indices (Bar Chart)</h3>
+    <div class="chart-placeholder">
+      [Methylation Indices Bar Chart]<br>
+      PMI: {{PMI}} (Reference: >0.7) | SMI: {{SMI}} (Reference: >4.0)
+    </div>
+  </div>
+
+  <div class="footer">
+    * This report is for clinical reference only and cannot replace physician's professional judgment.
+    <div class="page-number">Page 2</div>
+  </div>
+</div>
+
+<!-- Page 4: SHAP Analysis -->
+<div class="page">
+  <div class="header">
+    <img src="{{LOGO_PATH}}" class="header-logo" alt="Logo">
+    <div class="header-text">
+      <span>www.atocarditox.com</span>
+    </div>
+  </div>
+
+  <div class="section" style="margin-top: 25mm;">
+    <h2 class="section-title">IV. Feature Importance Analysis (SHAP)</h2>
+
+    <p class="paragraph">
+      SHAP (SHapley Additive exPlanations) values explain the contribution of each feature to this prediction.
+      Positive values increase cardiotoxicity risk (shown in red), negative values decrease risk (shown in blue).
+      The bar length indicates the magnitude of impact.
+    </p>
+
+    <h3 class="subsection-title">4.1 SHAP Waterfall Plot</h3>
+    <div class="chart-placeholder">
+      [SHAP Waterfall Plot]<br>
+      Base Value → Feature Contributions → Predicted Probability
+    </div>
+
+    <h3 class="subsection-title">4.2 Feature Importance Ranking</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>SHAP Value</th>
+          <th>Direction</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>tAs (Total Arsenic)</td>
+          <td class="number">{{SHAP_TAS}}</td>
+          <td>{{SHAP_TAS_DIRECTION}}</td>
+        </tr>
+        <tr>
+          <td>SMI (Secondary Methylation Index)</td>
+          <td class="number">{{SHAP_SMI}}</td>
+          <td>{{SHAP_SMI_DIRECTION}}</td>
+        </tr>
+        <tr>
+          <td>MMA%</td>
+          <td class="number">{{SHAP_MMA_PER}}</td>
+          <td>{{SHAP_MMA_PER_DIRECTION}}</td>
+        </tr>
+        <tr>
+          <td>DMA%</td>
+          <td class="number">{{SHAP_DMA_PER}}</td>
+          <td>{{SHAP_DMA_PER_DIRECTION}}</td>
+        </tr>
+        <tr>
+          <td>Cardiotoxic Drug</td>
+          <td class="number">{{SHAP_CT_DRUG}}</td>
+          <td>{{SHAP_CT_DRUG_DIRECTION}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="paragraph" style="margin-top: 10px;">
+      <strong>Major Risk Factor:</strong> {{MAJOR_RISK_FACTOR}}
+    </p>
+  </div>
+
+  <div class="footer">
+    * This report is for clinical reference only and cannot replace physician's professional judgment.
+    <div class="page-number">Page 3</div>
+  </div>
+</div>
+
+<!-- Page 5: Clinical Recommendations -->
+<div class="page">
+  <div class="header">
+    <img src="{{LOGO_PATH}}" class="header-logo" alt="Logo">
+    <div class="header-text">
+      <span>www.atocarditox.com</span>
+    </div>
+  </div>
+
+  <div class="section" style="margin-top: 25mm;">
+    <h2 class="section-title">V. Clinical Recommendations</h2>
+
+    <h3 class="subsection-title">5.1 Personalized Recommendations (Risk-Stratified)</h3>
+    <ul class="suggestion-list">
+      {{SUGGESTIONS_LIST}}
+    </ul>
+
+    <h3 class="subsection-title">5.2 General Monitoring Protocol</h3>
+    <div class="precaution-item">
+      <div class="precaution-title">• ECG Monitoring:</div>
+      Regular electrocardiogram monitoring with attention to QTc interval changes. Immediate medical attention if QTc >500ms or significant prolongation.
+    </div>
+    <div class="precaution-item">
+      <div class="precaution-title">• Electrolyte Management:</div>
+      Maintain potassium (K⁺) >4.0 mmol/L, magnesium (Mg²⁺) >0.9 mmol/L, and calcium (Ca²⁺) within normal range.
+    </div>
+    <div class="precaution-item">
+      <div class="precaution-title">• Symptom Monitoring:</div>
+      Seek immediate medical attention if experiencing palpitations, chest tightness, chest pain, dizziness, syncope, or dyspnea.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">VI. Precautions</h2>
+
+    <div class="precaution-item">
+      <div class="precaution-title">Model Characteristics:</div>
+      This report is generated by a machine learning model trained on clinical data. It provides risk probability estimation for clinical reference and must be integrated with comprehensive clinical evaluation, laboratory tests, imaging studies, and physician's professional judgment in actual clinical decision-making.
+    </div>
+
+    <div class="precaution-item">
+      <div class="precaution-title">Clinical Application:</div>
+      The model is based on statistical analysis and cannot cover all individual variations. Physicians should make treatment decisions based on patient-specific conditions, taking into account comorbidities, concomitant medications, and other relevant factors.
+    </div>
+
+    <div class="precaution-item">
+      <div class="precaution-title">Monitoring Recommendations:</div>
+      Regardless of predicted risk level, comprehensive ECG monitoring and electrolyte testing throughout the treatment course are recommended, with particular attention to QTc interval changes.
+    </div>
+
+    <div class="precaution-item">
+      <div class="precaution-title">Medication Management:</div>
+      Exercise caution when evaluating potential drug interactions. The impact of concomitant medications varies by individual case and requires comprehensive assessment based on the patient's complete medication profile and clinical status.
+    </div>
+  </div>
+
+  <div class="footer">
+    * This report is for clinical reference only and cannot replace physician's professional judgment.
+    <div class="page-number">Page 4</div>
+  </div>
+</div>
+
+<!-- Page 6: References -->
+<div class="page">
+  <div class="header">
+    <img src="{{LOGO_PATH}}" class="header-logo" alt="Logo">
+    <div class="header-text">
+      <span>www.atocarditox.com</span>
+    </div>
+  </div>
+
+  <div class="section" style="margin-top: 25mm;">
+    <h2 class="section-title">VII. References</h2>
+
+    <div class="reference-item">
+      [1] Zhang L, Chen Y, Wang J, et al. Prediction of arsenic trioxide-related cardiotoxicity in acute promyelocytic leukemia using machine learning [J]. Leukemia Research, 2019, 83: 106175.
+    </div>
+
+    <div class="reference-item">
+      [2] Chinese Society of Hematology, Chinese Medical Association. Chinese guidelines for diagnosis and treatment of acute promyelocytic leukemia (2023 edition) [J]. Chinese Journal of Hematology, 2023, 44(1): 1-9.
+    </div>
+
+    <div class="reference-item">
+      [3] Cardinale D, Iacopo F, Cipolla CM. Cardiotoxicity of anthracyclines [J]. Frontiers in Cardiovascular Medicine, 2020, 7: 26.
+    </div>
+
+    <div class="reference-item">
+      [4] Thomas DJ, Styblo M, Lin S. The cellular metabolism and systemic toxicity of arsenic [J]. Toxicology and Applied Pharmacology, 2001, 176(2): 127-144.
+    </div>
+
+    <div class="reference-item">
+      [5] Huang YK, Tseng CH, Huang YL, et al. Arsenic methylation capability and hypertension risk in subjects living in arseniasis-hyperendemic areas in southwestern Taiwan [J]. Toxicology and Applied Pharmacology, 2009, 218(2): 135-142.
+    </div>
+
+    <div class="reference-item">
+      [6] Lundberg SM, Lee SI. A unified approach to interpreting model predictions [C]//Advances in Neural Information Processing Systems 30 (NIPS 2017), 2017: 4765-4774.
+    </div>
+
+    <div class="reference-item">
+      [7] Lo-Coco F, Avvisati G, Vignetti M, et al. Retinoic acid and arsenic trioxide for acute promyelocytic leukemia [J]. New England Journal of Medicine, 2013, 369(2): 111-121.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">VIII. Contact Information</h2>
+    <p class="paragraph">
+      For questions or concerns, please contact:<br>
+      <strong>Department of Pharmacy, First Affiliated Hospital of Harbin Medical University</strong><br>
+      Email: Haixin@hrbmu.edu.cn | Phone: +86 15852962765<br>
+      Office Hours: Monday to Friday, 9:00 AM - 4:00 PM
+    </p>
+  </div>
+
+  <div class="footer">
+    * This report is for clinical reference only and cannot replace physician's professional judgment.
+    <div class="page-number">Page 5 · End of Report</div>
+  </div>
+</div>
+
+</body>
+</html>

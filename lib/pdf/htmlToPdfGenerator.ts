@@ -76,7 +76,7 @@ export class HtmlToPdfGenerator {
     let htmlTemplate = await fs.readFile(templatePath, 'utf-8')
 
     // 获取 Logo 路径
-    const logoPath = path.join(process.cwd(), 'public', 'logo.png')
+    const logoPath = path.join(process.cwd(), 'public', 'images', 'logo.png')
     let logoDataUrl = ''
 
     try {
