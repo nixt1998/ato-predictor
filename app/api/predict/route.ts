@@ -85,11 +85,9 @@ export async function POST(request: NextRequest) {
       })
     } catch (fetchError: any) {
       if (fetchError.name === 'AbortError') {
-        console.error('R API request timeout')
-        return NextResponse.json(
-          { error: 'Prediction timeout. Please try again.' },
-          { status: 504 }
-        )
+        console.warn('R API request timeout, falling back to local prediction')
+        // R API 超时，使用本地回退逻辑，不报错
+        return useFallbackPrediction(data, locale)
       }
 
       console.error('R API fetch error:', fetchError)
