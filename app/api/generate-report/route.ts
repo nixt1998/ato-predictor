@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { jsPDFGenerator } from '@/lib/pdf/jsPDFGenerator'
+import { HtmlToPdfGenerator } from '@/lib/pdf/htmlToPdfGenerator'
 
 export const dynamic = 'force-dynamic'
 
 /**
  * POST /api/generate-report
- * 使用 jsPDF 生成 PDF 报告
+ * 使用 Puppeteer + HTML 模板生成 PDF 报告（支持中文）
  */
 export async function POST(request: NextRequest) {
   try {
@@ -29,12 +29,12 @@ export async function POST(request: NextRequest) {
       generatedAt: new Date().toISOString(),
     }
 
-    // 使用 jsPDF 生成器
-    const generator = new jsPDFGenerator(config, predictionData)
-    const doc = generator.generate()
+    // 使用 HTML 模板生成器（支持中文）
+    const generator = new HtmlToPdfGenerator(config, predictionData)
+    const pdfBuffer = await generator.generate()
 
     // 转换为 base64
-    const pdfBase64 = doc.output('datauristring').split(',')[1]
+    const pdfBase64 = pdfBuffer.toString('base64')
 
     return NextResponse.json({
       success: true,
