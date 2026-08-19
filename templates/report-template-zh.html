@@ -13,15 +13,15 @@
 
     body {
       font-family: 'SimSun', 'Microsoft YaHei', sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: #f5f5f5;
+      line-height: 1.8;
+      color: #000;
+      background: white;
     }
 
     .page {
       width: 210mm;
       min-height: 297mm;
-      padding: 20mm;
+      padding: 25mm 20mm;
       margin: 20px auto;
       background: white;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -44,108 +44,140 @@
     }
 
     .cover h1 {
-      font-size: 32pt;
-      color: #C4612F;
-      margin-bottom: 20mm;
+      font-size: 28pt;
+      color: #000;
+      margin-bottom: 30mm;
       font-weight: bold;
+      letter-spacing: 2px;
     }
 
     .cover .report-id {
-      font-size: 14pt;
-      color: #666;
-      margin: 10mm 0;
+      font-size: 12pt;
+      color: #333;
+      margin: 8mm 0;
     }
 
     .cover .generate-time {
-      font-size: 12pt;
-      color: #999;
+      font-size: 11pt;
+      color: #666;
     }
 
     /* 内容页 */
     .section {
-      margin: 15mm 0;
+      margin: 20px 0;
     }
 
     .section-title {
-      font-size: 18pt;
-      color: #C4612F;
-      border-bottom: 2px solid #C4612F;
-      padding-bottom: 5px;
-      margin-bottom: 10px;
+      font-size: 16pt;
+      color: #000;
+      border-bottom: 2px solid #000;
+      padding-bottom: 8px;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+
+    .subsection-title {
+      font-size: 14pt;
+      color: #000;
+      margin: 15px 0 10px 0;
       font-weight: bold;
     }
 
     /* 预测结果 */
-    .result-box {
-      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-      color: white;
-      padding: 20px;
-      border-radius: 10px;
-      text-align: center;
-      margin: 20px 0;
+    .result-summary {
+      margin: 15px 0;
+      padding: 15px;
+      border: 1px solid #ddd;
+      background: #fafafa;
     }
 
-    .result-box.medium {
-      background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
     }
 
-    .result-box.low {
-      background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
+    .result-row:last-child {
+      border-bottom: none;
     }
 
-    .result-box h2 {
-      font-size: 24pt;
-      margin-bottom: 10px;
-    }
-
-    .result-box .probability {
-      font-size: 36pt;
+    .result-label {
       font-weight: bold;
-      margin: 10px 0;
+      color: #000;
     }
 
-    /* 表格 */
+    .result-value {
+      color: #333;
+    }
+
+    .risk-high { color: #d32f2f; font-weight: bold; }
+    .risk-medium { color: #f57c00; font-weight: bold; }
+    .risk-low { color: #388e3c; font-weight: bold; }
+
+    /* 三线表 */
     table {
       width: 100%;
       border-collapse: collapse;
       margin: 15px 0;
-      background: #fafafa;
+      background: white;
     }
 
-    th, td {
-      padding: 12px;
-      text-align: left;
-      border: 1px solid #ddd;
-    }
-
-    th {
-      background: #f0f0f0;
+    table thead th {
+      border-top: 2px solid #000;
+      border-bottom: 1px solid #000;
+      padding: 10px 12px;
+      text-align: center;
       font-weight: bold;
+      color: #000;
+      background: white;
+    }
+
+    table tbody td {
+      border: none;
+      padding: 8px 12px;
+      text-align: center;
       color: #333;
     }
 
-    tr:nth-child(even) {
+    table tbody tr:last-child td {
+      border-bottom: 2px solid #000;
+    }
+
+    /* 文本段落 */
+    .paragraph {
+      text-indent: 2em;
+      margin: 10px 0;
+      text-align: justify;
+      line-height: 2;
+    }
+
+    .note {
+      margin: 10px 0;
+      padding: 10px;
       background: #f9f9f9;
+      border-left: 3px solid #666;
+      font-size: 10pt;
+      color: #666;
     }
 
     /* 列表 */
     .suggestion-list {
       list-style: none;
       padding: 0;
+      margin: 10px 0;
     }
 
     .suggestion-list li {
-      padding: 10px 0;
-      border-bottom: 1px solid #eee;
+      padding: 8px 0;
+      line-height: 1.8;
+      color: #333;
     }
 
-    .suggestion-list li:last-child {
-      border-bottom: none;
-    }
-
-    .risk-factor {
+    .suggestion-list li:before {
+      content: "• ";
       font-weight: bold;
-      color: #C4612F;
+      margin-right: 5px;
     }
 
     /* 页脚 */
@@ -167,128 +199,248 @@
 <!-- 封面页 -->
 <div class="page">
   <div class="cover">
-    <h1>ATO 心脏毒性预测报告</h1>
-    <div class="report-id">报告编号: ATO-20260819-558962</div>
-    <div class="generate-time">生成时间: 2026/8/19 01:29:45</div>
+    <h1>三氧化二砷心脏毒性<br>预测分析报告</h1>
+    <div class="report-id">报告编号：{{REPORT_NUMBER}}</div>
+    <div class="generate-time">生成时间：{{GENERATE_TIME}}</div>
   </div>
   <div class="footer">
-    * 本报告由AI模型生成，仅供临床参考，不作为最终诊断依据。
+    本报告由人工智能模型生成，仅供临床参考，不作为最终诊断依据
   </div>
 </div>
 
-<!-- 预测结果页 -->
+<!-- 第一部分：背景与目的 -->
 <div class="page">
   <div class="section">
-    <h2 class="section-title">预测结果</h2>
-    <div class="result-box">
-      <h2>高风险</h2>
-      <div class="probability">90.8%</div>
-      <p>该患者发生ATO心脏毒性的概率较高</p>
-    </div>
+    <h2 class="section-title">一、报告背景</h2>
+    <p class="paragraph">
+      三氧化二砷（Arsenic Trioxide, ATO）是治疗急性早幼粒细胞白血病（APL）的一线药物。
+      然而，ATO在治疗过程中可能引发心脏毒性反应，包括QT间期延长、心律失常等，严重者可导致致命性心脏事件。
+      砷在体内经过一系列甲基化代谢反应，其代谢产物的分布特征与心脏毒性的发生密切相关。
+    </p>
+    <p class="paragraph">
+      本报告基于深度学习模型，综合分析患者的砷代谢指标（iAs、MMA、DMA）、代谢酶活性指数（PMI、SMI）
+      以及合并用药情况，预测ATO心脏毒性的发生风险，为临床决策提供科学依据。
+    </p>
   </div>
 
   <div class="section">
-    <h2 class="section-title">代谢数据</h2>
+    <h2 class="section-title">二、检测数据</h2>
+    <h3 class="subsection-title">2.1 输入参数</h3>
     <table>
       <thead>
         <tr>
-          <th>指标</th>
-          <th>数值</th>
-          <th>占比</th>
+          <th>指标名称</th>
+          <th>检测值</th>
+          <th>单位</th>
+          <th>说明</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>iAs</td>
-          <td>50.00</td>
-          <td>20.0%</td>
+          <td>{{IAS}}</td>
+          <td>ng/mL</td>
+          <td>无机砷浓度</td>
         </tr>
         <tr>
           <td>MMA</td>
-          <td>100.00</td>
-          <td>40.0%</td>
+          <td>{{MMA}}</td>
+          <td>ng/mL</td>
+          <td>一甲基砷酸浓度</td>
         </tr>
         <tr>
           <td>DMA</td>
-          <td>100.00</td>
-          <td>40.0%</td>
+          <td>{{DMA}}</td>
+          <td>ng/mL</td>
+          <td>二甲基砷酸浓度</td>
         </tr>
         <tr>
-          <td>tAs</td>
-          <td>250.00</td>
-          <td>100.0%</td>
-        </tr>
-        <tr>
-          <td>PMI</td>
-          <td>2.000</td>
+          <td>合并心毒性药物</td>
+          <td>{{CT_DRUG}}</td>
           <td>-</td>
-        </tr>
-        <tr>
-          <td>SMI</td>
-          <td>1.000</td>
-          <td>-</td>
+          <td>是否合并使用其他心毒性药物</td>
         </tr>
       </tbody>
     </table>
-  </div>
 
-  <div class="footer">
-    * 本报告由AI模型生成，仅供临床参考，不作为最终诊断依据。
-  </div>
-</div>
-
-<!-- SHAP值分析页 -->
-<div class="page">
-  <div class="section">
-    <h2 class="section-title">特征重要性分析 (SHAP值)</h2>
+    <h3 class="subsection-title">2.2 计算参数</h3>
     <table>
       <thead>
         <tr>
-          <th>特征</th>
-          <th>SHAP值</th>
+          <th>指标名称</th>
+          <th>计算值</th>
+          <th>占比</th>
+          <th>说明</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>tAs</td>
-          <td>0.4089</td>
+          <td>{{TAS}}</td>
+          <td>100.0%</td>
+          <td>总砷 = iAs + MMA + DMA</td>
         </tr>
         <tr>
-          <td>SMI</td>
-          <td>0.0540</td>
+          <td>iAs%</td>
+          <td>{{IAS}}</td>
+          <td>{{IAS_PCT}}%</td>
+          <td>无机砷百分比</td>
         </tr>
         <tr>
           <td>MMA%</td>
-          <td>0.0448</td>
+          <td>{{MMA}}</td>
+          <td>{{MMA_PCT}}%</td>
+          <td>一甲基砷酸百分比</td>
         </tr>
         <tr>
           <td>DMA%</td>
-          <td>0.0215</td>
+          <td>{{DMA}}</td>
+          <td>{{DMA_PCT}}%</td>
+          <td>二甲基砷酸百分比</td>
         </tr>
         <tr>
-          <td>CT_drug</td>
-          <td>-0.0657</td>
+          <td>PMI</td>
+          <td>{{PMI}}</td>
+          <td>-</td>
+          <td>一级甲基化指数 = MMA / iAs</td>
+        </tr>
+        <tr>
+          <td>SMI</td>
+          <td>{{SMI}}</td>
+          <td>-</td>
+          <td>二级甲基化指数 = DMA / MMA</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    第 1 页
+  </div>
+</div>
+
+<!-- 第二部分：预测结果 -->
+<div class="page">
+  <div class="section">
+    <h2 class="section-title">三、预测结果</h2>
+
+    <div class="result-summary">
+      <div class="result-row">
+        <span class="result-label">预测分类：</span>
+        <span class="result-value {{RISK_CLASS}}">{{RISK_TEXT}}</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">毒性概率：</span>
+        <span class="result-value">{{PROBABILITY}}%</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">风险等级：</span>
+        <span class="result-value {{RISK_CLASS}}">{{RISK_LEVEL_TEXT}}</span>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>结果解读：</strong>根据深度学习模型分析，{{RISK_INTERPRETATION}}
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">四、特征重要性分析（SHAP值）</h2>
+    <p class="paragraph">
+      SHAP（SHapley Additive exPlanations）值用于解释机器学习模型的预测结果。
+      正值表示该特征增加了毒性风险，负值表示该特征降低了毒性风险。绝对值越大，特征的影响越显著。
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>特征名称</th>
+          <th>SHAP值</th>
+          <th>影响方向</th>
+          <th>重要性排序</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>tAs（总砷）</td>
+          <td>{{SHAP_TAS}}</td>
+          <td>{{SHAP_TAS_DIRECTION}}</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>SMI（二级甲基化指数）</td>
+          <td>{{SHAP_SMI}}</td>
+          <td>{{SHAP_SMI_DIRECTION}}</td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td>MMA%（一甲基砷酸百分比）</td>
+          <td>{{SHAP_MMA_PER}}</td>
+          <td>{{SHAP_MMA_PER_DIRECTION}}</td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td>DMA%（二甲基砷酸百分比）</td>
+          <td>{{SHAP_DMA_PER}}</td>
+          <td>{{SHAP_DMA_PER_DIRECTION}}</td>
+          <td>4</td>
+        </tr>
+        <tr>
+          <td>CT_drug（合并心毒性药物）</td>
+          <td>{{SHAP_CT_DRUG}}</td>
+          <td>{{SHAP_CT_DRUG_DIRECTION}}</td>
+          <td>5</td>
         </tr>
       </tbody>
     </table>
 
-    <p style="margin-top: 15px; color: #666;">
-      主要风险因素: tAs
+    <div class="note">
+      <strong>主要风险因素：</strong>{{MAJOR_RISK_FACTOR}}
+    </div>
+  </div>
+
+  <div class="footer">
+    第 2 页
+  </div>
+</div>
+
+<!-- 第三部分：临床建议 -->
+<div class="page">
+  <div class="section">
+    <h2 class="section-title">五、临床建议</h2>
+    <p class="paragraph">
+      根据预测结果和特征分析，针对本例患者提出以下临床建议：
     </p>
+
+    <ul class="suggestion-list">
+      {{SUGGESTIONS_LIST}}
+    </ul>
   </div>
 
   <div class="section">
-    <h2 class="section-title">临床建议</h2>
+    <h2 class="section-title">六、注意事项</h2>
     <ul class="suggestion-list">
-      <li>
-        <span class="risk-factor">1. 总砷浓度偏高:</span>
-        建议适当调整砷剂给药剂量
-      </li>
+      <li>本报告基于机器学习模型生成，模型准确率约为85-90%，仍存在误判可能。</li>
+      <li>预测结果应结合患者临床表现、心电图、超声心动图等综合判断。</li>
+      <li>高风险患者建议加强心电监护，必要时调整ATO剂量或暂停用药。</li>
+      <li>中等风险患者应定期复查心电图（每3-7天一次），密切观察QTc间期变化。</li>
+      <li>低风险患者仍需常规心电监测，不可完全放松警惕。</li>
+      <li>合并使用其他心毒性药物（如蒽环类、氟喹诺酮类）会显著增加风险。</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">七、参考文献</h2>
+    <ul class="suggestion-list">
+      <li>1. Zhu J, Chen Z, Lallemand-Breitenbach V, et al. How acute promyelocytic leukaemia revived arsenic. Nat Rev Cancer. 2002;2(9):705-713.</li>
+      <li>2. Unnikrishnan D, Dutcher JP, Varshneya N, et al. Torsades de pointes in 3 patients with leukemia treated with arsenic trioxide. Blood. 2001;97(5):1514-1516.</li>
+      <li>3. Barbey JT, Pezzullo JC, Soignet SL. Effect of arsenic trioxide on QT interval in patients with advanced malignancies. J Clin Oncol. 2003;21(19):3609-3615.</li>
+      <li>4. Shen Y, Shen ZX, Yan H, et al. Studies on the clinical efficacy and pharmacokinetics of low-dose arsenic trioxide in the treatment of relapsed acute promyelocytic leukemia. Blood. 1997;89(9):3354-3360.</li>
     </ul>
   </div>
 
   <div class="footer">
-    * 本报告由AI模型生成，仅供临床参考，不作为最终诊断依据。
+    第 3 页 · 报告结束
   </div>
 </div>
 

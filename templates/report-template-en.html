@@ -13,15 +13,15 @@
 
     body {
       font-family: 'Arial', 'Helvetica', sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: #f5f5f5;
+      line-height: 1.8;
+      color: #000;
+      background: white;
     }
 
     .page {
       width: 210mm;
       min-height: 297mm;
-      padding: 20mm;
+      padding: 25mm 20mm;
       margin: 20px auto;
       background: white;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -44,108 +44,140 @@
     }
 
     .cover h1 {
-      font-size: 32pt;
-      color: #C4612F;
-      margin-bottom: 20mm;
+      font-size: 28pt;
+      color: #000;
+      margin-bottom: 30mm;
       font-weight: bold;
+      letter-spacing: 1px;
     }
 
     .cover .report-id {
-      font-size: 14pt;
-      color: #666;
-      margin: 10mm 0;
+      font-size: 12pt;
+      color: #333;
+      margin: 8mm 0;
     }
 
     .cover .generate-time {
-      font-size: 12pt;
-      color: #999;
+      font-size: 11pt;
+      color: #666;
     }
 
     /* Content Sections */
     .section {
-      margin: 15mm 0;
+      margin: 20px 0;
     }
 
     .section-title {
-      font-size: 18pt;
-      color: #C4612F;
-      border-bottom: 2px solid #C4612F;
-      padding-bottom: 5px;
-      margin-bottom: 10px;
+      font-size: 16pt;
+      color: #000;
+      border-bottom: 2px solid #000;
+      padding-bottom: 8px;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+
+    .subsection-title {
+      font-size: 14pt;
+      color: #000;
+      margin: 15px 0 10px 0;
       font-weight: bold;
     }
 
     /* Prediction Result */
-    .result-box {
-      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-      color: white;
-      padding: 20px;
-      border-radius: 10px;
-      text-align: center;
-      margin: 20px 0;
+    .result-summary {
+      margin: 15px 0;
+      padding: 15px;
+      border: 1px solid #ddd;
+      background: #fafafa;
     }
 
-    .result-box.medium {
-      background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
     }
 
-    .result-box.low {
-      background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
+    .result-row:last-child {
+      border-bottom: none;
     }
 
-    .result-box h2 {
-      font-size: 24pt;
-      margin-bottom: 10px;
-    }
-
-    .result-box .probability {
-      font-size: 36pt;
+    .result-label {
       font-weight: bold;
-      margin: 10px 0;
+      color: #000;
     }
 
-    /* Table */
+    .result-value {
+      color: #333;
+    }
+
+    .risk-high { color: #d32f2f; font-weight: bold; }
+    .risk-medium { color: #f57c00; font-weight: bold; }
+    .risk-low { color: #388e3c; font-weight: bold; }
+
+    /* Three-line Table */
     table {
       width: 100%;
       border-collapse: collapse;
       margin: 15px 0;
-      background: #fafafa;
+      background: white;
     }
 
-    th, td {
-      padding: 12px;
-      text-align: left;
-      border: 1px solid #ddd;
-    }
-
-    th {
-      background: #f0f0f0;
+    table thead th {
+      border-top: 2px solid #000;
+      border-bottom: 1px solid #000;
+      padding: 10px 12px;
+      text-align: center;
       font-weight: bold;
+      color: #000;
+      background: white;
+    }
+
+    table tbody td {
+      border: none;
+      padding: 8px 12px;
+      text-align: center;
       color: #333;
     }
 
-    tr:nth-child(even) {
-      background: #f9f9f9;
+    table tbody tr:last-child td {
+      border-bottom: 2px solid #000;
     }
 
-    /* List */
+    /* Text Paragraphs */
+    .paragraph {
+      text-indent: 2em;
+      margin: 10px 0;
+      text-align: justify;
+      line-height: 2;
+    }
+
+    .note {
+      margin: 10px 0;
+      padding: 10px;
+      background: #f9f9f9;
+      border-left: 3px solid #666;
+      font-size: 10pt;
+      color: #666;
+    }
+
+    /* Lists */
     .suggestion-list {
       list-style: none;
       padding: 0;
+      margin: 10px 0;
     }
 
     .suggestion-list li {
-      padding: 10px 0;
-      border-bottom: 1px solid #eee;
+      padding: 8px 0;
+      line-height: 1.8;
+      color: #333;
     }
 
-    .suggestion-list li:last-child {
-      border-bottom: none;
-    }
-
-    .risk-factor {
+    .suggestion-list li:before {
+      content: "• ";
       font-weight: bold;
-      color: #C4612F;
+      margin-right: 5px;
     }
 
     /* Footer */
@@ -167,128 +199,251 @@
 <!-- Cover Page -->
 <div class="page">
   <div class="cover">
-    <h1>ATO Cardiotoxicity<br>Prediction Report</h1>
-    <div class="report-id">Report ID: ATO-20260819-558962</div>
-    <div class="generate-time">Generated: August 19, 2026 01:29:45</div>
+    <h1>Arsenic Trioxide Cardiotoxicity<br>Prediction Report</h1>
+    <div class="report-id">Report No.: {{REPORT_NUMBER}}</div>
+    <div class="generate-time">Generated: {{GENERATE_TIME}}</div>
   </div>
   <div class="footer">
-    * This report is generated by AI model for clinical reference only, not as final diagnosis.
+    This report is generated by AI model for clinical reference only, not as final diagnosis.
   </div>
 </div>
 
-<!-- Prediction Result Page -->
+<!-- Part 1: Background & Purpose -->
 <div class="page">
   <div class="section">
-    <h2 class="section-title">Prediction Result</h2>
-    <div class="result-box">
-      <h2>High Risk</h2>
-      <div class="probability">90.8%</div>
-      <p>This patient has a high probability of ATO cardiotoxicity</p>
-    </div>
+    <h2 class="section-title">I. Background</h2>
+    <p class="paragraph">
+      Arsenic Trioxide (ATO) is a first-line drug for treating Acute Promyelocytic Leukemia (APL).
+      However, ATO may cause cardiotoxicity during treatment, including QT interval prolongation and arrhythmias,
+      which can lead to fatal cardiac events in severe cases. Arsenic undergoes a series of methylation reactions
+      in the body, and the distribution of its metabolites is closely related to the occurrence of cardiotoxicity.
+    </p>
+    <p class="paragraph">
+      This report uses a deep learning model to comprehensively analyze the patient's arsenic metabolism indicators
+      (iAs, MMA, DMA), metabolic enzyme activity indices (PMI, SMI), and concomitant medication status to predict
+      the risk of ATO cardiotoxicity and provide scientific evidence for clinical decision-making.
+    </p>
   </div>
 
   <div class="section">
-    <h2 class="section-title">Metabolism Data</h2>
+    <h2 class="section-title">II. Test Data</h2>
+    <h3 class="subsection-title">2.1 Input Parameters</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Indicator</th>
+          <th>Value</th>
+          <th>Unit</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>iAs</td>
+          <td>{{IAS}}</td>
+          <td>ng/mL</td>
+          <td>Inorganic arsenic concentration</td>
+        </tr>
+        <tr>
+          <td>MMA</td>
+          <td>{{MMA}}</td>
+          <td>ng/mL</td>
+          <td>Monomethylarsonic acid concentration</td>
+        </tr>
+        <tr>
+          <td>DMA</td>
+          <td>{{DMA}}</td>
+          <td>ng/mL</td>
+          <td>Dimethylarsinic acid concentration</td>
+        </tr>
+        <tr>
+          <td>Cardiotoxic Drug</td>
+          <td>{{CT_DRUG}}</td>
+          <td>-</td>
+          <td>Concurrent use of other cardiotoxic drugs</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title">2.2 Calculated Parameters</h3>
     <table>
       <thead>
         <tr>
           <th>Indicator</th>
           <th>Value</th>
           <th>Percentage</th>
+          <th>Description</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>iAs</td>
-          <td>50.00</td>
-          <td>20.0%</td>
-        </tr>
-        <tr>
-          <td>MMA</td>
-          <td>100.00</td>
-          <td>40.0%</td>
-        </tr>
-        <tr>
-          <td>DMA</td>
-          <td>100.00</td>
-          <td>40.0%</td>
-        </tr>
-        <tr>
           <td>tAs</td>
-          <td>250.00</td>
+          <td>{{TAS}}</td>
           <td>100.0%</td>
+          <td>Total arsenic = iAs + MMA + DMA</td>
+        </tr>
+        <tr>
+          <td>iAs%</td>
+          <td>{{IAS}}</td>
+          <td>{{IAS_PCT}}%</td>
+          <td>Inorganic arsenic percentage</td>
+        </tr>
+        <tr>
+          <td>MMA%</td>
+          <td>{{MMA}}</td>
+          <td>{{MMA_PCT}}%</td>
+          <td>Monomethylarsonic acid percentage</td>
+        </tr>
+        <tr>
+          <td>DMA%</td>
+          <td>{{DMA}}</td>
+          <td>{{DMA_PCT}}%</td>
+          <td>Dimethylarsinic acid percentage</td>
         </tr>
         <tr>
           <td>PMI</td>
-          <td>2.000</td>
+          <td>{{PMI}}</td>
           <td>-</td>
+          <td>Primary methylation index = MMA / iAs</td>
         </tr>
         <tr>
           <td>SMI</td>
-          <td>1.000</td>
+          <td>{{SMI}}</td>
           <td>-</td>
+          <td>Secondary methylation index = DMA / MMA</td>
         </tr>
       </tbody>
     </table>
   </div>
 
   <div class="footer">
-    * This report is generated by AI model for clinical reference only, not as final diagnosis.
+    Page 1
   </div>
 </div>
 
-<!-- SHAP Analysis Page -->
+<!-- Part 2: Prediction Results -->
 <div class="page">
   <div class="section">
-    <h2 class="section-title">Feature Importance Analysis (SHAP Values)</h2>
+    <h2 class="section-title">III. Prediction Results</h2>
+
+    <div class="result-summary">
+      <div class="result-row">
+        <span class="result-label">Classification:</span>
+        <span class="result-value {{RISK_CLASS}}">{{RISK_TEXT}}</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Toxicity Probability:</span>
+        <span class="result-value">{{PROBABILITY}}%</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Risk Level:</span>
+        <span class="result-value {{RISK_CLASS}}">{{RISK_LEVEL_TEXT}}</span>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Interpretation:</strong> {{RISK_INTERPRETATION}}
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">IV. Feature Importance Analysis (SHAP Values)</h2>
+    <p class="paragraph">
+      SHAP (SHapley Additive exPlanations) values explain machine learning model predictions.
+      Positive values indicate the feature increases toxicity risk, while negative values indicate
+      the feature decreases risk. The larger the absolute value, the more significant the feature's impact.
+    </p>
+
     <table>
       <thead>
         <tr>
           <th>Feature</th>
           <th>SHAP Value</th>
+          <th>Impact Direction</th>
+          <th>Rank</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>tAs</td>
-          <td>0.4089</td>
+          <td>tAs (Total Arsenic)</td>
+          <td>{{SHAP_TAS}}</td>
+          <td>{{SHAP_TAS_DIRECTION}}</td>
+          <td>1</td>
         </tr>
         <tr>
-          <td>SMI</td>
-          <td>0.0540</td>
+          <td>SMI (Secondary Methylation Index)</td>
+          <td>{{SHAP_SMI}}</td>
+          <td>{{SHAP_SMI_DIRECTION}}</td>
+          <td>2</td>
         </tr>
         <tr>
-          <td>MMA%</td>
-          <td>0.0448</td>
+          <td>MMA% (MMA Percentage)</td>
+          <td>{{SHAP_MMA_PER}}</td>
+          <td>{{SHAP_MMA_PER_DIRECTION}}</td>
+          <td>3</td>
         </tr>
         <tr>
-          <td>DMA%</td>
-          <td>0.0215</td>
+          <td>DMA% (DMA Percentage)</td>
+          <td>{{SHAP_DMA_PER}}</td>
+          <td>{{SHAP_DMA_PER_DIRECTION}}</td>
+          <td>4</td>
         </tr>
         <tr>
-          <td>CT_drug</td>
-          <td>-0.0657</td>
+          <td>CT_drug (Cardiotoxic Drug)</td>
+          <td>{{SHAP_CT_DRUG}}</td>
+          <td>{{SHAP_CT_DRUG_DIRECTION}}</td>
+          <td>5</td>
         </tr>
       </tbody>
     </table>
 
-    <p style="margin-top: 15px; color: #666;">
-      Major Risk Factor: tAs
+    <div class="note">
+      <strong>Major Risk Factor:</strong> {{MAJOR_RISK_FACTOR}}
+    </div>
+  </div>
+
+  <div class="footer">
+    Page 2
+  </div>
+</div>
+
+<!-- Part 3: Clinical Recommendations -->
+<div class="page">
+  <div class="section">
+    <h2 class="section-title">V. Clinical Recommendations</h2>
+    <p class="paragraph">
+      Based on the prediction results and feature analysis, the following clinical recommendations are provided:
     </p>
+
+    <ul class="suggestion-list">
+      {{SUGGESTIONS_LIST}}
+    </ul>
   </div>
 
   <div class="section">
-    <h2 class="section-title">Clinical Suggestions</h2>
+    <h2 class="section-title">VI. Precautions</h2>
     <ul class="suggestion-list">
-      <li>
-        <span class="risk-factor">1. High Total Arsenic Concentration:</span>
-        It is recommended to adjust the arsenic dosage appropriately
-      </li>
+      <li>This report is generated by a machine learning model with an accuracy of approximately 85-90%, and misjudgment is possible.</li>
+      <li>Prediction results should be combined with clinical manifestations, ECG, and echocardiography for comprehensive judgment.</li>
+      <li>High-risk patients are recommended to strengthen ECG monitoring and adjust ATO dosage or suspend medication if necessary.</li>
+      <li>Medium-risk patients should have regular ECG follow-up (every 3-7 days) and closely monitor QTc interval changes.</li>
+      <li>Low-risk patients still require routine ECG monitoring and should not be completely complacent.</li>
+      <li>Concurrent use of other cardiotoxic drugs (such as anthracyclines, fluoroquinolones) significantly increases risk.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">VII. References</h2>
+    <ul class="suggestion-list">
+      <li>1. Zhu J, Chen Z, Lallemand-Breitenbach V, et al. How acute promyelocytic leukaemia revived arsenic. Nat Rev Cancer. 2002;2(9):705-713.</li>
+      <li>2. Unnikrishnan D, Dutcher JP, Varshneya N, et al. Torsades de pointes in 3 patients with leukemia treated with arsenic trioxide. Blood. 2001;97(5):1514-1516.</li>
+      <li>3. Barbey JT, Pezzullo JC, Soignet SL. Effect of arsenic trioxide on QT interval in patients with advanced malignancies. J Clin Oncol. 2003;21(19):3609-3615.</li>
+      <li>4. Shen Y, Shen ZX, Yan H, et al. Studies on the clinical efficacy and pharmacokinetics of low-dose arsenic trioxide in the treatment of relapsed acute promyelocytic leukemia. Blood. 1997;89(9):3354-3360.</li>
     </ul>
   </div>
 
   <div class="footer">
-    * This report is generated by AI model for clinical reference only, not as final diagnosis.
+    Page 3 · End of Report
   </div>
 </div>
 
