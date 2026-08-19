@@ -216,5 +216,8 @@ export class HtmlToPdfGenerator {
       .replace(/{{MAJOR_RISK_FACTOR}}/g, major_risk_factor)
       .replace(/{{SUGGESTIONS_LIST}}/g, suggestionsList)
       .replace(/{{LOGO_PATH}}/g, logoDataUrl)
+      // 模板中用相对路径 ../public/images/logo.png 便于浏览器双击预览；
+      // 生成 PDF 时用 setContent 无法解析相对路径，故替换为 base64 data URL
+      .replace(/\.\.\/public\/images\/logo\.png/g, logoDataUrl)
   }
 }
