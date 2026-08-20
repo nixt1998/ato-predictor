@@ -29,6 +29,8 @@ export default function DownloadReportDialog({ isOpen, onClose }: DownloadDialog
 
     try {
       // 准备预测数据 - 直接传递完整的 result + input
+      // 注意：suggestions 保留 key，供后端按【下载时选择的语言】重新翻译，
+      // 使 PDF 语言与页面 UI 语言解耦
       const predictionData = {
         input: {
           iAs: input.iAs,
@@ -77,9 +79,6 @@ export default function DownloadReportDialog({ isOpen, onClose }: DownloadDialog
       document.body.removeChild(a)
 
       setSuccess(true)
-      setTimeout(() => {
-        onClose()
-      }, 2000)
     } catch (err) {
       console.error('Download error:', err)
       setError(err instanceof Error ? err.message : 'Unknown error')
@@ -111,7 +110,7 @@ export default function DownloadReportDialog({ isOpen, onClose }: DownloadDialog
             </label>
             <div className="grid grid-cols-2 gap-3">
               <button
-                onClick={() => setLanguage('zh')}
+                onClick={() => { setLanguage('zh'); setSuccess(false); setError(null) }}
                 className={`p-4 rounded-lg border-2 transition-all ${
                   language === 'zh'
                     ? 'border-[#005EB8] bg-[#F0F7FF] text-[#005EB8]'
@@ -122,7 +121,7 @@ export default function DownloadReportDialog({ isOpen, onClose }: DownloadDialog
                 <div className="text-xs text-[#757575]">Chinese</div>
               </button>
               <button
-                onClick={() => setLanguage('en')}
+                onClick={() => { setLanguage('en'); setSuccess(false); setError(null) }}
                 className={`p-4 rounded-lg border-2 transition-all ${
                   language === 'en'
                     ? 'border-[#005EB8] bg-[#F0F7FF] text-[#005EB8]'
@@ -176,7 +175,7 @@ export default function DownloadReportDialog({ isOpen, onClose }: DownloadDialog
             </button>
             <button
               onClick={handleDownload}
-              disabled={isGenerating || success}
+              disabled={isGenerating}
               className="flex-1 px-4 py-3 bg-gradient-to-r from-[#005EB8] to-[#0073D1] text-white rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isGenerating ? (

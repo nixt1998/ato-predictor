@@ -127,6 +127,7 @@
     "analysis": {
       "shapTitle": "Risk Factor Quantification (SHAP Values)",
       "shapDescription": "SHAP values represent each factor's contribution to the prediction",
+      "shapSamplingNote": "Note: SHAP values are estimated via Monte Carlo sampling. Minor numerical differences at the third decimal place may occur between repeated computations; this is an inherent property of the algorithm rather than a computational error. The predicted probability and risk level remain stable and are unaffected.",
       "increasesRisk": "Increases risk",
       "decreasesRisk": "Decreases risk",
       "metabolismDistribution": "Arsenic Metabolism Distribution",

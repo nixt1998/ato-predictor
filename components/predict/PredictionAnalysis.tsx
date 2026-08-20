@@ -64,10 +64,10 @@ export default function PredictionAnalysis() {
                     border: '1px solid #E0E0E0',
                     borderRadius: '8px',
                   }}
-                  formatter={(value: number, name: string, props: any) => [
+                  formatter={((value: any, name: any, props: any) => [
                     `${props.payload.raw > 0 ? '+' : ''}${props.payload.raw.toFixed(3)}`,
                     'SHAP Value'
-                  ]}
+                  ]) as any}
                 />
                 <Bar dataKey="value" radius={[0, 8, 8, 0]}>
                   {shapData.map((entry, index) => (
@@ -91,6 +91,11 @@ export default function PredictionAnalysis() {
                 <span className="text-[#757575]">{t('decreasesRisk')}</span>
               </div>
             </div>
+
+            {/* SHAP 蒙特卡洛采样说明 */}
+            <p className="text-xs text-[#9E9E9E] mt-4 leading-relaxed">
+              {t('shapSamplingNote')}
+            </p>
           </CardContent>
         </Card>
       </motion.div>
@@ -120,7 +125,7 @@ export default function PredictionAnalysis() {
                     border: '1px solid #E0E0E0',
                     borderRadius: '8px',
                   }}
-                  formatter={(value: number) => [`${value.toFixed(1)}%`, 'Percentage']}
+                  formatter={((value: any) => [`${Number(value).toFixed(1)}%`, 'Percentage']) as any}
                 />
                 <Bar dataKey="value" fill="#005EB8" radius={[8, 8, 0, 0]} />
               </BarChart>

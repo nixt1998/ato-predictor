@@ -1,11 +1,13 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useTranslations, useLocale } from 'next-intl'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { useAppStore } from '@/lib/store'
 import { Download, Printer, AlertCircle, CheckCircle, Info } from 'lucide-react'
+import DownloadReportDialog from '@/components/predict/DownloadReportDialog'
 
 // 语言字典：key -> [risk_factor, suggestion]
 const SUGGESTION_DICT: Record<string, Record<string, [string, string]>> = {
@@ -35,6 +37,7 @@ export default function PredictionSuggestions() {
   const t = useTranslations('predict.suggestions')
   const locale = useLocale()
   const { result } = useAppStore()
+  const [showDownloadDialog, setShowDownloadDialog] = useState(false)
 
   if (!result) return null
 
@@ -59,9 +62,7 @@ export default function PredictionSuggestions() {
     riskLevel === 'medium' ? Info :
     CheckCircle
 
-  const handleDownloadPDF = () => {
-    console.log('Download PDF')
-  }
+  const handleDownloadPDF = () => setShowDownloadDialog(true)
 
   const handlePrint = () => {
     window.print()
@@ -159,6 +160,7 @@ export default function PredictionSuggestions() {
           </CardContent>
         </Card>
       </motion.div>
+      <DownloadReportDialog isOpen={showDownloadDialog} onClose={() => setShowDownloadDialog(false)} />
     </div>
   )
 }

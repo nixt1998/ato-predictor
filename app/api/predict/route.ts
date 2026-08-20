@@ -3,7 +3,7 @@ import { PredictionInput, PredictionResult } from '@/types/prediction'
 
 // R API 地址（从环境变量读取）
 const R_API_URL = process.env.NEXT_PUBLIC_R_API_URL || 'http://localhost:8000'
-const API_TIMEOUT = 30000 // 30 秒超时
+const API_TIMEOUT = 8000 // 8 秒超时
 
 export async function POST(request: NextRequest) {
   try {

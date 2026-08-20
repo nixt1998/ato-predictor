@@ -127,6 +127,7 @@
     "analysis": {
       "shapTitle": "风险因素量化分析 (SHAP值)",
       "shapDescription": "SHAP值表示各风险因素对预测结果的贡献程度",
+      "shapSamplingNote": "注：SHAP值基于蒙特卡洛采样估计，多次计算之间可能出现小数点后第三位的轻微数值差异，属该算法的固有特性，并非计算误差；预测概率与风险等级保持稳定，不受影响。",
       "increasesRisk": "促进心毒性",
       "decreasesRisk": "抑制心毒性",
       "metabolismDistribution": "砷代谢分布",
