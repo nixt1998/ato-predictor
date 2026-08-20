@@ -266,6 +266,15 @@
       line-height: 1.7;
     }
 
+    /* 图表下方解读小字 */
+    .chart-note {
+      font-size: 8.5pt;
+      color: #666;
+      margin: 4px 0 10px 0;
+      line-height: 1.7;
+      text-align: justify;
+    }
+
     /* 图表占位 - 避免被分页截断 */
     .chart-placeholder {
       width: 100%;
@@ -513,11 +522,9 @@
       [砷形态分布饼图]<br>
       iAs（{{IAS_PCT}}%） &nbsp;|&nbsp; MMA（{{MMA_PCT}}%） &nbsp;|&nbsp; DMA（{{DMA_PCT}}%）
     </div>
-
-    <h3 class="subsection-title">4.2 甲基化指数</h3>
-    <div class="chart-placeholder">
-      [甲基化指数柱状图]<br>
-      PMI：{{PMI}} &nbsp;|&nbsp; SMI：{{SMI}}
+    <div class="chart-note">
+      该饼图展示无机砷（iAs）、一甲基砷酸（MMA）、二甲基砷酸（DMA）三种砷形态在总砷（tAs = {{TAS}} ng/mL）中的占比。
+      DMA 占比越高，通常提示砷的甲基化代谢与清除越充分。
     </div>
   </div>
 
@@ -537,7 +544,7 @@
   <div class="section">
     <h2 class="section-title">五、特征重要性分析（SHAP）</h2>
 
-    <p class="paragraph">
+    <p class="paragraph" style="margin: 4px 0;">
       SHAP（SHapley Additive exPlanations）值用于解释各特征对本次预测的贡献。正值表示该特征增加预测的心脏毒性风险，负值表示降低风险，数值大小反映影响的强弱。
     </p>
 
@@ -546,10 +553,18 @@
       [SHAP 瀑布图]<br>
       基准值 → 各特征贡献 → 预测概率
     </div>
+    <div class="chart-note">
+      解读：瀑布图从模型基准值（base，即训练人群的平均预测概率）出发，逐一叠加各特征的贡献——红色条使风险上升、
+      蓝色条使风险下降——最终得到该患者的预测概率 f(x)。
+    </div>
 
     <h3 class="subsection-title">5.2 特征重要性排序</h3>
     <div class="chart-placeholder">
       [SHAP 条形图 — 特征重要性]
+    </div>
+    <div class="chart-note">
+      解读：各特征按 SHAP 值绝对值大小排序（条形越长，影响越强）。红色表示增加风险、蓝色表示降低风险，
+      排在最上方的特征即为本次预测的主导因素。
     </div>
 
     <h3 class="subsection-title">5.3 特征贡献表</h3>
@@ -590,12 +605,12 @@
       </tbody>
     </table>
 
-    <p class="paragraph" style="margin-top: 10px;">
+    <p style="margin-top: 8px; font-size: 10.5pt;">
       <strong>主要风险因素：</strong>{{MAJOR_RISK_FACTOR}}
     </p>
 
     <div class="table-note">
-      注：SHAP 值基于蒙特卡洛采样估计，多次计算之间可能存在小数点后第三位的轻微数值差异，属该算法的固有特性，并非计算误差；预测概率与风险等级不受影响，保持稳定。
+      注：SHAP 值基于蒙特卡洛采样估计，多次计算之间可能出现小数点后第三位的轻微差异，属该算法固有特性，并非计算误差；预测概率与风险等级保持稳定，不受影响。
     </div>
   </div>
 

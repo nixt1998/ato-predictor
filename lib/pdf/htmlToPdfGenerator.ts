@@ -213,41 +213,35 @@ export class HtmlToPdfGenerator {
     }).join('\n      ')
 
     // 生成内联 SVG 图表，替换模板中的 chart-placeholder 占位符
-    const { iAs_pct, MMA_pct, DMA_pct, PMI: pmi, SMI: smi, tAs } = metabolism
+    const { iAs_pct, MMA_pct, DMA_pct, tAs } = metabolism
     const { tAs: shapTas, SMI: shapSmi, MMA_per: shapMma, DMA_per: shapDma, CT_drug: shapCt } = shap_values
 
     // 图表1 - 砷形态饼图 (SVG)
     const pieSvg = this.generatePieChart(iAs_pct, MMA_pct, DMA_pct, tAs)
-    // 图表2 - 甲基化指数柱状图 (SVG)
-    const barSvg = this.generateMethylationBarChart(pmi, smi)
-    // 图表3 - SHAP 瀑布图 (SVG)
+    // 图表2 - SHAP 瀑布图 (SVG)
     const waterfallSvg = this.generateShapWaterfall(shapTas, shapSmi, shapMma, shapDma, shapCt, prediction.probability)
-    // 图表4 - SHAP 条形图 (SVG)
+    // 图表3 - SHAP 条形图 (SVG)
     const shapBarSvg = this.generateShapBarChart(shapTas, shapSmi, shapMma, shapDma, shapCt)
 
     // 将图表替换到模板中（匹配含有对应关键词的 .chart-placeholder div）
-    const toImgTag = (svg: string) => `<img src="data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}" style="width:100%;max-height:54mm;display:block;" />`
+    // 第2页饼图空间充足用 54mm；第3页 SHAP 两图较挤，用 42mm 避免整页溢出
+    const toImgTag = (svg: string, maxH = 54) => `<img src="data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}" style="width:100%;max-height:${maxH}mm;display:block;" />`
 
     let filledTemplate = template
     // 替换砷形态饼图占位符
     filledTemplate = filledTemplate.replace(
       /<div[^>]*class="chart-placeholder"[^>]*>[\s\S]*?(?:砷形态|Arsenic Speciation|Speciation Pie)[\s\S]*?<\/div>/,
-      toImgTag(pieSvg)
-    )
-    // 替换甲基化指数柱状图占位符
-    filledTemplate = filledTemplate.replace(
-      /<div[^>]*class="chart-placeholder"[^>]*>[\s\S]*?(?:甲基化指数|Methylation Indices|Methylation Index)[\s\S]*?<\/div>/,
-      toImgTag(barSvg)
+      toImgTag(pieSvg, 54)
     )
     // 替换 SHAP 瀑布图占位符
     filledTemplate = filledTemplate.replace(
       /<div[^>]*class="chart-placeholder"[^>]*>[\s\S]*?(?:SHAP 瀑布|SHAP Waterfall|Waterfall)[\s\S]*?<\/div>/,
-      toImgTag(waterfallSvg)
+      toImgTag(waterfallSvg, 38)
     )
     // 替换 SHAP 条形图占位符
     filledTemplate = filledTemplate.replace(
       /<div[^>]*class="chart-placeholder"[^>]*>[\s\S]*?(?:SHAP 条形|SHAP Bar|Feature Importance)[\s\S]*?<\/div>/,
-      toImgTag(shapBarSvg)
+      toImgTag(shapBarSvg, 38)
     )
 
     // 替换所有占位符
@@ -315,46 +309,19 @@ export class HtmlToPdfGenerator {
       startAngle = endAngle
     })
     const legend = slices.map(({ pct, color, label }, i) => {
-      const ly = 70 + i * 30
+      const ly = 60 + i * 30
       return `<rect x="280" y="${ly}" width="14" height="14" fill="${color}"/><text x="300" y="${ly + 11}" font-size="13" fill="#333">${label}: ${pct.toFixed(1)}%</text>`
     }).join('')
+    // tAs 总量放在图例下方（不再压在饼图中心）
+    const tAsLabel = `<text x="280" y="${60 + slices.length * 30 + 14}" font-size="13" fill="#333">tAs: ${tAs.toFixed(1)} ng/mL</text>`
     return `<svg xmlns="http://www.w3.org/2000/svg" width="500" height="220" viewBox="0 0 500 220">
   <rect width="500" height="220" fill="white"/>
   ${paths}
-  <text x="${cx}" y="${cy - 8}" text-anchor="middle" font-size="11" fill="#555">tAs</text>
-  <text x="${cx}" y="${cy + 8}" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">${tAs.toFixed(1)}</text>
-  <text x="${cx}" y="${cy + 24}" text-anchor="middle" font-size="11" fill="#555">ng/mL</text>
   ${legend}
+  ${tAsLabel}
 </svg>`
   }
 
-  /**
-   * 生成甲基化指数水平柱状图 SVG
-   */
-  private generateMethylationBarChart(PMI: number, SMI: number): string {
-    const barH = 40, gap = 30, leftPad = 80, topPad = 40, maxW = 300
-    const pmiRef = 0.7, smiRef = 4.0
-    const pmiMax = Math.max(PMI * 1.4, pmiRef * 2, 1.5)
-    const smiMax = Math.max(SMI * 1.4, smiRef * 2, 8)
-    const pmiW = Math.min((PMI / pmiMax) * maxW, maxW)
-    const smiW = Math.min((SMI / smiMax) * maxW, maxW)
-    const pmiRefX = leftPad + (pmiRef / pmiMax) * maxW
-    const smiRefX = leftPad + (smiRef / smiMax) * maxW
-    const y1 = topPad, y2 = topPad + barH + gap
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="500" height="220" viewBox="0 0 500 220">
-  <rect width="500" height="220" fill="white"/>
-  <text x="10" y="${y1 + barH / 2 + 5}" font-size="13" fill="#333" font-weight="bold">PMI</text>
-  <rect x="${leftPad}" y="${y1}" width="${pmiW.toFixed(1)}" height="${barH}" fill="#4a90d9" rx="3"/>
-  <line x1="${pmiRefX.toFixed(1)}" y1="${y1 - 8}" x2="${pmiRefX.toFixed(1)}" y2="${y1 + barH + 8}" stroke="#d32f2f" stroke-width="2" stroke-dasharray="4,3"/>
-  <text x="${pmiRefX.toFixed(1)}" y="${y1 - 12}" text-anchor="middle" font-size="11" fill="#d32f2f">ref ${pmiRef}</text>
-  <text x="${leftPad + pmiW + 6}" y="${y1 + barH / 2 + 5}" font-size="13" fill="#333">${PMI.toFixed(3)}</text>
-  <text x="10" y="${y2 + barH / 2 + 5}" font-size="13" fill="#333" font-weight="bold">SMI</text>
-  <rect x="${leftPad}" y="${y2}" width="${smiW.toFixed(1)}" height="${barH}" fill="#28a745" rx="3"/>
-  <line x1="${smiRefX.toFixed(1)}" y1="${y2 - 8}" x2="${smiRefX.toFixed(1)}" y2="${y2 + barH + 8}" stroke="#d32f2f" stroke-width="2" stroke-dasharray="4,3"/>
-  <text x="${smiRefX.toFixed(1)}" y="${y2 - 12}" text-anchor="middle" font-size="11" fill="#d32f2f">ref ${smiRef}</text>
-  <text x="${leftPad + smiW + 6}" y="${y2 + barH / 2 + 5}" font-size="13" fill="#333">${SMI.toFixed(3)}</text>
-</svg>`
-  }
   /**
    * 生成 SHAP 瀑布图 SVG
    */

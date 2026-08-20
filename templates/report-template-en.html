@@ -261,6 +261,15 @@
       line-height: 1.6;
     }
 
+    /* 图表下方解读小字 */
+    .chart-note {
+      font-size: 8.5pt;
+      color: #666;
+      margin: 4px 0 10px 0;
+      line-height: 1.6;
+      text-align: justify;
+    }
+
     /* 图表占位 - 避免被分页截断 */
     .chart-placeholder {
       width: 100%;
@@ -512,11 +521,10 @@
       [Arsenic Speciation Pie Chart]<br>
       iAs ({{IAS_PCT}}%) &nbsp;|&nbsp; MMA ({{MMA_PCT}}%) &nbsp;|&nbsp; DMA ({{DMA_PCT}}%)
     </div>
-
-    <h3 class="subsection-title">4.2 Methylation Indices</h3>
-    <div class="chart-placeholder">
-      [Methylation Indices Bar Chart]<br>
-      PMI: {{PMI}} &nbsp;|&nbsp; SMI: {{SMI}}
+    <div class="chart-note">
+      This pie chart shows the proportion of the three arsenic species (inorganic arsenic iAs,
+      monomethylarsonic acid MMA, and dimethylarsinic acid DMA) in the total arsenic (tAs = {{TAS}} ng/mL).
+      A larger DMA fraction generally indicates more complete arsenic methylation and clearance.
     </div>
   </div>
 
@@ -536,10 +544,10 @@
   <div class="section">
     <h2 class="section-title">V. Feature Importance Analysis (SHAP)</h2>
 
-    <p class="paragraph">
-      SHAP (SHapley Additive exPlanations) values explain the contribution of each feature to this prediction.
-      A positive value indicates that the feature increases the predicted cardiotoxicity risk, while a negative
-      value indicates that it decreases the risk. The magnitude of the value reflects the strength of the impact.
+    <p class="paragraph" style="margin: 4px 0;">
+      SHAP (SHapley Additive exPlanations) values explain each feature's contribution to this prediction:
+      a positive value increases the predicted cardiotoxicity risk, a negative value decreases it, and the
+      magnitude reflects the strength of the effect.
     </p>
 
     <h3 class="subsection-title">5.1 SHAP Waterfall Plot</h3>
@@ -547,10 +555,20 @@
       [SHAP Waterfall Plot]<br>
       Base Value → Feature Contributions → Predicted Probability
     </div>
+    <div class="chart-note">
+      How to read: the waterfall plot starts from the model's base value (base, the average predicted
+      probability across the training population) and adds each feature's contribution one by one — red bars
+      push the risk up, blue bars pull it down — to reach the final prediction f(x) for this patient.
+    </div>
 
     <h3 class="subsection-title">5.2 Feature Importance Ranking</h3>
     <div class="chart-placeholder">
       [SHAP Bar Chart — Feature Importance]
+    </div>
+    <div class="chart-note">
+      How to read: features are ranked by the absolute magnitude of their SHAP value (bar length = strength of
+      influence). Red denotes a risk-increasing effect and blue a risk-decreasing effect; the topmost feature is
+      the dominant driver of this prediction.
     </div>
 
     <h3 class="subsection-title">5.3 Feature Contribution Table</h3>
@@ -591,12 +609,14 @@
       </tbody>
     </table>
 
-    <p class="paragraph" style="margin-top: 10px;">
+    <p style="margin-top: 8px; font-size: 10.5pt;">
       <strong>Major Risk Factor:</strong> {{MAJOR_RISK_FACTOR}}
     </p>
 
     <div class="table-note">
-      Note: SHAP values are estimated via Monte Carlo sampling. Minor numerical differences at the third decimal place may occur between repeated computations; this is an inherent property of the algorithm rather than a computational error. The predicted probability and risk level remain stable and are unaffected.
+      Note: SHAP values are estimated via Monte Carlo sampling; minor differences at the third decimal place may
+      occur between runs. This is an inherent property of the algorithm, not a computational error — the predicted
+      probability and risk level remain stable.
     </div>
   </div>
 
