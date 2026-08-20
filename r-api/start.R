@@ -6,11 +6,11 @@
 library(plumber)
 
 # 确保在 api.R 所在目录运行
-script_dir <- dirname(normalizePath(commandArgs(trailingOnly = FALSE)[
-  grepl("--file=", commandArgs(trailingOnly = FALSE))
-]))
-if (length(script_dir) > 0 && nchar(script_dir) > 0) {
-  setwd(script_dir)
+args <- commandArgs(trailingOnly = FALSE)
+file_arg <- args[grepl("--file=", args)]
+if (length(file_arg) > 0) {
+  script_dir <- dirname(normalizePath(file_arg, mustWork = FALSE))
+  if (nchar(script_dir) > 0) setwd(script_dir)
 }
 
 cat("[ATO API] Working directory:", getwd(), "\n")
