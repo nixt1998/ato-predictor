@@ -38,17 +38,17 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* 右侧：快速链接 */}
+          {/* 右侧：快速链接（三列布局）*/}
           <div className="text-center md:text-left">
             <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-[#41B6E6]">
               {t('footer.quickLinks')}
             </h3>
-            <ul className="space-y-2">
+            <ul className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-2">
               {quickLinks.map((link) => (
                 <li key={link.key}>
                   <Link
                     href={`/${locale}${link.originalHref}`}
-                    className="text-[#BDBDBD] hover:text-[#41B6E6] transition-colors text-xs sm:text-sm"
+                    className="text-[#BDBDBD] hover:text-[#41B6E6] transition-colors text-xs sm:text-sm block"
                   >
                     {t(`footer.${link.key}`)}
                   </Link>
