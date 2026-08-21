@@ -15,6 +15,7 @@ interface FilterPanelProps {
  */
 export default function FilterPanel({ filters, onChange }: FilterPanelProps) {
   const t = useTranslations('history.filter')
+  const tQuick = useTranslations('history.quickFilters')
 
   // 切换风险等级（多选）
   const toggleRiskLevel = (level: RiskLevel) => {
@@ -64,9 +65,9 @@ export default function FilterPanel({ filters, onChange }: FilterPanelProps) {
     filters.probabilityRange.max < 100
 
   return (
-    <div className="bg-white rounded-xl border border-[#E0E0E0] p-4 shadow-sm">
+    <div className="bg-white rounded-xl border border-[#E0E0E0] p-3 shadow-sm">
       {/* 标题 */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-[#005EB8]" />
           <h3 className="font-semibold text-[#212121]">{t('title')}</h3>
@@ -83,11 +84,11 @@ export default function FilterPanel({ filters, onChange }: FilterPanelProps) {
       </div>
 
       {/* 三列布局：风险等级 | 日期范围 | 概率区间 */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {/* 风险等级（多选） */}
         <div>
-          <p className="text-sm font-medium text-[#212121] mb-2">{t('riskLevel')}</p>
-          <div className="space-y-1.5">
+          <p className="text-sm font-medium text-[#212121] mb-1.5">{t('riskLevel')}</p>
+          <div className="space-y-1">
             {(['low', 'medium', 'high'] as RiskLevel[]).map((level) => (
               <label key={level} className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -100,7 +101,7 @@ export default function FilterPanel({ filters, onChange }: FilterPanelProps) {
                   {level === 'low' && '🟢 '}
                   {level === 'medium' && '🟡 '}
                   {level === 'high' && '🔴 '}
-                  {t(`../quickFilters.${level}`)}
+                  {tQuick(level)}
                 </span>
               </label>
             ))}
@@ -109,8 +110,8 @@ export default function FilterPanel({ filters, onChange }: FilterPanelProps) {
 
         {/* 日期范围 */}
         <div>
-          <p className="text-sm font-medium text-[#212121] mb-2">{t('dateRange')}</p>
-          <div className="space-y-1.5">
+          <p className="text-sm font-medium text-[#212121] mb-1.5">{t('dateRange')}</p>
+          <div className="space-y-1">
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="radio"
@@ -159,19 +160,19 @@ export default function FilterPanel({ filters, onChange }: FilterPanelProps) {
 
             {/* 自定义日期输入 */}
             {(filters.dateRange.start || filters.dateRange.end || (!filters.dateRange.preset && filters.dateRange.start === undefined && filters.dateRange.end === undefined)) && (
-              <div className="ml-6 space-y-1.5 pt-1">
+              <div className="ml-6 pt-1 flex items-center gap-2">
                 <input
                   type="date"
                   value={filters.dateRange.start || ''}
                   onChange={(e) => setCustomDateRange(e.target.value, filters.dateRange.end)}
-                  className="w-full text-xs px-2 py-1 border border-[#E0E0E0] rounded focus:outline-none focus:border-[#005EB8]"
+                  className="flex-1 text-xs px-2 py-1 border border-[#E0E0E0] rounded focus:outline-none focus:border-[#005EB8]"
                 />
-                <p className="text-xs text-[#757575] text-center">{t('to')}</p>
+                <span className="text-xs text-[#757575]">{t('to')}</span>
                 <input
                   type="date"
                   value={filters.dateRange.end || ''}
                   onChange={(e) => setCustomDateRange(filters.dateRange.start, e.target.value)}
-                  className="w-full text-xs px-2 py-1 border border-[#E0E0E0] rounded focus:outline-none focus:border-[#005EB8]"
+                  className="flex-1 text-xs px-2 py-1 border border-[#E0E0E0] rounded focus:outline-none focus:border-[#005EB8]"
                 />
               </div>
             )}
@@ -180,8 +181,8 @@ export default function FilterPanel({ filters, onChange }: FilterPanelProps) {
 
         {/* 概率区间 */}
         <div>
-          <p className="text-sm font-medium text-[#212121] mb-2">{t('probRange')}</p>
-          <div className="space-y-1.5">
+          <p className="text-sm font-medium text-[#212121] mb-1.5">{t('probRange')}</p>
+          <div className="space-y-1">
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="radio"

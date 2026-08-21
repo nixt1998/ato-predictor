@@ -25,6 +25,8 @@ import QuickFilters from '@/components/history/QuickFilters'
 import FilterPanel from '@/components/history/FilterPanel'
 import SortDropdown from '@/components/history/SortDropdown'
 import BatchActions from '@/components/history/BatchActions'
+import StatisticsPanel from '@/components/history/StatisticsPanel'
+import ExportButton from '@/components/history/ExportButton'
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
 
 /**
@@ -61,7 +63,7 @@ export default function HistoryPage() {
     dateRange: {},
     probabilityRange: { min: 0, max: 100 },
   })
-  const [sortBy, setSortBy] = useState<SortOption>('date-newest')
+  const [sortBy, setSortBy] = useState<SortOption>('date_newest')
 
   // 分页
   const [currentPage, setCurrentPage] = useState(1)
@@ -230,12 +232,16 @@ export default function HistoryPage() {
         {/* 搜索、筛选、排序区域（非空时显示） */}
         {!isEmpty && (
           <div className="space-y-4 mb-6">
-            {/* 第一行：搜索框 + 排序 */}
+            {/* 统计面板 */}
+            <StatisticsPanel records={[...storage.pinned, ...storage.normal]} />
+
+            {/* 第一行：搜索框 + 排序 + 导出 */}
             <div className="flex flex-col md:flex-row gap-3">
               <div className="flex-1">
                 <SearchBox value={searchQuery} onChange={setSearchQuery} />
               </div>
               <SortDropdown sortBy={sortBy} onChange={setSortBy} />
+              <ExportButton records={[...storage.pinned, ...storage.normal]} />
             </div>
 
             {/* 第二行：快速筛选标签 */}

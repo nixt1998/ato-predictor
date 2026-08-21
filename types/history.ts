@@ -25,6 +25,11 @@ export interface SavedPrediction {
 }
 
 /**
+ * 预测记录别名（用于组件）
+ */
+export type PredictionRecord = SavedPrediction
+
+/**
  * LocalStorage 存储结构
  */
 export interface StorageData {
@@ -43,12 +48,12 @@ export type RiskLevel = 'low' | 'medium' | 'high'
  * 排序选项
  */
 export type SortOption =
-  | 'date-newest'    // 日期最新（默认）
-  | 'date-oldest'    // 日期最旧
-  | 'risk-asc'       // 风险升序（低→中→高）
-  | 'risk-desc'      // 风险降序（高→中→低）
-  | 'prob-asc'       // 概率升序
-  | 'prob-desc'      // 概率降序
+  | 'date_newest'    // 日期最新（默认）
+  | 'date_oldest'    // 日期最旧
+  | 'risk_asc'       // 风险升序（低→中→高）
+  | 'risk_desc'      // 风险降序（高→中→低）
+  | 'prob_asc'       // 概率升序
+  | 'prob_desc'      // 概率降序
 
 /**
  * 日期范围预设

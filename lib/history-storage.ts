@@ -367,36 +367,36 @@ export function sortNormalRecords(
   const sorted = [...records]
 
   switch (sortBy) {
-    case 'date-newest':
+    case 'date_newest':
       sorted.sort(
         (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
       )
       break
-    case 'date-oldest':
+    case 'date_oldest':
       sorted.sort(
         (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
       )
       break
-    case 'risk-asc':
+    case 'risk_asc':
       sorted.sort(
         (a, b) =>
           getRiskScore(a.result.prediction.risk_level) -
           getRiskScore(b.result.prediction.risk_level)
       )
       break
-    case 'risk-desc':
+    case 'risk_desc':
       sorted.sort(
         (a, b) =>
           getRiskScore(b.result.prediction.risk_level) -
           getRiskScore(a.result.prediction.risk_level)
       )
       break
-    case 'prob-asc':
+    case 'prob_asc':
       sorted.sort(
         (a, b) => a.result.prediction.probability - b.result.prediction.probability
       )
       break
-    case 'prob-desc':
+    case 'prob_desc':
       sorted.sort(
         (a, b) => b.result.prediction.probability - a.result.prediction.probability
       )

@@ -13,7 +13,7 @@ export default function PredictPage() {
   const { activeTab, setActiveTab, result } = useAppStore()
 
   const tabs = [
-    { id: 'input', label: t('tabs.input') },
+    { id: 'input', label: t('tabs.input'), disabled: false },
     { id: 'result', label: t('tabs.result'), disabled: !result },
     { id: 'analysis', label: t('tabs.analysis'), disabled: !result },
     { id: 'suggestion', label: t('tabs.suggestion'), disabled: !result },

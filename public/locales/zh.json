@@ -266,6 +266,21 @@
       "imported": "成功导入 {count} 条记录",
       "importError": "导入失败：文件格式错误",
       "cleared": "已清空全部记录"
+    },
+    "statistics": {
+      "totalRecords": "总记录数",
+      "highRisk": "高风险记录",
+      "mediumRisk": "中风险记录",
+      "lowRisk": "低风险记录",
+      "avgProbability": "平均概率",
+      "recentDays": "近7天: {count} 条"
+    },
+    "export": {
+      "export": "导出",
+      "exporting": "导出中...",
+      "exportCSV": "导出为CSV",
+      "exportAllPDF": "批量导出PDF",
+      "error": "导出失败，请重试"
     }
   },
   "saveRecord": {

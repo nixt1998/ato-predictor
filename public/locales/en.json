@@ -266,6 +266,21 @@
       "imported": "Successfully imported {count} records",
       "importError": "Import failed: invalid file format",
       "cleared": "All records cleared"
+    },
+    "statistics": {
+      "totalRecords": "Total Records",
+      "highRisk": "High Risk",
+      "mediumRisk": "Medium Risk",
+      "lowRisk": "Low Risk",
+      "avgProbability": "Avg Probability",
+      "recentDays": "Last 7 days: {count}"
+    },
+    "export": {
+      "export": "Export",
+      "exporting": "Exporting...",
+      "exportCSV": "Export as CSV",
+      "exportAllPDF": "Export All PDF",
+      "error": "Export failed, please retry"
     }
   },
   "saveRecord": {

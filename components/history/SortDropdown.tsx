@@ -10,22 +10,22 @@ interface SortDropdownProps {
 }
 
 const sortOptions: SortOption[] = [
-  'date-newest',
-  'date-oldest',
-  'risk-desc',
-  'risk-asc',
-  'prob-desc',
-  'prob-asc',
+  'date_newest',
+  'date_oldest',
+  'risk_desc',
+  'risk_asc',
+  'prob_desc',
+  'prob_asc',
 ]
 
 // 排序选项到翻译键的映射
 const sortLabelMap: Record<SortOption, string> = {
-  'date-newest': 'dateNewest',
-  'date-oldest': 'dateOldest',
-  'risk-desc': 'riskDesc',
-  'risk-asc': 'riskAsc',
-  'prob-desc': 'probDesc',
-  'prob-asc': 'probAsc',
+  'date_newest': 'dateNewest',
+  'date_oldest': 'dateOldest',
+  'risk_desc': 'riskDesc',
+  'risk_asc': 'riskAsc',
+  'prob_desc': 'probDesc',
+  'prob_asc': 'probAsc',
 }
 
 /**
