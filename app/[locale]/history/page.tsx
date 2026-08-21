@@ -8,15 +8,23 @@ import { useAppStore } from '@/lib/store'
 import {
   getStorageData,
   deleteRecord,
+  deleteRecords,
   togglePin,
   renameRecord,
+  searchRecords,
+  filterRecords,
   sortPinnedRecords,
   sortNormalRecords,
   paginateRecords,
 } from '@/lib/history-storage'
-import { SavedPrediction, StorageData } from '@/types/history'
+import { SavedPrediction, StorageData, FilterOptions, SortOption } from '@/types/history'
 import RecordCard from '@/components/history/RecordCard'
 import PaginationNav from '@/components/history/PaginationNav'
+import SearchBox from '@/components/history/SearchBox'
+import QuickFilters from '@/components/history/QuickFilters'
+import FilterPanel from '@/components/history/FilterPanel'
+import SortDropdown from '@/components/history/SortDropdown'
+import BatchActions from '@/components/history/BatchActions'
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
 
 /**
@@ -45,16 +53,34 @@ export default function HistoryPage() {
     normal: [],
     lastModified: '',
   })
+
+  // 搜索、筛选、排序
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filters, setFilters] = useState<FilterOptions>({
+    riskLevels: [],
+    dateRange: {},
+    probabilityRange: { min: 0, max: 100 },
+  })
+  const [sortBy, setSortBy] = useState<SortOption>('date-newest')
+
+  // 分页
   const [currentPage, setCurrentPage] = useState(1)
+
+  // 批量选择
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+
+  // UI状态
   const [mounted, setMounted] = useState(false)
   const [downloadingId, setDownloadingId] = useState<string | null>(null)
 
   // 删除确认
   const [deleteTarget, setDeleteTarget] = useState<SavedPrediction | null>(null)
+  const [batchDeleteConfirm, setBatchDeleteConfirm] = useState(false)
 
   // 从 LocalStorage 加载数据
   const reload = useCallback(() => {
     setStorage(getStorageData())
+    setSelectedIds(new Set()) // 重新加载后清空选择
   }, [])
 
   useEffect(() => {
@@ -62,22 +88,58 @@ export default function HistoryPage() {
     reload()
   }, [reload])
 
-  // 排序后的置顶记录（按置顶时间降序）
-  const sortedPinned = useMemo(() => sortPinnedRecords(storage.pinned), [storage.pinned])
+  // 数据处理流水线：搜索 → 筛选 → 排序 → 分页
+  const processedData = useMemo(() => {
+    // 1. 搜索（作用于置顶+普通）
+    const allRecords = [...storage.pinned, ...storage.normal]
+    const searchedAll = searchRecords(searchQuery, allRecords)
+    const searchedPinned = searchedAll.filter((r) => r.isPinned)
+    const searchedNormal = searchedAll.filter((r) => !r.isPinned)
 
-  // 排序后的普通记录（第一阶段默认按日期最新）
-  const sortedNormal = useMemo(
-    () => sortNormalRecords(storage.normal, 'date-newest'),
-    [storage.normal]
-  )
+    // 2. 筛选（作用于搜索结果）
+    const filteredPinned = filterRecords(searchedPinned, filters)
+    const filteredNormal = filterRecords(searchedNormal, filters)
 
-  // 分页
-  const { pinnedRecords, normalRecords, pagination } = useMemo(
-    () => paginateRecords(sortedPinned, sortedNormal, currentPage),
-    [sortedPinned, sortedNormal, currentPage]
-  )
+    // 3. 排序
+    const sortedPinned = sortPinnedRecords(filteredPinned)
+    const sortedNormal = sortNormalRecords(filteredNormal, sortBy)
+
+    // 4. 分页
+    return paginateRecords(sortedPinned, sortedNormal, currentPage)
+  }, [storage, searchQuery, filters, sortBy, currentPage])
+
+  const { pinnedRecords, normalRecords, pagination } = processedData
+
+  // 搜索/筛选/排序变化时回到第一页
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchQuery, filters, sortBy])
 
   // ---- 操作处理 ----
+
+  // 批量选择
+  const toggleSelect = (id: string) => {
+    const newSelected = new Set(selectedIds)
+    if (newSelected.has(id)) {
+      newSelected.delete(id)
+    } else {
+      newSelected.add(id)
+    }
+    setSelectedIds(newSelected)
+  }
+
+  const selectAllVisible = () => {
+    const allVisibleIds = [...pinnedRecords, ...normalRecords].map((r) => r.id)
+    setSelectedIds(new Set(allVisibleIds))
+  }
+
+  // 批量删除
+  const handleBatchDelete = () => {
+    deleteRecords(Array.from(selectedIds))
+    setSelectedIds(new Set())
+    setBatchDeleteConfirm(false)
+    reload()
+  }
 
   // 查看详情：加载数据到 store 并跳转预测页
   const handleViewDetail = (record: SavedPrediction) => {
@@ -161,6 +223,33 @@ export default function HistoryPage() {
           <h1 className="text-3xl font-bold text-[#212121]">{t('title')}</h1>
         </div>
 
+        {/* 搜索、筛选、排序区域（非空时显示） */}
+        {!isEmpty && (
+          <div className="space-y-4 mb-6">
+            {/* 第一行：搜索框 + 排序 */}
+            <div className="flex flex-col md:flex-row gap-3">
+              <div className="flex-1">
+                <SearchBox value={searchQuery} onChange={setSearchQuery} />
+              </div>
+              <SortDropdown sortBy={sortBy} onChange={setSortBy} />
+            </div>
+
+            {/* 第二行：快速筛选标签 */}
+            <QuickFilters filters={filters} onChange={setFilters} />
+
+            {/* 第三行：筛选面板（可折叠） */}
+            <FilterPanel filters={filters} onChange={setFilters} />
+
+            {/* 第四行：批量操作栏 */}
+            <BatchActions
+              totalCount={pinnedRecords.length + normalRecords.length}
+              selectedCount={selectedIds.size}
+              onSelectAll={selectAllVisible}
+              onDeleteSelected={() => setBatchDeleteConfirm(true)}
+            />
+          </div>
+        )}
+
         {isEmpty ? (
           /* 空状态 */
           <div className="bg-white rounded-xl border border-[#E0E0E0] shadow-sm py-16 text-center">
@@ -197,9 +286,9 @@ export default function HistoryPage() {
                     <RecordCard
                       key={record.id}
                       record={record}
-                      isSelected={false}
+                      isSelected={selectedIds.has(record.id)}
                       isDownloading={downloadingId === record.id}
-                      onToggleSelect={() => {}}
+                      onToggleSelect={toggleSelect}
                       onViewDetail={handleViewDetail}
                       onDownloadPDF={handleDownloadPDF}
                       onDelete={setDeleteTarget}
@@ -236,9 +325,9 @@ export default function HistoryPage() {
                     <RecordCard
                       key={record.id}
                       record={record}
-                      isSelected={false}
+                      isSelected={selectedIds.has(record.id)}
                       isDownloading={downloadingId === record.id}
-                      onToggleSelect={() => {}}
+                      onToggleSelect={toggleSelect}
                       onViewDetail={handleViewDetail}
                       onDownloadPDF={handleDownloadPDF}
                       onDelete={setDeleteTarget}
@@ -293,6 +382,19 @@ export default function HistoryPage() {
         cancelText={t('deleteConfirm.cancel')}
         onConfirm={handleConfirmDelete}
         onClose={() => setDeleteTarget(null)}
+      />
+
+      {/* 批量删除确认对话框 */}
+      <ConfirmDialog
+        isOpen={batchDeleteConfirm}
+        title={t('batchDeleteConfirm.title')}
+        message={t('batchDeleteConfirm.message', { count: selectedIds.size })}
+        tip={t('batchDeleteConfirm.tip')}
+        variant="danger"
+        confirmText={t('batchDeleteConfirm.confirm')}
+        cancelText={t('batchDeleteConfirm.cancel')}
+        onConfirm={handleBatchDelete}
+        onClose={() => setBatchDeleteConfirm(false)}
       />
     </div>
   )
