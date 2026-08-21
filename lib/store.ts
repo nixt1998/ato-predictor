@@ -14,6 +14,12 @@ interface AppState {
   result: PredictionResult | null
   setResult: (result: PredictionResult) => void
 
+  // 重置预测（清空输入和结果，回到输入 Tab）—— 用于"新建预测"
+  resetPrediction: () => void
+
+  // 加载历史记录到当前预测（用于"查看详情"）
+  loadPrediction: (input: PredictionInput, result: PredictionResult) => void
+
   // 计算状态
   isCalculating: boolean
   setIsCalculating: (isCalculating: boolean) => void
@@ -41,6 +47,12 @@ export const useAppStore = create<AppState>((set) => ({
   // 计算结果
   result: null,
   setResult: (result) => set({ result }),
+
+  // 重置预测（清空输入和结果，回到输入 Tab）
+  resetPrediction: () => set({ input: null, result: null, activeTab: 'input' }),
+
+  // 加载历史记录到当前预测（跳到结果 Tab）
+  loadPrediction: (input, result) => set({ input, result, activeTab: 'result' }),
 
   // 计算状态
   isCalculating: false,

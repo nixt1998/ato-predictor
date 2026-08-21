@@ -6,8 +6,10 @@ import { useTranslations, useLocale } from 'next-intl'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { useAppStore } from '@/lib/store'
-import { Download, Printer, AlertCircle, CheckCircle, Info } from 'lucide-react'
+import { Download, Save, PlusCircle, AlertCircle, CheckCircle, Info } from 'lucide-react'
 import DownloadReportDialog from '@/components/predict/DownloadReportDialog'
+import SaveRecordDialog from '@/components/predict/SaveRecordDialog'
+import ConfirmDialog from '@/components/ui/ConfirmDialog'
 
 // 语言字典：key -> [risk_factor, suggestion]
 const SUGGESTION_DICT: Record<string, Record<string, [string, string]>> = {
@@ -36,8 +38,10 @@ const SUGGESTION_DICT: Record<string, Record<string, [string, string]>> = {
 export default function PredictionSuggestions() {
   const t = useTranslations('predict.suggestions')
   const locale = useLocale()
-  const { result } = useAppStore()
+  const { result, resetPrediction } = useAppStore()
   const [showDownloadDialog, setShowDownloadDialog] = useState(false)
+  const [showSaveDialog, setShowSaveDialog] = useState(false)
+  const [showNewConfirm, setShowNewConfirm] = useState(false)
 
   if (!result) return null
 
@@ -64,8 +68,10 @@ export default function PredictionSuggestions() {
 
   const handleDownloadPDF = () => setShowDownloadDialog(true)
 
-  const handlePrint = () => {
-    window.print()
+  // 新建预测：确认后清空当前预测数据，回到输入 Tab
+  const handleNewPrediction = () => {
+    resetPrediction()
+    setShowNewConfirm(false)
   }
 
   return (
@@ -143,13 +149,22 @@ export default function PredictionSuggestions() {
                 {t('downloadReport')}
               </Button>
               <Button
-                onClick={handlePrint}
+                onClick={() => setShowSaveDialog(true)}
                 variant="secondary"
                 size="lg"
                 className="flex-1"
               >
-                <Printer className="w-5 h-5 mr-2" />
-                {t('printReport')}
+                <Save className="w-5 h-5 mr-2" />
+                {t('saveRecord')}
+              </Button>
+              <Button
+                onClick={() => setShowNewConfirm(true)}
+                variant="secondary"
+                size="lg"
+                className="flex-1"
+              >
+                <PlusCircle className="w-5 h-5 mr-2" />
+                {t('newPrediction')}
               </Button>
             </div>
             <div className="mt-4 pt-4 border-t border-[#E0E0E0]">
@@ -160,7 +175,24 @@ export default function PredictionSuggestions() {
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* 下载 PDF 报告对话框 */}
       <DownloadReportDialog isOpen={showDownloadDialog} onClose={() => setShowDownloadDialog(false)} />
+
+      {/* 保存记录对话框 */}
+      <SaveRecordDialog isOpen={showSaveDialog} onClose={() => setShowSaveDialog(false)} />
+
+      {/* 新建预测确认对话框 */}
+      <ConfirmDialog
+        isOpen={showNewConfirm}
+        title={t('newConfirm.title')}
+        message={t('newConfirm.message')}
+        tip={t('newConfirm.tip')}
+        confirmText={t('newConfirm.confirm')}
+        cancelText={t('newConfirm.cancel')}
+        onConfirm={handleNewPrediction}
+        onClose={() => setShowNewConfirm(false)}
+      />
     </div>
   )
 }

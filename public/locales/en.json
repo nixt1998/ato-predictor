@@ -5,6 +5,7 @@
   },
   "nav": {
     "home": "Home",
+    "history": "History",
     "about": "About",
     "algorithm": "Algorithm",
     "references": "References",
@@ -144,13 +145,154 @@
     "suggestions": {
       "clinicalSuggestions": "Clinical Suggestions",
       "downloadReport": "Download PDF Report",
-      "printReport": "Print Report",
+      "saveRecord": "Save Record",
+      "newPrediction": "New Prediction",
       "reportInfo": "This report is for reference only. Clinical decisions require professional medical judgment.",
+      "newConfirm": {
+        "title": "Confirm New Prediction",
+        "message": "Are you sure you want to clear the current result and start a new prediction? The current result will be cleared.",
+        "tip": "To keep the current result, please click \"Save Record\" first.",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
+      },
       "disclaimer": {
         "title": "⚠️ Disclaimer",
         "content": "This tool is for medical professionals only and cannot replace clinical judgment. All treatment decisions should be based on complete clinical evaluation."
       }
     }
+  },
+  "history": {
+    "title": "History",
+    "exportExcel": "Export Excel",
+    "exportBackup": "Export Backup",
+    "importBackup": "Import Backup",
+    "clearAll": "Clear All",
+    "searchPlaceholder": "Search name or number",
+    "empty": {
+      "title": "No saved prediction records yet",
+      "hint": "Click \"Save Record\" on the Suggestions tab of a prediction result to add one"
+    },
+    "pinnedSection": "📌 Pinned ({count})",
+    "normalSection": "📋 Records ({start}-{end} / {total} total)",
+    "noNormalRecords": "No records match the current filters",
+    "quickFilters": {
+      "high": "High Risk",
+      "medium": "Medium Risk",
+      "low": "Low Risk",
+      "pinned": "Pinned",
+      "today": "Today",
+      "thisWeek": "This Week"
+    },
+    "filter": {
+      "title": "Filter",
+      "riskLevel": "Risk Level",
+      "dateRange": "Date Range",
+      "all": "All",
+      "today": "Today",
+      "last7Days": "Last 7 Days",
+      "last30Days": "Last 30 Days",
+      "custom": "Custom",
+      "to": "to",
+      "probRange": "Probability Range",
+      "prob0": "0-20% (Low)",
+      "prob20": "20-40% (Mid-Low)",
+      "prob40": "40-60% (Mid-High)",
+      "prob60": "60-100% (High)",
+      "reset": "Reset Filters"
+    },
+    "sort": {
+      "title": "Sort",
+      "dateNewest": "Newest First",
+      "dateOldest": "Oldest First",
+      "riskAsc": "Risk Ascending",
+      "riskDesc": "Risk Descending",
+      "probAsc": "Probability Ascending",
+      "probDesc": "Probability Descending"
+    },
+    "batch": {
+      "selectAll": "Select All",
+      "selected": "{count} selected",
+      "deleteSelected": "Delete Selected"
+    },
+    "card": {
+      "input": "Input",
+      "result": "Result",
+      "viewDetail": "View Detail",
+      "downloadPDF": "Download PDF",
+      "delete": "Delete",
+      "pin": "Pin",
+      "unpin": "Unpin",
+      "rename": "Rename",
+      "save": "Save",
+      "cancelRename": "Cancel"
+    },
+    "pagination": {
+      "prev": "Previous",
+      "next": "Next",
+      "info": "Page {current} / {total}",
+      "records": "{normal} records + {pinned} pinned"
+    },
+    "deleteConfirm": {
+      "title": "Confirm Deletion",
+      "message": "Are you sure you want to delete this record? This cannot be undone!",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
+    "batchDeleteConfirm": {
+      "title": "Confirm Deletion",
+      "message": "About to delete {count} records. This cannot be undone!",
+      "tip": "Consider exporting a backup before deleting.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
+    "clearConfirm": {
+      "title": "Confirm Clear All",
+      "message": "Are you sure you want to clear all history, including pinned records? This cannot be undone!",
+      "tip": "Consider exporting a backup before clearing.",
+      "confirm": "Clear All",
+      "cancel": "Cancel"
+    },
+    "warnings": {
+      "title": "Important Notice",
+      "privacy": "Data is stored only in this browser and never uploaded to a server",
+      "dataLoss": "Clearing browser data, or switching device or browser, will lose all records",
+      "limit": "Up to 200 normal records (pinned records excluded from the limit)",
+      "backup": "Export to Excel or PDF regularly as a backup",
+      "public": "On a public computer, click \"Clear All\" after use"
+    },
+    "toast": {
+      "exported": "Exported {count} records",
+      "imported": "Successfully imported {count} records",
+      "importError": "Import failed: invalid file format",
+      "cleared": "All records cleared"
+    }
+  },
+  "saveRecord": {
+    "title": "Save Prediction Record",
+    "reportNumber": "Record No.",
+    "predictTime": "Prediction Time",
+    "nicknameLabel": "Record Name (optional)",
+    "nicknamePlaceholder": "e.g. Patient A - 1st follow-up",
+    "nicknameHint": "Leave blank to use the default name",
+    "privacyWarning": "Privacy Notice",
+    "privacyNote1": "Do not enter patient real names, ID numbers or other sensitive information in the name",
+    "privacyNote2": "On a public computer, clear all records after use",
+    "dataProtection": "Data Protection",
+    "dataNote1": "Data is stored only in this browser and never uploaded to a server",
+    "dataNote2": "Clearing browser data or switching device will lose the records",
+    "dataNote3": "Download the PDF report regularly for permanent archiving",
+    "dataNote4": "Up to 200 records; oldest are auto-deleted when exceeded (pinned excluded)",
+    "viewHint": "After saving, view it under [Navbar - History]",
+    "cancel": "Cancel",
+    "confirm": "Save",
+    "saved": "Saved successfully!",
+    "limitTitle": "Storage Limit Notice",
+    "limitMessage": "Normal records have reached the 200 limit. To save the new record, the following {count} oldest records will be deleted:",
+    "limitTip1": "Pinned records will not be deleted",
+    "limitTip2": "Consider pinning important records",
+    "limitTip3": "You can export a backup to keep the history",
+    "limitCancel": "Cancel",
+    "limitConfirm": "Save and Delete Old Records"
   },
   "about": {
     "title": "Introduction",

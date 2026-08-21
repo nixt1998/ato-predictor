@@ -14,6 +14,7 @@ export default function Header() {
 
   const navItems = [
     { key: 'home', originalHref: '' },
+    { key: 'history', originalHref: '/history' },
     { key: 'about', originalHref: '/about' },
     { key: 'algorithm', originalHref: '/algorithm' },
     { key: 'references', originalHref: '/references' },
