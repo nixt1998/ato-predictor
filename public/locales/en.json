@@ -202,6 +202,7 @@
     },
     "sort": {
       "title": "Sort",
+      "default": "Default",
       "dateNewest": "Newest First",
       "dateOldest": "Oldest First",
       "riskAsc": "Risk Ascending",
@@ -281,6 +282,16 @@
       "exportCSV": "Export as CSV",
       "exportAllPDF": "Export All PDF",
       "error": "Export failed, please retry"
+    },
+    "clearAll": {
+      "button": "Clear All"
+    },
+    "clearAllConfirm": {
+      "title": "Confirm Clear All",
+      "message": "Are you sure you want to clear all history records, including pinned ones? This action cannot be undone!",
+      "tip": "Consider exporting a backup before clearing",
+      "confirm": "Clear All",
+      "cancel": "Cancel"
     }
   },
   "saveRecord": {

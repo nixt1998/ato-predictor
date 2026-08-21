@@ -48,7 +48,8 @@ export type RiskLevel = 'low' | 'medium' | 'high'
  * 排序选项
  */
 export type SortOption =
-  | 'date_newest'    // 日期最新（默认）
+  | 'default'        // 默认排序（置顶优先，其他按保存时间）
+  | 'date_newest'    // 日期最新
   | 'date_oldest'    // 日期最旧
   | 'risk_asc'       // 风险升序（低→中→高）
   | 'risk_desc'      // 风险降序（高→中→低）

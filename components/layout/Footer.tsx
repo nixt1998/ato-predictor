@@ -9,8 +9,13 @@ export default function Footer() {
   const locale = useLocale()
 
   const quickLinks = [
+    { key: 'home', originalHref: '' },
+    { key: 'history', originalHref: '/history' },
     { key: 'about', originalHref: '/about' },
     { key: 'algorithm', originalHref: '/algorithm' },
+    { key: 'references', originalHref: '/references' },
+    { key: 'privacy', originalHref: '/privacy' },
+    { key: 'disclaimer', originalHref: '/disclaimer' },
     { key: 'contact', originalHref: '/contact' },
   ]
 

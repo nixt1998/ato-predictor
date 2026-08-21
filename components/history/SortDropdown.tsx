@@ -10,6 +10,7 @@ interface SortDropdownProps {
 }
 
 const sortOptions: SortOption[] = [
+  'default',
   'date_newest',
   'date_oldest',
   'risk_desc',
@@ -20,6 +21,7 @@ const sortOptions: SortOption[] = [
 
 // 排序选项到翻译键的映射
 const sortLabelMap: Record<SortOption, string> = {
+  'default': 'default',
   'date_newest': 'dateNewest',
   'date_oldest': 'dateOldest',
   'risk_desc': 'riskDesc',

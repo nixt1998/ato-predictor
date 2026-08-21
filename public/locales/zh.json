@@ -202,6 +202,7 @@
     },
     "sort": {
       "title": "排序",
+      "default": "默认排序",
       "dateNewest": "日期最新",
       "dateOldest": "日期最旧",
       "riskAsc": "风险升序",
@@ -281,6 +282,16 @@
       "exportCSV": "导出为CSV",
       "exportAllPDF": "批量导出PDF",
       "error": "导出失败，请重试"
+    },
+    "clearAll": {
+      "button": "清空全部"
+    },
+    "clearAllConfirm": {
+      "title": "确认清空全部",
+      "message": "确定要清空所有历史记录吗？包括置顶记录，此操作不可恢复！",
+      "tip": "清空前建议先导出备份",
+      "confirm": "确认清空",
+      "cancel": "取消"
     }
   },
   "saveRecord": {

@@ -28,6 +28,7 @@ import BatchActions from '@/components/history/BatchActions'
 import StatisticsPanel from '@/components/history/StatisticsPanel'
 import ExportButton from '@/components/history/ExportButton'
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
+import DownloadPDFDialog from '@/components/history/DownloadPDFDialog'
 
 /**
  * 将 base64 转换为 Blob（用于 PDF 下载）
@@ -63,7 +64,7 @@ export default function HistoryPage() {
     dateRange: {},
     probabilityRange: { min: 0, max: 100 },
   })
-  const [sortBy, setSortBy] = useState<SortOption>('date_newest')
+  const [sortBy, setSortBy] = useState<SortOption>('default')
 
   // 分页
   const [currentPage, setCurrentPage] = useState(1)
@@ -74,9 +75,12 @@ export default function HistoryPage() {
   // UI状态
   const [mounted, setMounted] = useState(false)
   const [downloadingId, setDownloadingId] = useState<string | null>(null)
+  const [pdfDownloadRecord, setPdfDownloadRecord] = useState<SavedPrediction | null>(null)
 
   // 删除确认
   const [deleteTarget, setDeleteTarget] = useState<SavedPrediction | null>(null)
+  const [batchDeleteConfirm, setBatchDeleteConfirm] = useState(false)
+  const [clearAllConfirm, setClearAllConfirm] = useState(false)
   const [batchDeleteConfirm, setBatchDeleteConfirm] = useState(false)
 
   // 从 LocalStorage 加载数据
@@ -147,48 +151,22 @@ export default function HistoryPage() {
     reload()
   }
 
+  // 清空全部记录
+  const handleClearAll = () => {
+    localStorage.removeItem('ato-prediction-history')
+    setClearAllConfirm(false)
+    reload()
+  }
+
   // 查看详情：加载数据到 store 并跳转预测页
   const handleViewDetail = (record: SavedPrediction) => {
     loadPrediction(record.input, record.result)
     router.push(`/${locale}/predict`)
   }
 
-  // 下载 PDF（使用当前页面语言）
-  const handleDownloadPDF = async (record: SavedPrediction) => {
-    setDownloadingId(record.id)
-    try {
-      const predictionData = {
-        input: record.input,
-        result: {
-          prediction: record.result.prediction,
-          metabolism: record.result.metabolism,
-          shap_values: record.result.shap_values,
-          major_risk_factor: record.result.major_risk_factor,
-          suggestions: record.result.suggestions,
-        },
-        timestamp: record.timestamp,
-      }
-      const response = await fetch('/api/generate-report', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ language: locale === 'en' ? 'en' : 'zh', predictionData }),
-      })
-      if (!response.ok) throw new Error('Failed to generate report')
-      const data = await response.json()
-      const pdfBlob = base64ToBlob(data.pdfBase64, 'application/pdf')
-      const url = window.URL.createObjectURL(pdfBlob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = data.filename || `${data.reportNumber}.pdf`
-      document.body.appendChild(a)
-      a.click()
-      window.URL.revokeObjectURL(url)
-      document.body.removeChild(a)
-    } catch (err) {
-      console.error('下载PDF失败:', err)
-    } finally {
-      setDownloadingId(null)
-    }
+  // 下载 PDF（打开语言选择对话框）
+  const handleDownloadPDF = (record: SavedPrediction) => {
+    setPdfDownloadRecord(record)
   }
 
   // 置顶/取消置顶
@@ -241,7 +219,12 @@ export default function HistoryPage() {
                 <SearchBox value={searchQuery} onChange={setSearchQuery} />
               </div>
               <SortDropdown sortBy={sortBy} onChange={setSortBy} />
-              <ExportButton records={[...storage.pinned, ...storage.normal]} />
+              <ExportButton
+                allRecords={[...storage.pinned, ...storage.normal]}
+                selectedRecords={[...storage.pinned, ...storage.normal].filter((r) =>
+                  selectedIds.has(r.id)
+                )}
+              />
             </div>
 
             {/* 第二行：快速筛选标签 */}
@@ -364,7 +347,7 @@ export default function HistoryPage() {
         )}
 
         {/* 底部固定提示栏 */}
-        <div className="bg-[#FFF9E6] border border-[#ED8B00] rounded-xl p-4">
+        <div className="bg-[#FFF9E6] border border-[#ED8B00] rounded-xl p-4 mb-4">
           <div className="flex items-start gap-2">
             <AlertTriangle className="w-5 h-5 text-[#ED8B00] flex-shrink-0 mt-0.5" />
             <div className="text-xs text-[#757575] space-y-1">
@@ -377,6 +360,18 @@ export default function HistoryPage() {
             </div>
           </div>
         </div>
+
+        {/* 清空全部按钮 */}
+        {!isEmpty && (
+          <div className="flex justify-center">
+            <button
+              onClick={() => setClearAllConfirm(true)}
+              className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
+            >
+              {t('clearAll.button')}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* 删除确认对话框 */}
@@ -406,6 +401,26 @@ export default function HistoryPage() {
         cancelText={t('batchDeleteConfirm.cancel')}
         onConfirm={handleBatchDelete}
         onClose={() => setBatchDeleteConfirm(false)}
+      />
+
+      {/* 清空全部确认对话框 */}
+      <ConfirmDialog
+        isOpen={clearAllConfirm}
+        title={t('clearAllConfirm.title')}
+        message={t('clearAllConfirm.message')}
+        tip={t('clearAllConfirm.tip')}
+        variant="danger"
+        confirmText={t('clearAllConfirm.confirm')}
+        cancelText={t('clearAllConfirm.cancel')}
+        onConfirm={handleClearAll}
+        onClose={() => setClearAllConfirm(false)}
+      />
+
+      {/* PDF下载对话框 */}
+      <DownloadPDFDialog
+        isOpen={pdfDownloadRecord !== null}
+        record={pdfDownloadRecord}
+        onClose={() => setPdfDownloadRecord(null)}
       />
     </div>
   )

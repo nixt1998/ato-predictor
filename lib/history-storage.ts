@@ -367,6 +367,12 @@ export function sortNormalRecords(
   const sorted = [...records]
 
   switch (sortBy) {
+    case 'default':
+      // 默认排序：按创建时间降序（最新的在前）
+      sorted.sort(
+        (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      )
+      break
     case 'date_newest':
       sorted.sort(
         (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
