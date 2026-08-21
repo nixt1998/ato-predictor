@@ -3,7 +3,7 @@ import { PredictionInput, PredictionResult } from '@/types/prediction'
 
 // R API 地址（从环境变量读取）
 const R_API_URL = process.env.NEXT_PUBLIC_R_API_URL || 'http://localhost:8000'
-const API_TIMEOUT = 8000 // 8 秒超时
+// 移除超时限制，等待真实模型预测结果（医疗诊断不能使用fallback虚假值）
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,10 +19,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 调用 R API
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT)
-
+    // 调用 R API（无超时限制，必须等待真实模型结果）
     try {
       const response = await fetch(`${R_API_URL}/predict`, {
         method: 'POST',
@@ -35,10 +32,7 @@ export async function POST(request: NextRequest) {
           DMA: data.DMA,
           CT_drug: data.CT_drug,
         }),
-        signal: controller.signal,
       })
-
-      clearTimeout(timeoutId)
 
       if (!response.ok) {
         throw new Error(`R API error: ${response.status} ${response.statusText}`)
@@ -84,16 +78,17 @@ export async function POST(request: NextRequest) {
         timestamp: new Date().toISOString(),
       })
     } catch (fetchError: any) {
-      if (fetchError.name === 'AbortError') {
-        console.warn('R API request timeout, falling back to local prediction')
-        // R API 超时，使用本地回退逻辑，不报错
-        return useFallbackPrediction(data, locale)
-      }
-
       console.error('R API fetch error:', fetchError)
 
-      // 如果 R API 不可用，使用回退逻辑
-      return useFallbackPrediction(data, locale)
+      // 医疗诊断系统：R API不可用时必须返回错误，不能使用虚假的fallback值
+      return NextResponse.json(
+        {
+          error: 'R API服务不可用，无法进行预测。请确保R API服务已启动。',
+          error_en: 'R API service unavailable. Please ensure the R API service is running.',
+          details: fetchError.message
+        },
+        { status: 503 }
+      )
     }
   } catch (error) {
     console.error('Prediction error:', error)
@@ -163,93 +158,4 @@ function generateSuggestions(rResult: any, input: PredictionInput, locale: strin
   }
 
   return suggestions
-}
-
-// 回退预测逻辑（当 R API 不可用时）
-function useFallbackPrediction(data: PredictionInput, locale: string = 'zh') {
-  console.warn('Using fallback prediction logic - R API unavailable')
-
-  // 计算砷代谢参数
-  const tAs = data.iAs + data.MMA + data.DMA
-  const PMI = data.iAs > 0 ? data.MMA / data.iAs : 0
-  const SMI = data.MMA > 0 ? data.DMA / data.MMA : 0
-  const iAs_pct = tAs > 0 ? (data.iAs / tAs) * 100 : 0
-  const MMA_pct = tAs > 0 ? (data.MMA / tAs) * 100 : 0
-  const DMA_pct = tAs > 0 ? (data.DMA / tAs) * 100 : 0
-
-  // 简化的风险评估逻辑
-  let riskScore = 0
-
-  // 总砷贡献
-  if (tAs > 300) riskScore += 0.3
-  else if (tAs > 200) riskScore += 0.2
-  else if (tAs > 150) riskScore += 0.1
-
-  // SMI 贡献
-  if (SMI < 2) riskScore += 0.25
-  else if (SMI < 4) riskScore += 0.15
-
-  // MMA% 贡献
-  if (MMA_pct > 20) riskScore += 0.2
-  else if (MMA_pct > 15) riskScore += 0.1
-
-  // CT drug 贡献
-  if (data.CT_drug === 'Yes') riskScore += 0.25
-
-  const probability = Math.min(0.95, Math.max(0.05, riskScore))
-
-  const riskLevel =
-    probability < 0.2 ? 'low' :
-    probability < 0.5 ? 'medium' :
-    'high'
-
-  // SHAP 值（简化版）
-  const shapValues = {
-    tAs: tAs > 200 ? 0.15 : tAs > 150 ? 0.08 : -0.05,
-    SMI: SMI < 2 ? 0.12 : SMI < 4 ? 0.06 : -0.08,
-    MMA_per: MMA_pct > 20 ? 0.1 : MMA_pct > 15 ? 0.05 : -0.03,
-    DMA_per: DMA_pct > 80 ? -0.06 : DMA_pct < 60 ? 0.04 : 0,
-    CT_drug: data.CT_drug === 'Yes' ? 0.15 : -0.05,
-  }
-
-  // 找出主要风险因素
-  const shapEntries = Object.entries(shapValues).map(([key, value]) => ({
-    key,
-    value: Math.abs(value as number),
-  }))
-  shapEntries.sort((a, b) => b.value - a.value)
-  const majorRiskFactor = shapEntries[0].key
-
-  const result: PredictionResult = {
-    prediction: {
-      class: probability > 0.5 ? 'Yes' : 'No',
-      probability,
-      risk_level: riskLevel,
-    },
-    metabolism: {
-      tAs,
-      PMI,
-      SMI,
-      iAs_pct,
-      MMA_pct,
-      DMA_pct,
-    },
-    shap_values: shapValues,
-    major_risk_factor: majorRiskFactor,
-    suggestions: generateSuggestions(
-      {
-        prediction: { risk_level: riskLevel },
-        metabolism: { tAs, SMI, MMA_pct },
-      },
-      data,
-      locale
-    ),
-    timestamp: new Date().toISOString(),
-  }
-
-  return NextResponse.json(result, {
-    headers: {
-      'X-Prediction-Mode': 'fallback',
-    },
-  })
 }
