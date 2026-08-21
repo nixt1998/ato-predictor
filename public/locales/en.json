@@ -36,8 +36,13 @@
   },
   "footer": {
     "quickLinks": "Quick Links",
+    "home": "Home",
+    "history": "History",
     "about": "About",
     "algorithm": "Algorithm",
+    "references": "References",
+    "privacy": "Privacy Policy",
+    "disclaimer": "Disclaimer",
     "contact": "Contact",
     "copyright": "Copyright © 2026 The First Affiliated Hospital of Harbin Medical University",
     "icpBeian": "ICP Registration No. 黑ICP备2026000537号-1",

@@ -36,8 +36,13 @@
   },
   "footer": {
     "quickLinks": "快速链接",
+    "home": "首页",
+    "history": "历史记录",
     "about": "关于项目",
     "algorithm": "算法说明",
+    "references": "参考文献",
+    "privacy": "隐私政策",
+    "disclaimer": "免责声明",
     "contact": "联系我们",
     "copyright": "Copyright © 2026 哈尔滨医科大学附属第一医院",
     "icpBeian": "黑ICP备2026000537号-1",
