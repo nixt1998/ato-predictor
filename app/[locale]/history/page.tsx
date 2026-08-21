@@ -81,7 +81,6 @@ export default function HistoryPage() {
   const [deleteTarget, setDeleteTarget] = useState<SavedPrediction | null>(null)
   const [batchDeleteConfirm, setBatchDeleteConfirm] = useState(false)
   const [clearAllConfirm, setClearAllConfirm] = useState(false)
-  const [batchDeleteConfirm, setBatchDeleteConfirm] = useState(false)
 
   // 从 LocalStorage 加载数据
   const reload = useCallback(() => {
