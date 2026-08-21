@@ -7,6 +7,7 @@ interface BatchActionsProps {
   totalCount: number
   selectedCount: number
   onSelectAll: () => void
+  onClearSelection: () => void
   onDeleteSelected: () => void
 }
 
@@ -18,6 +19,7 @@ export default function BatchActions({
   totalCount,
   selectedCount,
   onSelectAll,
+  onClearSelection,
   onDeleteSelected,
 }: BatchActionsProps) {
   const t = useTranslations('history.batch')
@@ -34,6 +36,16 @@ export default function BatchActions({
         <CheckSquare className="w-4 h-4" />
         {t('selectAll')}
       </button>
+
+      {/* 清空全选按钮（仅选中时显示） */}
+      {selectedCount > 0 && (
+        <button
+          onClick={onClearSelection}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-[#757575] bg-white border border-[#E0E0E0] rounded-lg hover:bg-[#F5F5F5] transition-colors"
+        >
+          {t('clearSelection')}
+        </button>
+      )}
 
       {/* 已选数量 */}
       <span className="text-sm text-[#212121]">

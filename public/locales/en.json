@@ -211,6 +211,7 @@
     },
     "batch": {
       "selectAll": "Select All",
+      "clearSelection": "Clear Selection",
       "selected": "{count} selected",
       "deleteSelected": "Delete Selected"
     },

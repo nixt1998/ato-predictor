@@ -211,6 +211,7 @@
     },
     "batch": {
       "selectAll": "全选",
+      "clearSelection": "清空全选",
       "selected": "已选 {count} 条",
       "deleteSelected": "删除选中"
     },

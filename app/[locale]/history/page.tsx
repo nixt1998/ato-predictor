@@ -133,6 +133,10 @@ export default function HistoryPage() {
     setSelectedIds(new Set(allVisibleIds))
   }
 
+  const clearSelection = () => {
+    setSelectedIds(new Set())
+  }
+
   // 批量删除
   const handleBatchDelete = () => {
     deleteRecords(Array.from(selectedIds))
@@ -245,6 +249,7 @@ export default function HistoryPage() {
               totalCount={pinnedRecords.length + normalRecords.length}
               selectedCount={selectedIds.size}
               onSelectAll={selectAllVisible}
+              onClearSelection={clearSelection}
               onDeleteSelected={() => setBatchDeleteConfirm(true)}
             />
           </div>

@@ -66,7 +66,7 @@ export default function FilterPanel({ filters, onChange }: FilterPanelProps) {
   return (
     <div className="bg-white rounded-xl border border-[#E0E0E0] p-4 shadow-sm">
       {/* 标题 */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-[#005EB8]" />
           <h3 className="font-semibold text-[#212121]">{t('title')}</h3>
@@ -82,149 +82,152 @@ export default function FilterPanel({ filters, onChange }: FilterPanelProps) {
         )}
       </div>
 
-      {/* 风险等级（多选） */}
-      <div className="mb-4">
-        <p className="text-sm font-medium text-[#212121] mb-2">{t('riskLevel')}</p>
-        <div className="space-y-1.5">
-          {(['low', 'medium', 'high'] as RiskLevel[]).map((level) => (
-            <label key={level} className="flex items-center gap-2 cursor-pointer">
+      {/* 三列布局：风险等级 | 日期范围 | 概率区间 */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* 风险等级（多选） */}
+        <div>
+          <p className="text-sm font-medium text-[#212121] mb-2">{t('riskLevel')}</p>
+          <div className="space-y-1.5">
+            {(['low', 'medium', 'high'] as RiskLevel[]).map((level) => (
+              <label key={level} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={filters.riskLevels.includes(level)}
+                  onChange={() => toggleRiskLevel(level)}
+                  className="w-4 h-4 text-[#005EB8] rounded focus:ring-[#005EB8]"
+                />
+                <span className="text-sm text-[#212121]">
+                  {level === 'low' && '🟢 '}
+                  {level === 'medium' && '🟡 '}
+                  {level === 'high' && '🔴 '}
+                  {t(`../quickFilters.${level}`)}
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* 日期范围 */}
+        <div>
+          <p className="text-sm font-medium text-[#212121] mb-2">{t('dateRange')}</p>
+          <div className="space-y-1.5">
+            <label className="flex items-center gap-2 cursor-pointer">
               <input
-                type="checkbox"
-                checked={filters.riskLevels.includes(level)}
-                onChange={() => toggleRiskLevel(level)}
-                className="w-4 h-4 text-[#005EB8] rounded focus:ring-[#005EB8]"
+                type="radio"
+                checked={!filters.dateRange.preset && !filters.dateRange.start}
+                onChange={() => setDatePreset(undefined)}
+                className="w-4 h-4 text-[#005EB8]"
               />
-              <span className="text-sm text-[#212121]">
-                {level === 'low' && '🟢 '}
-                {level === 'medium' && '🟡 '}
-                {level === 'high' && '🔴 '}
-                {t(`../quickFilters.${level}`)}
-              </span>
+              <span className="text-sm text-[#212121]">{t('all')}</span>
             </label>
-          ))}
-        </div>
-      </div>
-
-      {/* 日期范围 */}
-      <div className="mb-4">
-        <p className="text-sm font-medium text-[#212121] mb-2">{t('dateRange')}</p>
-        <div className="space-y-1.5">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              checked={!filters.dateRange.preset && !filters.dateRange.start}
-              onChange={() => setDatePreset(undefined)}
-              className="w-4 h-4 text-[#005EB8]"
-            />
-            <span className="text-sm text-[#212121]">{t('all')}</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              checked={filters.dateRange.preset === 'today'}
-              onChange={() => setDatePreset('today')}
-              className="w-4 h-4 text-[#005EB8]"
-            />
-            <span className="text-sm text-[#212121]">{t('today')}</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              checked={filters.dateRange.preset === '7days'}
-              onChange={() => setDatePreset('7days')}
-              className="w-4 h-4 text-[#005EB8]"
-            />
-            <span className="text-sm text-[#212121]">{t('last7Days')}</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              checked={filters.dateRange.preset === '30days'}
-              onChange={() => setDatePreset('30days')}
-              className="w-4 h-4 text-[#005EB8]"
-            />
-            <span className="text-sm text-[#212121]">{t('last30Days')}</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              checked={!!filters.dateRange.start || !!filters.dateRange.end}
-              onChange={() => {}}
-              className="w-4 h-4 text-[#005EB8]"
-            />
-            <span className="text-sm text-[#212121]">{t('custom')}</span>
-          </label>
-
-          {/* 自定义日期输入 */}
-          {(filters.dateRange.start || filters.dateRange.end || (!filters.dateRange.preset && filters.dateRange.start === undefined && filters.dateRange.end === undefined)) && (
-            <div className="ml-6 space-y-2 pt-1">
+            <label className="flex items-center gap-2 cursor-pointer">
               <input
-                type="date"
-                value={filters.dateRange.start || ''}
-                onChange={(e) => setCustomDateRange(e.target.value, filters.dateRange.end)}
-                className="w-full text-xs px-2 py-1 border border-[#E0E0E0] rounded focus:outline-none focus:border-[#005EB8]"
+                type="radio"
+                checked={filters.dateRange.preset === 'today'}
+                onChange={() => setDatePreset('today')}
+                className="w-4 h-4 text-[#005EB8]"
               />
-              <p className="text-xs text-[#757575] text-center">{t('to')}</p>
+              <span className="text-sm text-[#212121]">{t('today')}</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
               <input
-                type="date"
-                value={filters.dateRange.end || ''}
-                onChange={(e) => setCustomDateRange(filters.dateRange.start, e.target.value)}
-                className="w-full text-xs px-2 py-1 border border-[#E0E0E0] rounded focus:outline-none focus:border-[#005EB8]"
+                type="radio"
+                checked={filters.dateRange.preset === '7days'}
+                onChange={() => setDatePreset('7days')}
+                className="w-4 h-4 text-[#005EB8]"
               />
-            </div>
-          )}
-        </div>
-      </div>
+              <span className="text-sm text-[#212121]">{t('last7Days')}</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                checked={filters.dateRange.preset === '30days'}
+                onChange={() => setDatePreset('30days')}
+                className="w-4 h-4 text-[#005EB8]"
+              />
+              <span className="text-sm text-[#212121]">{t('last30Days')}</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                checked={!!filters.dateRange.start || !!filters.dateRange.end}
+                onChange={() => {}}
+                className="w-4 h-4 text-[#005EB8]"
+              />
+              <span className="text-sm text-[#212121]">{t('custom')}</span>
+            </label>
 
-      {/* 概率区间 */}
-      <div>
-        <p className="text-sm font-medium text-[#212121] mb-2">{t('probRange')}</p>
-        <div className="space-y-1.5">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              checked={filters.probabilityRange.min === 0 && filters.probabilityRange.max === 100}
-              onChange={() => setProbRange(0, 100)}
-              className="w-4 h-4 text-[#005EB8]"
-            />
-            <span className="text-sm text-[#212121]">{t('all')}</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              checked={filters.probabilityRange.min === 0 && filters.probabilityRange.max === 20}
-              onChange={() => setProbRange(0, 20)}
-              className="w-4 h-4 text-[#005EB8]"
-            />
-            <span className="text-sm text-[#212121]">{t('prob0')}</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              checked={filters.probabilityRange.min === 20 && filters.probabilityRange.max === 40}
-              onChange={() => setProbRange(20, 40)}
-              className="w-4 h-4 text-[#005EB8]"
-            />
-            <span className="text-sm text-[#212121]">{t('prob20')}</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              checked={filters.probabilityRange.min === 40 && filters.probabilityRange.max === 60}
-              onChange={() => setProbRange(40, 60)}
-              className="w-4 h-4 text-[#005EB8]"
-            />
-            <span className="text-sm text-[#212121]">{t('prob40')}</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              checked={filters.probabilityRange.min === 60 && filters.probabilityRange.max === 100}
-              onChange={() => setProbRange(60, 100)}
-              className="w-4 h-4 text-[#005EB8]"
-            />
-            <span className="text-sm text-[#212121]">{t('prob60')}</span>
-          </label>
+            {/* 自定义日期输入 */}
+            {(filters.dateRange.start || filters.dateRange.end || (!filters.dateRange.preset && filters.dateRange.start === undefined && filters.dateRange.end === undefined)) && (
+              <div className="ml-6 space-y-1.5 pt-1">
+                <input
+                  type="date"
+                  value={filters.dateRange.start || ''}
+                  onChange={(e) => setCustomDateRange(e.target.value, filters.dateRange.end)}
+                  className="w-full text-xs px-2 py-1 border border-[#E0E0E0] rounded focus:outline-none focus:border-[#005EB8]"
+                />
+                <p className="text-xs text-[#757575] text-center">{t('to')}</p>
+                <input
+                  type="date"
+                  value={filters.dateRange.end || ''}
+                  onChange={(e) => setCustomDateRange(filters.dateRange.start, e.target.value)}
+                  className="w-full text-xs px-2 py-1 border border-[#E0E0E0] rounded focus:outline-none focus:border-[#005EB8]"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* 概率区间 */}
+        <div>
+          <p className="text-sm font-medium text-[#212121] mb-2">{t('probRange')}</p>
+          <div className="space-y-1.5">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                checked={filters.probabilityRange.min === 0 && filters.probabilityRange.max === 100}
+                onChange={() => setProbRange(0, 100)}
+                className="w-4 h-4 text-[#005EB8]"
+              />
+              <span className="text-sm text-[#212121]">{t('all')}</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                checked={filters.probabilityRange.min === 0 && filters.probabilityRange.max === 20}
+                onChange={() => setProbRange(0, 20)}
+                className="w-4 h-4 text-[#005EB8]"
+              />
+              <span className="text-sm text-[#212121]">{t('prob0')}</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                checked={filters.probabilityRange.min === 20 && filters.probabilityRange.max === 40}
+                onChange={() => setProbRange(20, 40)}
+                className="w-4 h-4 text-[#005EB8]"
+              />
+              <span className="text-sm text-[#212121]">{t('prob20')}</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                checked={filters.probabilityRange.min === 40 && filters.probabilityRange.max === 60}
+                onChange={() => setProbRange(40, 60)}
+                className="w-4 h-4 text-[#005EB8]"
+              />
+              <span className="text-sm text-[#212121]">{t('prob40')}</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                checked={filters.probabilityRange.min === 60 && filters.probabilityRange.max === 100}
+                onChange={() => setProbRange(60, 100)}
+                className="w-4 h-4 text-[#005EB8]"
+              />
+              <span className="text-sm text-[#212121]">{t('prob60')}</span>
+            </label>
+          </div>
         </div>
       </div>
     </div>

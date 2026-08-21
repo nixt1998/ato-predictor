@@ -18,6 +18,16 @@ const sortOptions: SortOption[] = [
   'prob-asc',
 ]
 
+// 排序选项到翻译键的映射
+const sortLabelMap: Record<SortOption, string> = {
+  'date-newest': 'dateNewest',
+  'date-oldest': 'dateOldest',
+  'risk-desc': 'riskDesc',
+  'risk-asc': 'riskAsc',
+  'prob-desc': 'probDesc',
+  'prob-asc': 'probAsc',
+}
+
 /**
  * 排序下拉选择器
  */
@@ -34,7 +44,7 @@ export default function SortDropdown({ sortBy, onChange }: SortDropdownProps) {
       >
         {sortOptions.map((option) => (
           <option key={option} value={option}>
-            {t(option.replace(/-/g, '_') as any)}
+            {t(sortLabelMap[option])}
           </option>
         ))}
       </select>
