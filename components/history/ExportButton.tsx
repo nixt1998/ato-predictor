@@ -333,11 +333,3 @@ export default function ExportButton({ allRecords, selectedRecords }: ExportButt
     </>
   )
 }
-            <FileText className="w-4 h-4 text-red-600" />
-            {t('exportAllPDF')} ({records.length})
-          </button>
-        </div>
-      )}
-    </div>
-  )
-}
