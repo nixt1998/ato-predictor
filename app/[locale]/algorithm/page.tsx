@@ -80,7 +80,7 @@ export default function AlgorithmPage() {
                   <p className="text-sm text-[#757575]">{t('performance.auc')}</p>
                 </div>
                 <div className="text-center p-4 bg-gradient-to-br from-[#F0F7FF] to-white rounded-lg">
-                  <p className="text-3xl font-bold text-[#005EB8] mb-1">84.8%</p>
+                  <p className="text-3xl font-bold text-[#005EB8] mb-1">87.3%</p>
                   <p className="text-sm text-[#757575]">{t('performance.accuracy')}</p>
                 </div>
                 <div className="text-center p-4 bg-gradient-to-br from-[#F0F7FF] to-white rounded-lg">

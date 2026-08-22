@@ -392,7 +392,7 @@
       "accuracy": "Accuracy",
       "sensitivity": "Sensitivity",
       "specificity": "Specificity",
-      "note": "Metrics are from the independent test set (ROC-AUC=0.909, 95% CI: 0.861–0.957)."
+      "note": "All metrics are from the independent test set at the selected operating threshold (ROC-AUC=0.909, 95% CI: 0.861–0.957)."
     },
     "shap": {
       "title": "SHAP Interpretability",
