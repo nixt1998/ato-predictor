@@ -9,6 +9,7 @@ import {
   getStorageData,
   deleteRecord,
   deleteRecords,
+  clearAllRecords,
   togglePin,
   renameRecord,
   searchRecords,
@@ -152,7 +153,8 @@ export default function HistoryPage() {
 
   // 清空全部记录
   const handleClearAll = () => {
-    localStorage.removeItem('ato-prediction-history')
+    clearAllRecords()
+    setSelectedIds(new Set())
     setClearAllConfirm(false)
     reload()
   }
