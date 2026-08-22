@@ -14,7 +14,7 @@ const OUT_DIR = path.resolve(__dirname, '../public/templates')
 
 // ── 分类选项常量（中/英）──────────────────────────────────────────
 const YESNO = { zh: ['Yes', 'No'], en: ['Yes', 'No'] }
-const SEX = { zh: ['Male', 'Female'], en: ['Male', 'Female'] }
+const SEX = { zh: ['Male', 'Female', 'Intersex', 'Prefer not to say', 'Unknown'], en: ['Male', 'Female', 'Intersex', 'Prefer not to say', 'Unknown'] }
 
 // ── 字段定义（按确认的列顺序）────────────────────────────────────
 const F = (mod, key, zh, en, unit, type, range, ex, opt) => ({ mod, key, zh, en, unit, type, range, ex, opt })
@@ -24,6 +24,8 @@ const FIELDS = [
   F('①标识与元数据', 'subject_id', '受试者去标识编号', 'De-identified Subject ID', '', 'text', '自行编号，如 S001', 'S001'),
   F('①标识与元数据', 'center', '来源中心/医院代码', 'Center / Hospital Code', '', 'text', '中心代码，如 H01', 'H01'),
   F('①标识与元数据', 'record_date', '数据记录日期', 'Record Date', '', 'date', 'YYYY-MM-DD', '2026-03-15'),
+  F('①标识与元数据', 'admission_date', '入院日期', 'Admission Date', '', 'date', 'YYYY-MM-DD', '2026-03-10'),
+  F('①标识与元数据', 'discharge_date', '出院日期', 'Discharge Date', '', 'date', 'YYYY-MM-DD', '2026-04-05'),
 
   // ② 核心输入变量（模型必需）
   F('②核心输入', 'iAs', '无机砷', 'Inorganic Arsenic (iAs)', 'ng/mL', 'number', '≥0', '14'),
@@ -35,14 +37,14 @@ const FIELDS = [
   F('③结局', 'cardiotoxicity', '心毒性结局', 'Cardiotoxicity Outcome', '', 'cat', 'Yes / No', 'No', YESNO),
   F('③结局', 'cardiotox_type', '心毒性类型', 'Cardiotoxicity Type', '', 'cat', '可自定义', '', { zh: ['QT延长', '心律失常', '心力衰竭', '心肌损伤', '其他'], en: ['QT prolongation', 'Arrhythmia', 'Heart failure', 'Myocardial injury', 'Other'] }),
   F('③结局', 'onset_day', '发生时点', 'Onset Day', '天', 'number', '≥0', ''),
-  F('③结局', 'CTCAE_grade', '严重程度分级(CTCAE)', 'Severity Grade (CTCAE)', '', 'cat', '1-5', '', { zh: ['1', '2', '3', '4', '5'], en: ['1', '2', '3', '4', '5'] }),
-  F('③结局', 'outcome', '转归', 'Outcome', '', 'cat', '恢复/持续/死亡/未知', '', { zh: ['恢复', '持续', '死亡', '未知'], en: ['Recovered', 'Persistent', 'Death', 'Unknown'] }),
+  F('③结局', 'CTCAE_grade', '严重程度分级(CTCAE v6.0)', 'Severity Grade (CTCAE v6.0)', '', 'cat', '1-5', '', { zh: ['1', '2', '3', '4', '5'], en: ['1', '2', '3', '4', '5'] }),
+  F('③结局', 'outcome', '转归（心毒性结局转归）', 'Outcome (Cardiotoxicity)', '', 'cat', '恢复/持续/死亡/未知', '', { zh: ['恢复', '持续', '死亡', '未知'], en: ['Recovered', 'Persistent', 'Death', 'Unknown'] }),
   F('③结局', 'treatment_interrupted', '是否中断治疗', 'Treatment Interrupted', '', 'cat', 'Yes / No', 'No', YESNO),
 
   // ④ 人口学
-  F('④人口学', 'sex', '性别', 'Sex', '', 'cat', 'Male / Female', 'Male', SEX),
+  F('④人口学', 'sex', '性别 (NIH标准)', 'Sex (NIH standard)', '', 'cat', 'Male/Female/Intersex/Prefer not to say/Unknown', 'Male', SEX),
   F('④人口学', 'age', '年龄', 'Age', '岁', 'number', '0-120', '45'),
-  F('④人口学', 'ethnicity', '民族', 'Ethnicity', '', 'text', '开放文本', '汉族'),
+  F('④人口学', 'ethnicity', '民族', 'Ethnicity', '', 'text', '开放文本', 'Han'),
   F('④人口学', 'height', '身高', 'Height', 'cm', 'number', '30-250', '170'),
   F('④人口学', 'weight', '体重', 'Weight', 'kg', 'number', '2-300', '65'),
 
@@ -178,48 +180,80 @@ async function build(lang) {
   }
   put(zh ? 'ATO 心脏毒性研究 · 数据采集模板' : 'ATO Cardiotoxicity Research · Data Collection Template', { bold: true, size: 16, color: 'FF005EB8', h: 26 })
   put('')
+
+  // Sheet结构说明
   if (zh) {
-    put('一、填写规则', { bold: true, size: 13, color: 'FF005EB8' })
-    put('1. 本表用于科研数据采集，所有字段均为选填；请尽量填写，以提高数据分析价值。')
-    put('2. 一行对应一位患者。请在「数据」工作表中，从第 4 行开始录入（第 3 行为示例，提交前请删除）。')
-    put('3. 无数据或未检测的项目，请留空或填写 NA。')
-    put('4. 数值请只填阿拉伯数字，不要带单位（单位已在列标题中标注）。')
-    put('5. 分类字段可从下拉菜单选择，也允许手动输入下拉以外的值（不会被拒绝）。')
-    put('6. 派生指标（如 tAs 总砷、BMI 等）无需填写，系统将自动计算。')
+    put('本模板包含三个工作表：', { bold: true, size: 12, color: 'FF212121' })
+    put('  • Sheet 1「填写说明」— 数据采集规范、隐私保护声明、知情同意说明')
+    put('  • Sheet 2「数据」— 一行一患者的数据录入区（从第4行开始填写）')
+    put('  • Sheet 3「数据字典」— 每个变量的完整定义、单位、取值范围、示例')
     put('')
-    put('二、隐私与伦理声明', { bold: true, size: 13, color: 'FF005EB8' })
-    put('• 请勿填写姓名、身份证号、住院号、住址、电话等任何可识别患者身份的信息。', { color: 'FFDA291C' })
-    put('• subject_id 请使用去标识化编号（如 S001），对照表由您自行保管，不要上传。')
-    put('• 本数据仅用于三氧化二砷（ATO）心脏毒性风险模型研究，不作其他用途。')
+  } else {
+    put('This template contains three sheets:', { bold: true, size: 12, color: 'FF212121' })
+    put('  • Sheet 1 "Instructions" — Data collection guidelines, privacy policy, informed consent')
+    put('  • Sheet 2 "Data" — Patient data entry area (one row per patient, start from row 4)')
+    put('  • Sheet 3 "Dictionary" — Full definitions, units, ranges, and examples for each variable')
     put('')
-    put('三、提交者联系方式（可选，仅用于数据回访/质疑核对，非必填）', { bold: true, size: 13, color: 'FF005EB8' })
+  }
+
+  if (zh) {
+    put('一、数据采集规范', { bold: true, size: 13, color: 'FF005EB8' })
+    put('1.1 适用范围：本模板用于三氧化二砷（ATO）心脏毒性风险模型的多中心科研数据收集。')
+    put('1.2 字段性质：所有字段均为选填项，研究者可根据实际数据可得性填写；数据越完整，模型分析的精度和可靠性越高。')
+    put('1.3 录入格式：一行对应一位受试者。请在「数据」工作表中从第4行起录入（第3行为示例数据，以红色字体标注，提交前请整行删除）。')
+    put('1.4 缺失值处理：无数据或未检测的项目，请留空或填写 NA（Not Available）。')
+    put('1.5 数值录入规范：数值字段请仅填写阿拉伯数字，不要附带单位（单位已在列标题中标注）。')
+    put('1.6 分类字段：提供下拉菜单的字段，可从列表选择，或删除下拉值后手动输入自定义内容（系统不会拦截下拉列表外的值）。例如"Other"可删除后改填具体情况。')
+    put('')
+    put('二、隐私保护与知情同意（严格遵守）', { bold: true, size: 13, color: 'FFDA291C' })
+    put('2.1 去标识化要求：', { bold: true })
+    put('     严禁填写姓名、身份证号、住院号、家庭住址、联系电话、电子邮箱等任何可直接或间接识别患者身份的信息。', { color: 'FFDA291C' })
+    put('     如发生患者隐私泄露，研究团队与数据提交者将共同承担伦理与法律责任。', { color: 'FFDA291C' })
+    put('     subject_id（受试者编号）必须使用去标识化编号（如 S001、P-2023-001），编号与真实身份的对照表由数据提交者自行保管，不得上传或共享。')
+    put('2.2 知情同意：', { bold: true })
+    put('     提交数据前，请确认已获得受试者或其法定代理人的书面知情同意，并经所在机构伦理委员会批准（如适用）。')
+    put('     知情同意书应明确说明数据将用于ATO心脏毒性风险模型研究，数据去标识化后用于科研分析，不作其他用途。')
+    put('2.3 数据安全：', { bold: true })
+    put('     提交的数据将由研究团队进行加密存储和权限管理，仅用于科研分析，不对外公开原始数据。')
+    put('     研究成果发表时，仅呈现汇总统计结果，不涉及个体数据或中心特异性信息。')
+    put('')
+    put('三、数据提交者联系方式（选填，仅用于数据质量核查与回访）', { bold: true, size: 13, color: 'FF005EB8' })
     put('姓名 / 单位：__________________________', { fill: 'FFF0F7FF', h: 22 })
     put('邮箱 / 电话：__________________________', { fill: 'FFF0F7FF', h: 22 })
     put('')
-    put('四、字段详细定义（含单位、取值范围、示例）请见「数据字典」工作表。', { bold: true })
-    put('')
-    put('联系研究团队：Haixin@hrmu.edu.cn', { color: 'FF757575' })
+    put('四、技术支持与伦理咨询', { bold: true, size: 13, color: 'FF005EB8' })
+    put('如对本模板、数据采集规范或隐私保护有任何疑问，请联系研究团队：')
+    put('Email: Haixin@hrmu.edu.cn', { color: 'FF757575' })
+    put('本研究已通过相关伦理审查（如适用），具体信息请联系上述邮箱获取。', { color: 'FF757575' })
   } else {
-    put('1. Instructions', { bold: true, size: 13, color: 'FF005EB8' })
-    put('1. This template collects research data. All fields are OPTIONAL; please fill in as much as possible.')
-    put('2. One row = one patient. In the "Data" sheet, start entering from row 4 (row 3 is an example — delete before submitting).')
-    put('3. For missing items, leave blank or enter NA.')
-    put('4. For numeric fields, enter numbers only (units shown in column headers).')
-    put('5. Categorical fields offer a dropdown, but values outside the list are accepted (not rejected).')
-    put('6. Derived metrics (e.g. tAs, BMI) need NOT be filled — the system computes them automatically.')
+    put('1. Data Collection Guidelines', { bold: true, size: 13, color: 'FF005EB8' })
+    put('1.1 Scope: This template is designed for multi-center research data collection for arsenic trioxide (ATO) cardiotoxicity risk modeling.')
+    put('1.2 Field nature: All fields are OPTIONAL. Researchers may fill based on actual data availability; more complete data improves model precision and reliability.')
+    put('1.3 Entry format: One row per subject. Enter data starting from row 4 in the "Data" sheet (row 3 is example data marked in red font; delete the entire row before submission).')
+    put('1.4 Missing values: For unavailable or untested items, leave blank or enter NA (Not Available).')
+    put('1.5 Numeric entry: For numeric fields, enter numbers only without units (units are indicated in column headers).')
+    put('1.6 Categorical fields: Fields with dropdown menus allow selection from the list or manual entry of custom values (the system will not reject values outside the dropdown). For example, "Other" can be deleted and replaced with specific details.')
     put('')
-    put('2. Privacy & Ethics', { bold: true, size: 13, color: 'FF005EB8' })
-    put('• Do NOT enter names, IDs, addresses, phones, or any patient-identifiable information.', { color: 'FFDA291C' })
-    put('• Use de-identified subject_id (e.g. S001); keep the mapping table yourself.')
-    put('• Data is used solely for ATO cardiotoxicity risk-model research.')
+    put('2. Privacy Protection & Informed Consent (Strictly Required)', { bold: true, size: 13, color: 'FFDA291C' })
+    put('2.1 De-identification:', { bold: true })
+    put('     It is STRICTLY PROHIBITED to enter names, ID numbers, medical record numbers, home addresses, phone numbers, emails, or any information that directly or indirectly identifies patients.', { color: 'FFDA291C' })
+    put('     In the event of patient privacy breach, both the research team and data submitter will bear joint ethical and legal liability.', { color: 'FFDA291C' })
+    put('     subject_id must use de-identified codes (e.g., S001, P-2023-001). The mapping table linking codes to real identities must be kept by the data submitter and NOT uploaded or shared.')
+    put('2.2 Informed consent:', { bold: true })
+    put('     Before data submission, confirm that written informed consent has been obtained from subjects or their legal representatives, and approved by the institutional ethics committee (if applicable).')
+    put('     Informed consent forms should clearly state that data will be used for ATO cardiotoxicity risk model research, de-identified for scientific analysis, and not used for other purposes.')
+    put('2.3 Data security:', { bold: true })
+    put('     Submitted data will be encrypted and access-controlled by the research team, used solely for scientific analysis, and raw data will not be publicly disclosed.')
+    put('     When research findings are published, only aggregate statistical results will be presented, without individual data or center-specific information.')
     put('')
-    put('3. Submitter Contact (optional — for data follow-up only)', { bold: true, size: 13, color: 'FF005EB8' })
+    put('3. Submitter Contact Information (Optional, for data quality verification and follow-up only)', { bold: true, size: 13, color: 'FF005EB8' })
     put('Name / Institution: __________________________', { fill: 'FFF0F7FF', h: 22 })
     put('Email / Phone: __________________________', { fill: 'FFF0F7FF', h: 22 })
     put('')
-    put('4. See "Dictionary" sheet for full field definitions.', { bold: true })
-    put('')
-    put('Contact: Haixin@hrmu.edu.cn', { color: 'FF757575' })
+    put('4. Technical Support & Ethics Consultation', { bold: true, size: 13, color: 'FF005EB8' })
+    put('For questions regarding this template, data collection guidelines, or privacy protection, please contact the research team:')
+    put('Email: Haixin@hrmu.edu.cn', { color: 'FF757575' })
+    put('This study has undergone relevant ethics review (if applicable). For details, please contact the above email.', { color: 'FF757575' })
   }
 
   // ===== Sheet2 数据 =====
@@ -235,7 +269,7 @@ async function build(lang) {
     // 行1：变量名
     const kc = keyRow.getCell(col)
     kc.value = f.key
-    kc.font = { bold: true, color: { argb: C_HEADER_TXT }, size: 10 }
+    kc.font = { bold: true, color: { argb: C_HEADER_TXT }, size: 10, name: zh ? undefined : 'Times New Roman' }
     kc.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: C_HEADER } }
     kc.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true }
 
@@ -243,15 +277,15 @@ async function build(lang) {
     const lc = labelRow.getCell(col)
     const label = zh ? f.zh : f.en
     lc.value = f.unit ? `${label}\n(${f.unit})` : label
-    lc.font = { size: 10, color: { argb: 'FF212121' } }
+    lc.font = { size: 10, color: { argb: 'FF212121' }, name: zh ? undefined : 'Times New Roman' }
     lc.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true }
     const cf = colFill(f.mod)
     lc.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: cf || C_LABEL } }
 
-    // 行3：示例
+    // 行3：示例（红色字体）
     const ec = exRow.getCell(col)
     ec.value = f.ex || ''
-    ec.font = { italic: true, size: 10, color: { argb: 'FF757575' } }
+    ec.font = { italic: true, size: 10, color: { argb: 'FFDA291C' }, name: zh ? undefined : 'Times New Roman' }
     ec.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: C_EXAMPLE } }
     ec.alignment = { horizontal: 'center', vertical: 'middle' }
 
@@ -273,7 +307,7 @@ async function build(lang) {
   keyRow.height = 20
   labelRow.height = 34
   exRow.height = 18
-  exRow.getCell(1).note = zh ? '这是示例行，提交前请整行删���' : 'Example row — delete before submitting'
+  exRow.getCell(1).note = zh ? '⚠️ 这是示例行（红色字体），提交前请整行删除' : '⚠️ Example row (red font) — delete entire row before submission'
   s2.views = [{ state: 'frozen', xSplit: 1, ySplit: 3 }]
 
   // ===== Sheet3 数据字典 =====
@@ -304,7 +338,7 @@ async function build(lang) {
   FIELDS.forEach((f) => {
     let range = f.range || ''
     if (f.type === 'cat' && f.opt) range = (zh ? f.opt.zh : f.opt.en).join(' / ')
-    s3.addRow({
+    const row = s3.addRow({
       mod: f.mod,
       key: f.key,
       label: zh ? f.zh : f.en,
@@ -313,9 +347,15 @@ async function build(lang) {
       range,
       ex: f.ex || '',
     })
+    // 为英文版数据字典设置Times New Roman字体
+    if (!zh) {
+      row.eachCell((cell) => {
+        cell.font = { ...(cell.font || {}), name: 'Times New Roman' }
+      })
+    }
   })
   const h3 = s3.getRow(1)
-  h3.font = { bold: true, color: { argb: C_HEADER_TXT } }
+  h3.font = { bold: true, color: { argb: C_HEADER_TXT }, name: zh ? undefined : 'Times New Roman' }
   h3.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: C_HEADER } }
   h3.height = 20
   s3.autoFilter = { from: { row: 1, column: 1 }, to: { row: 1, column: dictCols.length } }
