@@ -17,8 +17,8 @@ const OUT_DIR = path.resolve(__dirname, '../public/templates')
 const L = (v, zh) => (v && typeof v === 'object' && !Array.isArray(v)) ? (zh ? v.zh : v.en) : v
 
 // ── 分类选项（数组按语言分；性别用国际标准英文编码，两版一致）──────
-const YESNO = { zh: ['Yes', 'No'], en: ['Yes', 'No'] }
-const SEX = { zh: ['Male', 'Female', 'Intersex', 'Prefer not to say', 'Unknown'], en: ['Male', 'Female', 'Intersex', 'Prefer not to say', 'Unknown'] }
+const YESNO = { zh: ['是', '否'], en: ['Yes', 'No'] }
+const SEX = { zh: ['男', '女', '间性', '不愿透露', '未知'], en: ['Male', 'Female', 'Intersex', 'Prefer not to say', 'Unknown'] }
 
 // ── 模块名（双语）────────────────────────────────────────────────
 const MOD = {
@@ -56,27 +56,27 @@ const FIELDS = [
   F(MOD.b, 'iAs', '无机砷', 'Inorganic Arsenic (iAs)', 'ng/mL', 'number', '≥0', '14'),
   F(MOD.b, 'MMA', '一甲基砷酸', 'Monomethylarsonic Acid (MMA)', 'ng/mL', 'number', '≥0', '16'),
   F(MOD.b, 'DMA', '二甲基砷酸', 'Dimethylarsinic Acid (DMA)', 'ng/mL', 'number', '≥0', '12'),
-  F(MOD.b, 'CT_drug', '合并心毒性药物', 'Concomitant Cardiotoxic Drug', '', 'cat', 'Yes / No', 'No', YESNO),
+  F(MOD.b, 'CT_drug', '合并心毒性药物', 'Concomitant Cardiotoxic Drug', '', 'cat', 'Yes / No', { zh: '否', en: 'No' }, YESNO),
 
   // ③ 结局（放在核心输入后）
-  F(MOD.c, 'cardiotoxicity', '心毒性结局', 'Cardiotoxicity Outcome', '', 'cat', 'Yes / No', 'No', YESNO),
+  F(MOD.c, 'cardiotoxicity', '心毒性结局', 'Cardiotoxicity Outcome', '', 'cat', 'Yes / No', { zh: '否', en: 'No' }, YESNO),
   F(MOD.c, 'cardiotox_type', '心毒性结局类型', 'Cardiotoxicity Type', '', 'cat', { zh: '可自定义', en: 'Editable' }, { zh: 'QT延长', en: 'QT prolongation' }, { zh: ['QT延长', '心律失常', '心力衰竭', '心肌损伤', '其他'], en: ['QT prolongation', 'Arrhythmia', 'Heart failure', 'Myocardial injury', 'Other'] }),
   F(MOD.c, 'onset_day', '心毒性发生时点', 'Onset Day', { zh: '天', en: 'days' }, 'number', '≥0', '14'),
   F(MOD.c, 'CTCAE_grade', '严重程度分级(CTCAE v6.0)', 'Severity Grade (CTCAE v6.0)', '', 'cat', '1-5', '2', { zh: ['1', '2', '3', '4', '5'], en: ['1', '2', '3', '4', '5'] }),
   F(MOD.c, 'outcome', '心毒性结局转归', 'Cardiotoxicity Outcome Status', '', 'cat', { zh: '恢复/持续/死亡/未知', en: 'Recovered/Persistent/Death/Unknown' }, { zh: '恢复', en: 'Recovered' }, { zh: ['恢复', '持续', '死亡', '未知'], en: ['Recovered', 'Persistent', 'Death', 'Unknown'] }),
-  F(MOD.c, 'treatment_interrupted', '是否因心毒性中断治疗', 'Treatment Interrupted', '', 'cat', 'Yes / No', 'No', YESNO),
+  F(MOD.c, 'treatment_interrupted', '是否因心毒性中断治疗', 'Treatment Interrupted', '', 'cat', 'Yes / No', { zh: '否', en: 'No' }, YESNO),
 
   // ④ 人口学
-  F(MOD.d, 'sex', '性别 (NIH标准)', 'Sex (NIH standard)', '', 'cat', 'Male/Female/Intersex/Prefer not to say/Unknown', 'Male', SEX),
+  F(MOD.d, 'sex', '性别 (NIH标准)', 'Sex (NIH standard)', '', 'cat', { zh: '男/女/间性/不愿透露/未知', en: 'Male/Female/Intersex/Prefer not to say/Unknown' }, { zh: '男', en: 'Male' }, SEX),
   F(MOD.d, 'age', '年龄', 'Age', { zh: '岁', en: 'years' }, 'number', '0-120', '45'),
-  F(MOD.d, 'ethnicity', '民族', 'Ethnicity', '', 'text', { zh: '开放文本', en: 'Free text' }, 'Han'),
+  F(MOD.d, 'ethnicity', '民族', 'Ethnicity', '', 'text', { zh: '开放文本', en: 'Free text' }, { zh: '汉族', en: 'Han' }),
   F(MOD.d, 'height', '身高', 'Height', 'cm', 'number', '30-250', '170'),
   F(MOD.d, 'weight', '体重', 'Weight', 'kg', 'number', '2-300', '65'),
 
   // ⑤ 生活方式
-  F(MOD.e, 'smoking', '吸烟史', 'Smoking History', '', 'cat', 'Yes / No', 'No', YESNO),
+  F(MOD.e, 'smoking', '吸烟史', 'Smoking History', '', 'cat', 'Yes / No', { zh: '否', en: 'No' }, YESNO),
   F(MOD.e, 'smoking_pack_years', '吸烟包年', 'Smoking Pack-years', { zh: '包年', en: 'pack-years' }, 'number', '≥0', '20'),
-  F(MOD.e, 'alcohol', '饮酒史', 'Alcohol History', '', 'cat', 'Yes / No', 'No', YESNO),
+  F(MOD.e, 'alcohol', '饮酒史', 'Alcohol History', '', 'cat', 'Yes / No', { zh: '否', en: 'No' }, YESNO),
   F(MOD.e, 'alcohol_years', '饮酒年数', 'Alcohol Years', { zh: '年', en: 'years' }, 'number', '≥0', '10'),
 
   // ⑥ 原发病与ATO治疗
@@ -86,28 +86,28 @@ const FIELDS = [
   F(MOD.f, 'ATO_regimen', '治疗阶段', 'Treatment Phase', '', 'cat', { zh: '诱导/巩固/维持', en: 'Induction/Consolidation/Maintenance' }, { zh: '诱导', en: 'Induction' }, { zh: ['诱导', '巩固', '维持'], en: ['Induction', 'Consolidation', 'Maintenance'] }),
   F(MOD.f, 'treatment_days', '疗程天数', 'Treatment Days', { zh: '天', en: 'days' }, 'number', '≥0', '28'),
   F(MOD.f, 'cumulative_dose', '累积剂量', 'Cumulative Dose', 'mg', 'number', '≥0', '280'),
-  F(MOD.f, 'ATRA_combo', '联用全反式维甲酸', 'Combined with ATRA', '', 'cat', 'Yes / No', 'Yes', YESNO),
+  F(MOD.f, 'ATRA_combo', '联用全反式维甲酸', 'Combined with ATRA', '', 'cat', 'Yes / No', { zh: '是', en: 'Yes' }, YESNO),
 
   // ⑦ 合并用药
   F(MOD.g, 'ctdrug_name', '心毒性药物名称', 'Cardiotoxic Drug Name', '', 'text', { zh: 'CT_drug=Yes 时填写', en: 'Fill if CT_drug=Yes' }, { zh: '柔红霉素', en: 'Daunorubicin' }),
-  F(MOD.g, 'noncardiotoxic_drug', '合并非心毒性药物', 'Concomitant Non-cardiotoxic Drug', '', 'cat', 'Yes / No', 'No', YESNO),
+  F(MOD.g, 'noncardiotoxic_drug', '合并非心毒性药物', 'Concomitant Non-cardiotoxic Drug', '', 'cat', 'Yes / No', { zh: '否', en: 'No' }, YESNO),
   F(MOD.g, 'noncardiotoxic_drug_name', '非心毒性药物名称', 'Non-cardiotoxic Drug Name', '', 'text', { zh: '开放文本', en: 'Free text' }, { zh: '维生素C', en: 'Vitamin C' }),
-  F(MOD.g, 'qt_drug', '合并QT延长药物', 'Concomitant QT-prolonging Drug', '', 'cat', 'Yes / No', 'No', YESNO),
-  F(MOD.g, 'azole_antifungal', '唑类抗真菌药', 'Azole Antifungal', '', 'cat', 'Yes / No', 'No', YESNO),
-  F(MOD.g, 'diuretic', '利尿剂', 'Diuretic', '', 'cat', 'Yes / No', 'No', YESNO),
+  F(MOD.g, 'qt_drug', '合并QT延长药物', 'Concomitant QT-prolonging Drug', '', 'cat', 'Yes / No', { zh: '否', en: 'No' }, YESNO),
+  F(MOD.g, 'azole_antifungal', '唑类抗真菌药', 'Azole Antifungal', '', 'cat', 'Yes / No', { zh: '否', en: 'No' }, YESNO),
+  F(MOD.g, 'diuretic', '利尿剂', 'Diuretic', '', 'cat', 'Yes / No', { zh: '否', en: 'No' }, YESNO),
 
   // ⑧ 既往史与合并症
-  F(MOD.h, 'diabetes', '糖尿病', 'Diabetes', '', 'cat', 'Yes / No', 'No', YESNO),
-  F(MOD.h, 'hypertension', '高血压', 'Hypertension', '', 'cat', 'Yes / No', 'No', YESNO),
-  F(MOD.h, 'hyperlipidemia', '高血脂', 'Hyperlipidemia', '', 'cat', 'Yes / No', 'No', YESNO),
-  F(MOD.h, 'CHD', '冠心病', 'Coronary Heart Disease', '', 'cat', 'Yes / No', 'No', YESNO),
-  F(MOD.h, 'heart_failure', '心力衰竭史', 'Heart Failure History', '', 'cat', 'Yes / No', 'No', YESNO),
-  F(MOD.h, 'arrhythmia_history', '心律失常史', 'Arrhythmia History', '', 'cat', 'Yes / No', 'No', YESNO),
-  F(MOD.h, 'prior_anthracycline', '既往蒽环类/胸部放疗', 'Prior Anthracycline / Chest RT', '', 'cat', 'Yes / No', 'No', YESNO),
-  F(MOD.h, 'family_sudden_death', '心脏病/猝死家族史', 'Family History of SCD', '', 'cat', 'Yes / No', 'No', YESNO),
-  F(MOD.h, 'renal_disease', '肾病史', 'Renal Disease', '', 'cat', 'Yes / No', 'No', YESNO),
-  F(MOD.h, 'liver_disease', '肝病史', 'Liver Disease', '', 'cat', 'Yes / No', 'No', YESNO),
-  F(MOD.h, 'thyroid_disease', '甲状腺疾病', 'Thyroid Disease', '', 'cat', 'Yes / No', 'No', YESNO),
+  F(MOD.h, 'diabetes', '糖尿病', 'Diabetes', '', 'cat', 'Yes / No', { zh: '否', en: 'No' }, YESNO),
+  F(MOD.h, 'hypertension', '高血压', 'Hypertension', '', 'cat', 'Yes / No', { zh: '否', en: 'No' }, YESNO),
+  F(MOD.h, 'hyperlipidemia', '高血脂', 'Hyperlipidemia', '', 'cat', 'Yes / No', { zh: '否', en: 'No' }, YESNO),
+  F(MOD.h, 'CHD', '冠心病', 'Coronary Heart Disease', '', 'cat', 'Yes / No', { zh: '否', en: 'No' }, YESNO),
+  F(MOD.h, 'heart_failure', '心力衰竭史', 'Heart Failure History', '', 'cat', 'Yes / No', { zh: '否', en: 'No' }, YESNO),
+  F(MOD.h, 'arrhythmia_history', '心律失常史', 'Arrhythmia History', '', 'cat', 'Yes / No', { zh: '否', en: 'No' }, YESNO),
+  F(MOD.h, 'prior_anthracycline', '既往蒽环类/胸部放疗', 'Prior Anthracycline / Chest RT', '', 'cat', 'Yes / No', { zh: '否', en: 'No' }, YESNO),
+  F(MOD.h, 'family_sudden_death', '心脏病/猝死家族史', 'Family History of SCD', '', 'cat', 'Yes / No', { zh: '否', en: 'No' }, YESNO),
+  F(MOD.h, 'renal_disease', '肾病史', 'Renal Disease', '', 'cat', 'Yes / No', { zh: '否', en: 'No' }, YESNO),
+  F(MOD.h, 'liver_disease', '肝病史', 'Liver Disease', '', 'cat', 'Yes / No', { zh: '否', en: 'No' }, YESNO),
+  F(MOD.h, 'thyroid_disease', '甲状腺疾病', 'Thyroid Disease', '', 'cat', 'Yes / No', { zh: '否', en: 'No' }, YESNO),
 
   // ⑨ 心脏基线
   F(MOD.i, 'baseline_QTc', '基线QTc', 'Baseline QTc', 'ms', 'number', '250-600', '420'),
@@ -297,8 +297,8 @@ async function build(lang) {
   // ===== Sheet3 数据字典 =====
   const s3 = wb.addWorksheet(zh ? '数据字典' : 'Dictionary')
   const heads = zh
-    ? ['模块', '变量名', '标签', '单位', '类型', '取值范围', '示例']
-    : ['Module', 'Variable', 'Label', 'Unit', 'Type', 'Range', 'Example']
+    ? ['模块', '变量名', '标签', '单位', '类型', '参考范围', '示例']
+    : ['Module', 'Variable', 'Label', 'Unit', 'Type', 'Reference / Plausible Range', 'Example']
   const widths = zh ? [22, 24, 26, 12, 10, 34, 14] : [30, 24, 30, 12, 10, 40, 14]
   s3.columns = widths.map((w) => ({ width: w }))
   const hr = s3.addRow(heads)
@@ -308,6 +308,16 @@ async function build(lang) {
     c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: C_HEADER } }
     c.alignment = { vertical: 'middle', horizontal: 'center' }
   })
+  // 表头下方：参考范围为合理性提示、非强制限制
+  const noteRow = s3.addRow([
+    zh
+      ? '说明：「参考范围」仅为数据合理性提示，用于协助识别可能的录入误差，并非强制限制；临床真实值超出该范围时仍可如实填写。'
+      : 'Note: "Reference / Plausible Range" is a data-plausibility hint to help catch entry errors. It is NOT a hard limit; enter the true clinical value even if it falls outside this range.',
+  ])
+  s3.mergeCells(noteRow.number, 1, noteRow.number, heads.length)
+  noteRow.getCell(1).font = { name: fontName, italic: true, size: 9, color: { argb: C_GREY } }
+  noteRow.getCell(1).alignment = { wrapText: true, vertical: 'middle' }
+  noteRow.height = 26
   const typeLabel = (t) => zh
     ? ({ number: '数值', text: '文本', date: '日期', cat: '分类' }[t])
     : ({ number: 'Number', text: 'Text', date: 'Date', cat: 'Category' }[t])
@@ -326,7 +336,7 @@ async function build(lang) {
     row.eachCell((c) => { c.font = { name: fontName, size: 10 } })
   })
   s3.autoFilter = { from: { row: 1, column: 1 }, to: { row: 1, column: heads.length } }
-  s3.views = [{ state: 'frozen', ySplit: 1 }]
+  s3.views = [{ state: 'frozen', ySplit: 2 }]
 
   const outPath = path.join(OUT_DIR, `template-${lang}.xlsx`)
   await wb.xlsx.writeFile(outPath)
@@ -345,7 +355,7 @@ function buildInstructions({ zh, put, putRich }) {
     put('二、工作表结构（本文件含三张工作表）', { bold: true, size: 13, color: C_BLUE })
     put('1）说明：本页。阐明研究目的、填写规范、隐私与知情同意声明。', { fill: C_LABEL })
     put('2）数据：数据录入主表。一行对应一位患者；第 1 行为英文变量名，第 2 行为中文标签与单位，第 3 行为示例（红色斜体）。', { fill: C_LABEL })
-    put('3）数据字典：各变量的完整定义，含所属模块、变量名、标签、单位、数据类型、取值范围与示例，供填写时对照查阅。', { fill: C_LABEL })
+    put('3）数据字典：各变量的完整定义，含所属模块、变量名、标签、单位、数据类型、参考范围与示例，供填写时对照查阅。其中"参考范围"仅为合理性提示，并非强制限制。', { fill: C_LABEL })
     put('')
     put('三、填写规范', { bold: true, size: 13, color: C_BLUE })
     put('1. 所有字段均为选填。请在能力范围内尽量完整填写，缺失数据将降低该记录的分析价值。')
@@ -383,7 +393,7 @@ function buildInstructions({ zh, put, putRich }) {
     put('2. Workbook Structure (this file contains three worksheets)', { bold: true, size: 13, color: C_BLUE })
     put('1) Instructions: this sheet, describing the study objective, completion guidelines, and privacy/informed-consent statement.', { fill: C_LABEL })
     put('2) Data: the main data-entry sheet. Each row represents one patient; Row 1 gives English variable names, Row 2 gives labels with units, and Row 3 provides an example (red italic).', { fill: C_LABEL })
-    put('3) Dictionary: the complete definition of each variable, including its module, variable name, label, unit, data type, permissible range, and example, for reference during completion.', { fill: C_LABEL })
+    put('3) Dictionary: the complete definition of each variable, including its module, variable name, label, unit, data type, reference range, and example. The "Reference / Plausible Range" is a plausibility hint only, not a hard limit.', { fill: C_LABEL })
     put('')
     put('3. Completion Guidelines', { bold: true, size: 13, color: C_BLUE })
     put('1. All fields are OPTIONAL. Please complete as thoroughly as possible; missing data reduce the analytical value of the record.')
