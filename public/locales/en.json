@@ -591,6 +591,7 @@
     "subtitle": "Upload patient data to advance ATO cardiotoxicity research",
     "description": "Thank you for sharing your clinical data. Your contribution helps us continuously improve the prediction model and benefit more patients. All fields are optional — please fill in only what you have available.",
     "sections": {
+      "identity": "Identifiers & Metadata (Optional)",
       "basicInfo": "Patient Basic Information",
       "clinical": "Clinical Classification & Medication",
       "comorbidities": "Medical History & Comorbidities",
@@ -644,6 +645,10 @@
       }
     },
     "fields": {
+      "subjectId": "De-identified Subject ID",
+      "subjectIdNote": "Do not enter names, medical record numbers, or any identifiable information; use your own coding, e.g. S001",
+      "center": "Center / Site Code",
+      "centerNote": "Used to distinguish data sources in multi-center studies, e.g. H01",
       "sex": "Sex",
       "age": "Age (years)",
       "height": "Height (cm)",
@@ -692,6 +697,8 @@
       "classLow": "Low-risk (WBC ≤ 10×10⁹/L)"
     },
     "placeholders": {
+      "subjectId": "e.g. S001",
+      "center": "e.g. H01",
       "age": "e.g. 45",
       "height": "e.g. 165",
       "weight": "e.g. 65",

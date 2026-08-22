@@ -106,10 +106,11 @@ export async function POST(request: NextRequest) {
 
     // 生成 formdata.xlsx
     await createExcel(submissionDir, submissionId, dateTimeStr, fields, files)
+    const excelPath = path.join(submissionDir, 'formdata.xlsx')
 
     // 发送邮件通知（失败不影响提交成功）
     try {
-      await sendEmail(submissionId, dateTimeStr, fields, files)
+      await sendEmail(submissionId, dateTimeStr, fields, files, excelPath)
     } catch (emailErr) {
       console.warn('[Upload] 邮件发送失败（数据已保存至服务器）:', emailErr)
     }
@@ -154,6 +155,8 @@ async function createExcel(
     { header: '值 (Value)',    key: 'value', width: 35 },
   ]
   const rows: [string, string][] = [
+    ['受试者去标识编号 Subject ID',    fields.subjectId      || ''],
+    ['来源中心/中心代码 Center',       fields.center         || ''],
     ['性别 Sex',                      fields.sex            || ''],
     ['年龄 Age (岁)',                  fields.age            || ''],
     ['身高 Height (cm)',               fields.height         || ''],
@@ -206,7 +209,8 @@ async function sendEmail(
   submissionId: string,
   dateTimeStr: string,
   fields: Record<string, string>,
-  files: File[]
+  files: File[],
+  excelPath: string
 ) {
   const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, EMAIL_TO } = process.env
 
@@ -224,6 +228,8 @@ async function sendEmail(
 
   // 只列出非空字段
   const fieldMap: [string, string][] = [
+    ['受试者去标识编号 Subject ID', fields.subjectId],
+    ['来源中心/中心代码 Center',    fields.center],
     ['性别 Sex',             fields.sex],
     ['年龄 Age',             fields.age    ? `${fields.age} 岁`     : ''],
     ['身高 Height',          fields.height ? `${fields.height} cm`  : ''],
@@ -293,6 +299,12 @@ async function sendEmail(
     to:      EMAIL_TO,
     subject: `[ATO CardiTox] 新数据提交 | ${submissionId} | ${dateTimeStr.split(' ')[0]}`,
     html,
+    attachments: [
+      {
+        filename: 'formdata.xlsx',
+        path: excelPath,
+      },
+    ],
   })
   console.log(`[Upload] 邮件已发送至 ${EMAIL_TO}`)
 }

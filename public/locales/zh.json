@@ -591,6 +591,7 @@
     "subtitle": "上传患者数据，助力砷剂心脏毒性研究",
     "description": "感谢您愿意共享临床数据。您的贡献将帮助我们持续优化预测模型，造福更多患者。所有字段均为选填，可只填写您掌握的信息。",
     "sections": {
+      "identity": "标识与元数据（选填）",
       "basicInfo": "患者基础信息",
       "clinical": "临床分型与用药",
       "comorbidities": "既往史与合并症",
@@ -644,6 +645,10 @@
       }
     },
     "fields": {
+      "subjectId": "受试者去标识编号",
+      "subjectIdNote": "请勿填写姓名、住院号等可识别身份的信息；建议自行编号，如 S001",
+      "center": "来源中心/中心代码",
+      "centerNote": "多中心研究时用于区分数据来源，如 H01",
       "sex": "性别",
       "age": "年龄（岁）",
       "height": "身高（cm）",
@@ -692,6 +697,8 @@
       "classLow": "低危（WBC ≤ 10×10⁹/L）"
     },
     "placeholders": {
+      "subjectId": "例：S001",
+      "center": "例：H01",
       "age": "例：45",
       "height": "例：165",
       "weight": "例：65",

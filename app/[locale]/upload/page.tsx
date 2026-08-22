@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 
 // ─── 类型 ──────────────────────────────────────────────────────────────────
 interface FormState {
+  subjectId: string; center: string
   sex: string; age: string; height: string; weight: string; contactInfo: string
   class: string; dose: string; cardiotoxicDrug: string; cardiotoxicDrugName: string
   nonCardiotoxicDrug: string; nonCardiotoxicDrugName: string
@@ -23,6 +24,7 @@ interface FormState {
 }
 
 const INITIAL: FormState = {
+  subjectId: '', center: '',
   sex: 'NA', age: '', height: '', weight: '', contactInfo: '',
   class: 'NA', dose: '', cardiotoxicDrug: 'NA', cardiotoxicDrugName: '',
   nonCardiotoxicDrug: 'NA', nonCardiotoxicDrugName: '',
@@ -36,13 +38,13 @@ const INITIAL: FormState = {
 
 // ─── 子组件：文本输入框 ─────────────────────────────────────────────────────
 function FieldInput({
-  label, name, placeholder, value, onChange, type = 'text',
+  label, name, placeholder, value, onChange, type = 'text', note, className,
 }: {
   label: string; name: string; placeholder?: string
-  value: string; onChange: (v: string) => void; type?: string
+  value: string; onChange: (v: string) => void; type?: string; note?: string; className?: string
 }) {
   return (
-    <div className="space-y-1">
+    <div className={`space-y-1 ${className ?? ''}`}>
       <label className="block text-sm font-medium text-[#212121]">{label}</label>
       <input
         type={type}
@@ -53,6 +55,7 @@ function FieldInput({
           text-[#212121] placeholder:text-[#BDBDBD] focus:outline-none
           focus:ring-2 focus:ring-[#005EB8]/40 focus:border-[#005EB8] transition"
       />
+      {note && <p className="text-xs text-[#757575]">{note}</p>}
     </div>
   )
 }
@@ -531,6 +534,28 @@ export default function UploadPage() {
 
         <form onSubmit={handleSubmit} className="space-y-5">
 
+          {/* 0. 标识与元数据（选填） */}
+          <SectionCard title={t('sections.identity')}>
+            <FieldInput
+              label={t('fields.subjectId')}
+              name="subjectId"
+              placeholder={t('placeholders.subjectId')}
+              value={form.subjectId}
+              onChange={v => set('subjectId', v)}
+              note={t('fields.subjectIdNote')}
+              className="lg:col-span-2"
+            />
+            <FieldInput
+              label={t('fields.center')}
+              name="center"
+              placeholder={t('placeholders.center')}
+              value={form.center}
+              onChange={v => set('center', v)}
+              note={t('fields.centerNote')}
+              className="lg:col-span-2"
+            />
+          </SectionCard>
+
           {/* 1. 患者基础信息 */}
           <SectionCard title={t('sections.basicInfo')}>
             <FieldSelect label={t('fields.sex')} value={form.sex} onChange={v => set('sex', v)} options={sexOpts} />
@@ -806,7 +831,7 @@ export default function UploadPage() {
               type="button"
               onClick={handleReset}
               disabled={submitting}
-              className="h-11 px-6 rounded-xl border-2 border-[#E0E0E0] text-[#757575] font-medium
+              className="h-12 px-6 rounded-xl border-2 border-[#E0E0E0] text-[#757575] font-medium
                 text-sm hover:border-[#BDBDBD] hover:bg-[#F5F5F5] transition disabled:opacity-50"
             >
               {t('buttons.reset')}
@@ -814,7 +839,7 @@ export default function UploadPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 h-14 rounded-xl bg-gradient-to-r from-[#005EB8] to-[#0073D1] text-white
+              className="flex-1 h-12 rounded-xl bg-gradient-to-r from-[#005EB8] to-[#0073D1] text-white
                 font-bold text-lg shadow-lg hover:shadow-xl hover:opacity-95 transition
                 disabled:opacity-60 flex items-center justify-center gap-2"
             >
