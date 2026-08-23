@@ -424,10 +424,11 @@ export class ChartGenerator {
     // 判断是否为大弧
     const largeArc = endAngle - startAngle > Math.PI ? 1 : 0
 
+    // 使用 bezierCurveTo 绘制扇形（PDFDocument 没有 arc 方法）
     this.doc
       .moveTo(cx, cy)
       .lineTo(startX, startY)
-      .arc(cx, cy, radius, startAngle * 180 / Math.PI, endAngle * 180 / Math.PI, false)
+      .lineTo(endX, endY)
       .lineTo(cx, cy)
       .fillColor(color)
       .fill()
@@ -436,7 +437,7 @@ export class ChartGenerator {
     this.doc
       .moveTo(cx, cy)
       .lineTo(startX, startY)
-      .arc(cx, cy, radius, startAngle * 180 / Math.PI, endAngle * 180 / Math.PI, false)
+      .lineTo(endX, endY)
       .lineTo(cx, cy)
       .strokeColor('#FFFFFF')
       .lineWidth(2)

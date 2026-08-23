@@ -1,5 +1,4 @@
 import PDFDocument from 'pdfkit'
-import type { TOptions } from 'pdfkit'
 import { ChartGenerator, type SHAPValue, type ArsenicMetabolismData } from './ChartGenerator'
 
 /**
@@ -82,7 +81,7 @@ export class PDFGenerator {
     this.data = data
 
     // 创建 PDF 文档
-    const options: TOptions = {
+    const options: PDFKit.PDFDocumentOptions = {
       size: 'A4',
       margins: {
         top: this.MARGIN_TOP,

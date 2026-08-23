@@ -11,10 +11,10 @@ import path from 'path'
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { reportNumber: string } }
+  { params }: { params: Promise<{ reportNumber: string }> }
 ) {
   try {
-    const { reportNumber } = params
+    const { reportNumber } = await params
 
     // 验证报告编号格式
     if (!reportNumber || !/^ATO-\d{8}-\d{6}$/.test(reportNumber)) {

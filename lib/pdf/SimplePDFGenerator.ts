@@ -18,12 +18,12 @@ export class SimplePDFGenerator {
 
   // 颜色
   private readonly COLORS = {
-    primary: [0, 94, 184],
-    low: [40, 167, 69],
-    medium: [253, 126, 20],
-    high: [220, 53, 69],
-    text: [33, 33, 33],
-    textLight: [117, 117, 117],
+    primary: [0, 94, 184] as [number, number, number],
+    low: [40, 167, 69] as [number, number, number],
+    medium: [253, 126, 20] as [number, number, number],
+    high: [220, 53, 69] as [number, number, number],
+    text: [33, 33, 33] as [number, number, number],
+    textLight: [117, 117, 117] as [number, number, number],
   }
 
   constructor(config: PDFConfig, data: PredictionData) {
