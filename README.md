@@ -2,139 +2,139 @@
 
 # 🧬 ATO CardiTox Predictor
 
-**三氧化二砷心脏毒性智能预测系统**
+**Intelligent Cardiotoxicity Risk Prediction System for Arsenic Trioxide Therapy**
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Next.js](https://img.shields.io/badge/Next.js-16.3-black)](https://nextjs.org/)
 [![R](https://img.shields.io/badge/R-4.5.0-276DC3)](https://www.r-project.org/)
 [![Deploy](https://img.shields.io/badge/status-online-success)](https://www.atocarditox.com)
 
-[English](./README.en.md) | 简体中文
+English | [简体中文](./README.zh.md)
 
-[🌐 在线演示](https://www.atocarditox.com) | [📖 使用文档](#使用指南) | [🤝 贡献数据](#数据贡献)
+[🌐 Live Demo](https://www.atocarditox.com/en) | [📖 Documentation](#usage-guide) | [🤝 Contribute Data](#data-contribution)
 
 </div>
 
 ---
 
-## 📋 项目简介
+## 📋 Overview
 
-ATO CardiTox Predictor 是一个基于机器学习的临床决策支持系统，用于预测急性早幼粒细胞白血病（APL）患者在接受三氧化二砷（ATO）治疗时发生心脏毒性的风险。
+ATO CardiTox Predictor is a machine learning-based clinical decision support system designed to predict cardiotoxicity risk in acute promyelocytic leukemia (APL) patients undergoing arsenic trioxide (ATO) treatment.
 
-系统通过分析患者的**砷代谢指标**和**临床特征**，提供：
-- ✅ **高精度风险预测**：采用优化的随机生存森林模型
-- 📊 **可解释性分析**：基于 SHAP 值的特征贡献解释
-- 📄 **专业报告生成**：自动生成包含临床建议的 PDF 报告
-- 🌍 **多语言支持**：中文/英文双语界面
-
----
-
-## 🎯 核心功能
-
-### 1. 风险预测
-- 输入 4 个关键参数：**iAs（无机砷）**、**MMA（一甲基砷）**、**DMA（二甲基砷）**、**合并心毒性药物**
-- 自动计算砷代谢指标（tAs、PMI、SMI、百分比）
-- 实时返回心脏毒性风险概率（低/中/高风险）
-
-### 2. 可解释性
-- **SHAP 值分析**：展示每个特征对预测结果的贡献
-- **主要风险因素识别**：自动标注影响最大的因素
-- **可视化图表**：直观展示风险构成
-
-### 3. 临床报告
-- **中英双语 PDF 报告**：包含预测结果、代谢参数、SHAP 分析
-- **个性化建议**：根据风险等级提供针对性临床指导
-- **专业排版**：符合医学文献标准的报告格式
-
-### 4. 数据贡献
-- **开放数据收集**：研究者可提交真实临床数据
-- **隐私保护**：自动去标识化处理
-- **邮件通知**：管理员实时接收提交通知
+By analyzing **arsenic metabolism biomarkers** and **clinical features**, the system provides:
+- ✅ **High-Precision Risk Prediction**: Optimized Random Survival Forest model
+- 📊 **Explainable AI**: SHAP-based feature contribution analysis
+- 📄 **Professional Reports**: Auto-generated PDF reports with clinical recommendations
+- 🌍 **Multilingual Support**: English/Chinese bilingual interface
 
 ---
 
-## 🏗️ 技术架构
+## 🎯 Key Features
 
-### 前端
-- **框架**：Next.js 16.3 (React 19) + TypeScript
-- **样式**：Tailwind CSS
-- **国际化**：next-intl
-- **图表**：Recharts
-- **PDF 生成**：Puppeteer + HTML 模板
+### 1. Risk Prediction
+- Input 4 key parameters: **iAs (inorganic arsenic)**, **MMA (monomethylarsonic acid)**, **DMA (dimethylarsinic acid)**, **Cardiotoxic Drug Co-administration**
+- Auto-calculate arsenic metabolism indices (tAs, PMI, SMI, percentages)
+- Real-time cardiotoxicity risk probability (Low/Medium/High)
 
-### 后端
-- **预测 API**：Next.js API Routes
-- **模型服务**：R 4.5.0 + Plumber
-- **机器学习**：aorsf（随机生存森林）
-- **可解释性**：kernelshap
+### 2. Explainability
+- **SHAP Value Analysis**: Visualize each feature's contribution to prediction
+- **Major Risk Factor Identification**: Auto-highlight the most influential factor
+- **Interactive Charts**: Intuitive risk composition display
 
-### 模型
-- **算法**：Oblique Random Survival Forest (ORSF)
-- **特征**：tAs, SMI, MMA_per, DMA_per, CT_drug
-- **性能**：C-index > 0.75（内部验证）
+### 3. Clinical Reports
+- **Bilingual PDF Reports**: Prediction results, metabolism parameters, SHAP analysis
+- **Personalized Recommendations**: Risk-specific clinical guidance
+- **Professional Layout**: Medical literature-standard formatting
 
-### 部署
-- **服务器**：Ubuntu 24.04 LTS
-- **前端**：PM2 + Next.js (SSR)
-- **后端**：Rscript + Plumber API
-- **反向代理**：Nginx + SSL (Let's Encrypt)
-- **域名**：https://www.atocarditox.com
+### 4. Data Contribution
+- **Open Data Collection**: Researchers can submit real clinical data
+- **Privacy Protection**: Automatic de-identification
+- **Email Notification**: Real-time admin alerts for new submissions
 
 ---
 
-## 🚀 快速开始
+## 🏗️ Tech Stack
 
-### 环境要求
+### Frontend
+- **Framework**: Next.js 16.3 (React 19) + TypeScript
+- **Styling**: Tailwind CSS
+- **i18n**: next-intl
+- **Charts**: Recharts
+- **PDF Generation**: Puppeteer + HTML templates
+
+### Backend
+- **Prediction API**: Next.js API Routes
+- **Model Service**: R 4.5.0 + Plumber
+- **Machine Learning**: aorsf (Random Survival Forest)
+- **Explainability**: kernelshap
+
+### Model
+- **Algorithm**: Oblique Random Survival Forest (ORSF)
+- **Features**: tAs, SMI, MMA_per, DMA_per, CT_drug
+- **Performance**: C-index > 0.75 (internal validation)
+
+### Deployment
+- **Server**: Ubuntu 24.04 LTS
+- **Frontend**: PM2 + Next.js (SSR)
+- **Backend**: Rscript + Plumber API
+- **Reverse Proxy**: Nginx + SSL (Let's Encrypt)
+- **Domain**: https://www.atocarditox.com
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
 - Node.js 20.x
 - R 4.5.0+
-- 必需的 R 包：plumber, tidymodels, aorsf, bonsai, kernelshap
+- Required R packages: plumber, tidymodels, aorsf, bonsai, kernelshap
 
-### 本地开发
+### Local Development
 
 ```bash
-# 1. 克隆仓库
+# 1. Clone the repository
 git clone https://github.com/nixt1998/ato-predictor.git
 cd ato-predictor
 
-# 2. 安装前端依赖
+# 2. Install frontend dependencies
 npm install
 
-# 3. 配置环境变量
+# 3. Configure environment variables
 cp .env.example .env.local
-# 编辑 .env.local，设置 R_API_URL=http://localhost:8000
+# Edit .env.local, set R_API_URL=http://localhost:8000
 
-# 4. 启动 R API（新终端窗口）
+# 4. Start R API (new terminal)
 cd r-api
 Rscript -e "plumber::pr_run(plumber::pr('api.R'), host='127.0.0.1', port=8000)"
 
-# 5. 启动前端开发服务器
+# 5. Start frontend dev server
 npm run dev
 ```
 
-访问 http://localhost:3000
+Visit http://localhost:3000
 
-### 生产部署
+### Production Deployment
 
-详见 [部署文档](docs/DEPLOYMENT.md)
+See [Deployment Guide](docs/DEPLOYMENT.md)
 
 ---
 
-## 📖 使用指南
+## 📖 Usage Guide
 
-### 在线使用
+### Online Usage
 
-1. 访问 https://www.atocarditox.com
-2. 导航至 **预测计算** 页面
-3. 输入以下参数：
-   - **iAs**（无机砷浓度，ng/mL）
-   - **MMA**（一甲基砷浓度，ng/mL）
-   - **DMA**（二甲基砷浓度，ng/mL）
-   - **合并心毒性药物**（是/否）
-4. 点击 **计算预测**
-5. 查看预测结果和 SHAP 分析
-6. 可选：下载完整 PDF 报告
+1. Visit https://www.atocarditox.com/en
+2. Navigate to **Prediction** page
+3. Input parameters:
+   - **iAs** (inorganic arsenic concentration, ng/mL)
+   - **MMA** (monomethylarsonic acid concentration, ng/mL)
+   - **DMA** (dimethylarsinic acid concentration, ng/mL)
+   - **Cardiotoxic Drug Co-administration** (Yes/No)
+4. Click **Calculate Prediction**
+5. View prediction results and SHAP analysis
+6. Optional: Download full PDF report
 
-### API 调用
+### API Integration
 
 ```bash
 curl -X POST https://www.atocarditox.com/api/predict \
@@ -147,7 +147,7 @@ curl -X POST https://www.atocarditox.com/api/predict \
   }'
 ```
 
-响应示例：
+Response example:
 ```json
 {
   "prediction": {
@@ -176,113 +176,113 @@ curl -X POST https://www.atocarditox.com/api/predict \
 
 ---
 
-## 🤝 数据贡献
+## 🤝 Data Contribution
 
-我们欢迎临床研究者贡献真实病例数据，以持续改进模型性能。
+We welcome clinical researchers to contribute real-world data to improve model performance.
 
-### 贡献流程
+### Contribution Process
 
-1. 访问 [数据上传页面](https://www.atocarditox.com/zh/upload)
-2. 填写基本信息（姓名、邮箱、机构）
-3. 上传去标识化的临床数据（Excel/CSV 格式）
-4. 提交后系统将：
-   - 保存数据到服务器
-   - 发送确认邮件给管理员
-   - 数据将用于模型迭代和验证
+1. Visit [Data Upload Page](https://www.atocarditox.com/en/upload)
+2. Fill in basic information (name, email, institution)
+3. Upload de-identified clinical data (Excel/CSV format)
+4. Upon submission, the system will:
+   - Save data to server
+   - Send confirmation email to admin
+   - Use data for model iteration and validation
 
-### 数据格式要求
+### Data Format Requirements
 
-必需字段：
-- `iAs`, `MMA`, `DMA`（砷代谢指标，ng/mL）
-- `CT_drug`（合并心毒性药物，Yes/No）
-- `Cardiotoxicity`（是否发生心脏毒性，Yes/No）
+Required fields:
+- `iAs`, `MMA`, `DMA` (arsenic metabolism biomarkers, ng/mL)
+- `CT_drug` (cardiotoxic drug co-administration, Yes/No)
+- `Cardiotoxicity` (occurrence of cardiotoxicity, Yes/No)
 
-可选字段：
-- 人口统计学信息（年龄、性别、身高、体重）
-- 实验室检查（K、Mg、Ca、肝肾功能）
-- 合并疾病史（糖尿病、高血压等）
+Optional fields:
+- Demographics (age, sex, height, weight)
+- Laboratory tests (K, Mg, Ca, liver/kidney function)
+- Comorbidities (diabetes, hypertension, etc.)
 
-模板下载：[data_template.xlsx](https://www.atocarditox.com/templates/data_template.xlsx)
+Template download: [data_template.xlsx](https://www.atocarditox.com/templates/data_template.xlsx)
 
 ---
 
-## 📊 模型性能
+## 📊 Model Performance
 
-| 指标 | 测试集 |
-|------|--------|
+| Metric | Test Set |
+|--------|----------|
 | ROC-AUC | 0.909 (95% CI: 0.861–0.957) |
-| Sensitivity | 11.5% 高于传统 Logistic 回归 |
+| Sensitivity | 11.5% higher than traditional Logistic Regression |
 | Specificity | 93.3% |
-| 特征数量 | 5 个（vs Logistic 9 个）|
+| Feature Count | 5 features (vs Logistic 9 features) |
 
-**临床增益**：
-- 在相同特异度下，多检出 11.5% 的心脏毒性事件（7 例患者）
-- 零误报增加
-- 特征精简：5 个特征即可达到与 9 特征 Logistic 回归相同的判别力
+**Clinical Benefit**:
+- At the same specificity, detects 11.5% more cardiotoxicity events (7 additional patients)
+- Zero increase in false positives
+- Feature reduction: Achieves same discriminative power as 9-feature Logistic Regression with only 5 features
 
-> **注意**：本系统用于辅助临床决策，不能替代专业医学判断。
+> **Disclaimer**: This system is intended for clinical decision support and should not replace professional medical judgment.
 
 ---
 
-## 🗂️ 项目结构
+## 🗂️ Project Structure
 
 ```
 ato-predictor/
-├── app/                      # Next.js 应用
-│   ├── [locale]/            # 国际化路由
-│   │   ├── predict/         # 预测页面
-│   │   ├── upload/          # 数据上传
+├── app/                      # Next.js application
+│   ├── [locale]/            # i18n routes
+│   │   ├── predict/         # Prediction page
+│   │   ├── upload/          # Data upload
 │   │   └── ...
-│   └── api/                 # API 路由
-│       ├── predict/         # 预测接口
-│       ├── generate-report/ # PDF 生成
-│       └── upload/          # 数据接收
-├── r-api/                   # R 模型服务
+│   └── api/                 # API routes
+│       ├── predict/         # Prediction endpoint
+│       ├── generate-report/ # PDF generation
+│       └── upload/          # Data reception
+├── r-api/                   # R model service
 │   ├── api.R               # Plumber API
-│   ├── optim_wflow_last_fit.rds  # 训练好的模型
-│   └── train_data.rds      # 训练数据
-├── components/              # React 组件
-├── lib/                     # 工具函数
-├── templates/               # PDF 模板
+│   ├── optim_wflow_last_fit.rds  # Trained model
+│   └── train_data.rds      # Training data
+├── components/              # React components
+├── lib/                     # Utilities
+├── templates/               # PDF templates
 │   ├── report-template-zh.html
 │   └── report-template-en.html
-├── public/                  # 静态资源
-└── messages/                # 国际化翻译
+├── public/                  # Static assets
+└── messages/                # i18n translations
 ```
 
 ---
 
-## 🔬 科学依据
+## 🔬 Scientific Background
 
-本项目基于以下研究：
+This project is based on the following research:
 
-1. **砷代谢与心脏毒性的关联**  
+1. **Arsenic Metabolism and Cardiovascular Toxicity**  
    Chen Y, et al. *Arsenic metabolism and cardiovascular toxicity in ATO-treated APL patients.* Lancet Haematol. 2023.
 
-2. **机器学习在临床风险预测中的应用**  
+2. **Machine Learning in Clinical Risk Prediction**  
    Rajkomar A, et al. *Machine learning in medicine.* N Engl J Med. 2019.
 
-3. **随机生存森林模型**  
+3. **Random Survival Forests**  
    Ishwaran H, et al. *Random survival forests.* Ann Appl Stat. 2008.
 
-详见 [参考文献页面](https://www.atocarditox.com/zh/references)
+See [References Page](https://www.atocarditox.com/en/references)
 
 ---
 
-## 🛡️ 隐私与安全
+## 🛡️ Privacy & Security
 
-- ✅ 所有数据传输使用 **HTTPS 加密**
-- ✅ 用户输入数据**不存储**，仅用于实时预测
-- ✅ 贡献数据自动**去标识化**处理
-- ✅ 服务器位于中国大陆，遵守 **PIPL**（个人信息保护法）
+- ✅ All data transmission uses **HTTPS encryption**
+- ✅ User input data is **not stored**, only used for real-time prediction
+- ✅ Contributed data is automatically **de-identified**
+- ✅ Server located in mainland China, compliant with **PIPL** (Personal Information Protection Law)
 
 ---
 
-## 📜 开源协议
+## 📜 License
 
-本项目采用 [MIT License](LICENSE) 开源。
+This project is open-sourced under the [MIT License](LICENSE).
 
-**引用格式：**
+**Citation:**
 ```
 @software{ato_carditox_2026,
   title = {ATO CardiTox Predictor: Machine Learning-Based Cardiotoxicity Risk Prediction System},
@@ -294,39 +294,39 @@ ato-predictor/
 
 ---
 
-## 👥 团队
+## 👥 Team
 
-**开发者**：倪啸庭 (Xiaoting Ni)  
-**附属单位**：
-- 齐齐哈尔医学院 (Qiqihar Medical University)
-- 哈尔滨医科大学附属第一医院 (The First Affiliated Hospital of Harbin Medical University)
+**Developer**: Xiaoting Ni (倪啸庭)  
+**Affiliations**:
+- Qiqihar Medical University
+- The First Affiliated Hospital of Harbin Medical University
 
-**联系方式**：nixt1998@163.com
-
----
-
-## 🙏 致谢
-
-感谢以下项目和团队的支持：
-- [Next.js](https://nextjs.org/) - React 框架
-- [R Foundation](https://www.r-project.org/) - 统计计算环境
-- [aorsf](https://github.com/ayer-ribeiro/aorsf) - 随机生存森林实现
-- [Puppeteer](https://pptr.dev/) - PDF 生成
-- 所有贡献数据的临床研究者
+**Contact**: nixt1998@163.com
 
 ---
 
-## 📞 联系我们
+## 🙏 Acknowledgments
 
-- **网站**：https://www.atocarditox.com
-- **邮箱**：nixt1998@163.com
-- **Issue**：[GitHub Issues](https://github.com/nixt1998/ato-predictor/issues)
+Thanks to the following projects and teams:
+- [Next.js](https://nextjs.org/) - React framework
+- [R Foundation](https://www.r-project.org/) - Statistical computing environment
+- [aorsf](https://github.com/ayer-ribeiro/aorsf) - Random Survival Forest implementation
+- [Puppeteer](https://pptr.dev/) - PDF generation
+- All clinical researchers who contributed data
+
+---
+
+## 📞 Contact Us
+
+- **Website**: https://www.atocarditox.com
+- **Email**: nixt1998@163.com
+- **Issues**: [GitHub Issues](https://github.com/nixt1998/ato-predictor/issues)
 
 ---
 
 <div align="center">
 
-**⭐ 如果这个项目对你有帮助，请给我们一个 Star！**
+**⭐ If this project helps you, please give us a Star!**
 
 Made with ❤️ by Xiaoting Ni
 
