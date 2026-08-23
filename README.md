@@ -93,7 +93,7 @@ ATO CardiTox Predictor 是一个基于机器学习的临床决策支持系统，
 
 ```bash
 # 1. 克隆仓库
-git clone https://github.com/yourusername/ato-predictor.git
+git clone https://github.com/nixt1998/ato-predictor.git
 cd ato-predictor
 
 # 2. 安装前端依赖
@@ -208,11 +208,17 @@ curl -X POST https://www.atocarditox.com/api/predict \
 
 ## 📊 模型性能
 
-| 指标 | 训练集 | 验证集 |
-|------|--------|--------|
-| C-index | 0.78 | 0.75 |
-| Sensitivity | 85% | 82% |
-| Specificity | 72% | 70% |
+| 指标 | 测试集 |
+|------|--------|
+| ROC-AUC | 0.909 (95% CI: 0.861–0.957) |
+| Sensitivity | 11.5% 高于传统 Logistic 回归 |
+| Specificity | 93.3% |
+| 特征数量 | 5 个（vs Logistic 9 个）|
+
+**临床增益**：
+- 在相同特异度下，多检出 11.5% 的心脏毒性事件（7 例患者）
+- 零误报增加
+- 特征精简：5 个特征即可达到与 9 特征 Logistic 回归相同的判别力
 
 > **注意**：本系统用于辅助临床决策，不能替代专业医学判断。
 
@@ -280,9 +286,9 @@ ato-predictor/
 ```
 @software{ato_carditox_2026,
   title = {ATO CardiTox Predictor: Machine Learning-Based Cardiotoxicity Risk Prediction System},
-  author = {Your Name},
+  author = {Xiaoting Ni},
   year = {2026},
-  url = {https://github.com/yourusername/ato-predictor}
+  url = {https://github.com/nixt1998/ato-predictor}
 }
 ```
 
@@ -290,8 +296,11 @@ ato-predictor/
 
 ## 👥 团队
 
-**开发者**：[您的名字]  
-**机构**：[您的机构]  
+**开发者**：倪啸庭 (Xiaoting Ni)  
+**附属单位**：
+- 齐齐哈尔医学院 (Qiqihar Medical University)
+- 哈尔滨医科大学附属第一医院 (The First Affiliated Hospital of Harbin Medical University)
+
 **联系方式**：nixt1998@163.com
 
 ---
@@ -311,7 +320,7 @@ ato-predictor/
 
 - **网站**：https://www.atocarditox.com
 - **邮箱**：nixt1998@163.com
-- **Issue**：[GitHub Issues](https://github.com/yourusername/ato-predictor/issues)
+- **Issue**：[GitHub Issues](https://github.com/nixt1998/ato-predictor/issues)
 
 ---
 
@@ -319,6 +328,6 @@ ato-predictor/
 
 **⭐ 如果这个项目对你有帮助，请给我们一个 Star！**
 
-Made with ❤️ by [Your Name]
+Made with ❤️ by Xiaoting Ni
 
 </div>

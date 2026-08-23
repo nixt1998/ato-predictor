@@ -93,7 +93,7 @@ By analyzing **arsenic metabolism biomarkers** and **clinical features**, the sy
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/yourusername/ato-predictor.git
+git clone https://github.com/nixt1998/ato-predictor.git
 cd ato-predictor
 
 # 2. Install frontend dependencies
@@ -208,11 +208,17 @@ Template download: [data_template.xlsx](https://www.atocarditox.com/templates/da
 
 ## 📊 Model Performance
 
-| Metric | Training | Validation |
-|--------|----------|------------|
-| C-index | 0.78 | 0.75 |
-| Sensitivity | 85% | 82% |
-| Specificity | 72% | 70% |
+| Metric | Test Set |
+|--------|----------|
+| ROC-AUC | 0.909 (95% CI: 0.861–0.957) |
+| Sensitivity | 11.5% higher than traditional Logistic Regression |
+| Specificity | 93.3% |
+| Feature Count | 5 features (vs Logistic 9 features) |
+
+**Clinical Benefit**:
+- At the same specificity, detects 11.5% more cardiotoxicity events (7 additional patients)
+- Zero increase in false positives
+- Feature reduction: Achieves same discriminative power as 9-feature Logistic Regression with only 5 features
 
 > **Disclaimer**: This system is intended for clinical decision support and should not replace professional medical judgment.
 
@@ -280,9 +286,9 @@ This project is open-sourced under the [MIT License](LICENSE).
 ```
 @software{ato_carditox_2026,
   title = {ATO CardiTox Predictor: Machine Learning-Based Cardiotoxicity Risk Prediction System},
-  author = {Your Name},
+  author = {Xiaoting Ni},
   year = {2026},
-  url = {https://github.com/yourusername/ato-predictor}
+  url = {https://github.com/nixt1998/ato-predictor}
 }
 ```
 
@@ -290,8 +296,11 @@ This project is open-sourced under the [MIT License](LICENSE).
 
 ## 👥 Team
 
-**Developer**: [Your Name]  
-**Institution**: [Your Institution]  
+**Developer**: Xiaoting Ni (倪啸庭)  
+**Affiliations**:
+- Qiqihar Medical University
+- The First Affiliated Hospital of Harbin Medical University
+
 **Contact**: nixt1998@163.com
 
 ---
@@ -311,7 +320,7 @@ Thanks to the following projects and teams:
 
 - **Website**: https://www.atocarditox.com
 - **Email**: nixt1998@163.com
-- **Issues**: [GitHub Issues](https://github.com/yourusername/ato-predictor/issues)
+- **Issues**: [GitHub Issues](https://github.com/nixt1998/ato-predictor/issues)
 
 ---
 
@@ -319,6 +328,6 @@ Thanks to the following projects and teams:
 
 **⭐ If this project helps you, please give us a Star!**
 
-Made with ❤️ by [Your Name]
+Made with ❤️ by Xiaoting Ni
 
 </div>
